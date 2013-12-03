@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.Robot;
@@ -25,7 +25,7 @@ public class StampGachaHandler extends AbstractGachaHandler {
         final Matcher actBtnMatcher = StampGachaHandler.ACTBTN_PATTHERN.matcher(html);
         if (actBtnMatcher.find()) {
             String url = actBtnMatcher.group(1);
-            url = StringEscapeUtils.unescapeHtml4(url);
+            url = StringEscapeUtils.unescapeHtml(url);
             this.openGachaAnimation(url);
         } else {
             if (this.log.isInfoEnabled()) {

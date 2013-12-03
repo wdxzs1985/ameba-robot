@@ -3,7 +3,7 @@ package robot.tnk47.battle;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.Robot;
