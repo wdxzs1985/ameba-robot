@@ -37,6 +37,7 @@ public class BattleDetailHandler extends AbstractBattleHandler {
         this.resolveInputToken(html);
 
         this.sendInvite(html);
+
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
             final String battleStartType = jsonPageParams.getString("battleStartType");
@@ -55,6 +56,8 @@ public class BattleDetailHandler extends AbstractBattleHandler {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("报酬确定,停止攻击。");
                 }
+                session.put("quest", false);
+                session.put("battle", false);
             } else {
                 final JSONObject battleEnemy = this.findBattleEnemy(data);
                 if (battleEnemy != null) {

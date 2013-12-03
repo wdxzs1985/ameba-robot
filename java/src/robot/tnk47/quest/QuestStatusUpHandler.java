@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import net.sf.json.JSONObject;
+
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.AbstractEventHandler;
@@ -58,10 +60,10 @@ public class QuestStatusUpHandler extends AbstractEventHandler {
                                             String.valueOf(attrPowerP)));
             nvps.add(new BasicNameValuePair("token", token));
 
-            final String html = this.httpPost(path, nvps);
+            final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
+            this.resolveJsonToken(jsonResponse);
 
             if (this.log.isInfoEnabled()) {
-                this.log.info(html);
                 this.log.info(String.format("增加了%d体力，增加了%d攻防",
                                             attrStaminaP,
                                             attrPowerP));

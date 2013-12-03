@@ -36,7 +36,11 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
         nvps.add(new BasicNameValuePair("token", token));
 
         final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
-        this.resolveJsonToken(jsonResponse);
+        if (jsonResponse.containsKey("token")) {
+            this.resolveJsonToken(jsonResponse);
+        } else {
+            return "/";
+        }
 
         final JSONObject data = jsonResponse.getJSONObject("data");
         this.printAreaEncount(data);
@@ -172,14 +176,16 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
                     return true;
-                } else if (StringUtils.contains(code, "stamina50") && useStamina50
-                           && needExpForNextLevel > maxStamina / 2) {
+                }
+                if (useStamina50 && StringUtils.contains(code, "stamina50")
+                    && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
                     return true;
-                } else if (StringUtils.contains(code, "stamina100") && useStamina100
-                           && needExpForNextLevel > maxStamina) {
+                }
+                if (useStamina100 && StringUtils.contains(code, "stamina100")
+                    && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
