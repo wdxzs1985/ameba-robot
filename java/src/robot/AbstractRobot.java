@@ -64,7 +64,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
                 currEventHandler.handle();
                 this.httpClient.saveCookie(this.cookieFile);
                 try {
-                    final int sleepTime = 500 + RandomUtils.nextInt(500);
+                    final int sleepTime = 5000 + RandomUtils.nextInt(5000);
                     Thread.sleep(sleepTime);
                 } catch (final InterruptedException e) {
                 }
