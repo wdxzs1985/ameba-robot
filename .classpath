@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="tnk47collection/work/|tnk47collection/|robot/mxm/|robot/tnk47/MarathonHandler.java|robot/tnk47/MarathonQuestHandler.java|robot/tnk47/MarathonRobot.java|robot/tnk47/MarathonStageDetailHandler.java|robot/tnk47/MarathonStageForwardHandler.java|robot/tnk47/marathon/" kind="src" path="java/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="java/lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="java/lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="java/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="java/lib/fluent-hc-4.3.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/httpclient-4.3.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/httpclient-cache-4.3.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/httpcore-4.3.jar"/>
+	<classpathentry kind="lib" path="java/lib/httpmime-4.3.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="java/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="java/lib/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="java/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/ezmorph-1.0.6.jar"/>
+	<classpathentry kind="lib" path="java/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
