@@ -38,8 +38,6 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
         final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
         if (jsonResponse.containsKey("token")) {
             this.resolveJsonToken(jsonResponse);
-        } else {
-            return "/";
         }
 
         final JSONObject data = jsonResponse.getJSONObject("data");
