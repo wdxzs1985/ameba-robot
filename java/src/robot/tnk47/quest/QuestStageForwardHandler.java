@@ -151,7 +151,7 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
     }
 
     private boolean isUseItem(final JSONObject data) {
-        final String regenStaminaItemsValue = data.getString("stageRewardFindStatuses");
+        final String regenStaminaItemsValue = data.getString("regenStaminaItems");
         if (!StringUtils.equals(regenStaminaItemsValue, "null")) {
             final Map<String, Object> session = this.robot.getSession();
             final Properties config = this.robot.getConfig();
