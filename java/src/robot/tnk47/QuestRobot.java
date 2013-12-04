@@ -1,5 +1,13 @@
 package robot.tnk47;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 import robot.AbstractRobot;
 import robot.LoginHandler;
 import robot.tnk47.battle.BattleAnimationHandler;
@@ -21,13 +29,20 @@ import robot.tnk47.quest.QuestStatusUpHandler;
 public class QuestRobot extends AbstractRobot {
 
     public static void main(final String[] args) {
-        QuestRobot robot = null;
-        if (args.length > 0) {
-            robot = new QuestRobot(args[0]);
-        } else {
-            robot = new QuestRobot("setup.properties");
+
+        final String setup = args.length > 0 ? args[0] : "setup.properties";
+        final Properties config = new Properties();
+        InputStream inputConfig = null;
+        try {
+            inputConfig = FileUtils.openInputStream(new File(setup));
+            config.load(inputConfig);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(inputConfig);
         }
 
+        final QuestRobot robot = new QuestRobot(config);
         final Thread thread = new Thread(robot);
         try {
             thread.start();
@@ -38,7 +53,7 @@ public class QuestRobot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public QuestRobot(final String config) {
+    public QuestRobot(final Properties config) {
         super(QuestRobot.HOST, config);
         this.registerHandler("/", new HomeHandler(this));
         this.registerHandler("/login", new LoginHandler(this));

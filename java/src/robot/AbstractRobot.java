@@ -1,15 +1,11 @@
 package robot;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +13,9 @@ import org.apache.commons.logging.LogFactory;
 import common.CommonHttpClient;
 
 public abstract class AbstractRobot implements Robot, Runnable {
+
+    public static final int MAX_RETRY = 3;
+    public static final int SLEEP_TIME = 5000;
 
     protected final Log log;
     private final String host;
@@ -27,25 +26,18 @@ public abstract class AbstractRobot implements Robot, Runnable {
     private final Map<String, Object> session;
     private final Properties config;
 
-    public AbstractRobot(final String host, final String setup) {
+    public AbstractRobot(final String host, final Properties config) {
         this.host = host;
         this.log = LogFactory.getLog(this.getClass());
 
-        InputStream inputConfig = null;
         this.session = Collections.synchronizedMap(new HashMap<String, Object>());
-        this.config = new Properties();
-        try {
-            inputConfig = FileUtils.openInputStream(new File(setup));
-            this.getConfig().load(inputConfig);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(inputConfig);
-        }
+        this.config = config;
+
         final String username = this.getConfig()
                                     .getProperty("LoginHandler.username");
-        this.cookieFile = new File(username + ".cookie");
         this.httpClient = new CommonHttpClient();
+        this.cookieFile = new File(username + ".cookie");
+        this.httpClient.loadCookie(this.cookieFile);
         this.handlerMapping = new HashMap<String, EventHandler>();
     }
 
@@ -55,22 +47,20 @@ public abstract class AbstractRobot implements Robot, Runnable {
 
     @Override
     public void run() {
-        this.httpClient.loadCookie(this.cookieFile);
         this.dispatch("/");
-        try {
-            while (this.nextHandler != null) {
+        int wrongTime = 0;
+        while (this.nextHandler != null && AbstractRobot.MAX_RETRY > wrongTime) {
+            try {
                 final EventHandler currEventHandler = this.nextHandler;
                 this.nextHandler = null;
                 currEventHandler.handle();
                 this.httpClient.saveCookie(this.cookieFile);
-                try {
-                    final int sleepTime = 5000 + RandomUtils.nextInt(5000);
-                    Thread.sleep(sleepTime);
-                } catch (final InterruptedException e) {
-                }
+                Thread.sleep(AbstractRobot.SLEEP_TIME + RandomUtils.nextInt(AbstractRobot.SLEEP_TIME));
+            } catch (final Exception e) {
+                wrongTime++;
+                this.log.error("发生异常", e);
+                this.dispatch("/");
             }
-        } catch (final Exception e) {
-            this.log.error("发生异常退出", e);
         }
     }
 
