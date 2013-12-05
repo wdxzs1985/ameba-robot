@@ -19,9 +19,7 @@ public class GiftHandler extends AbstractEventHandler {
 
     @Override
     public String handleIt() {
-        final Map<String, Object> session = this.robot.getSession();
-        final String type = (String) session.get("type");
-        final String html = this.httpGet(String.format("/gift?type=%s", type));
+        final String html = this.httpGet("/gift");
         this.resolveInputToken(html);
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {

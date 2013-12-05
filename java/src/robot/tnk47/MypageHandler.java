@@ -22,41 +22,50 @@ public class MypageHandler extends AbstractEventHandler {
 
     @Override
     public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
         final String html = this.httpGet("/mypage");
-        final Matcher userStatusMatcher = MypageHandler.HTML_USER_STATUS_PATTERN.matcher(html);
-        if (userStatusMatcher.find()) {
-            final String userStatusHtml = userStatusMatcher.group(1);
-            this.printMyInfo(userStatusHtml);
-        } else {
-            if (this.log.isInfoEnabled()) {
-                final Matcher titleMatcher = MypageHandler.HTML_TITLE_PATTERN.matcher(html);
-                if (titleMatcher.find()) {
-                    final String title = titleMatcher.group(1);
-                    this.log.info(title);
+        if (this.isEnable("mypage")) {
+            final Matcher userStatusMatcher = MypageHandler.HTML_USER_STATUS_PATTERN.matcher(html);
+            if (userStatusMatcher.find()) {
+                final String userStatusHtml = userStatusMatcher.group(1);
+                this.printMyInfo(userStatusHtml);
+                session.put("mypage", false);
+            } else {
+                if (this.log.isInfoEnabled()) {
+                    final Matcher titleMatcher = MypageHandler.HTML_TITLE_PATTERN.matcher(html);
+                    if (titleMatcher.find()) {
+                        final String title = titleMatcher.group(1);
+                        this.log.info(title);
+                    }
                 }
+                return "/mypage";
             }
-            return "/mypage";
         }
 
         this.resolveInputToken(html);
 
         if (this.isEnable("checkStampGachaStatus")) {
+            session.put("checkStampGachaStatus", false);
             return "/gacha/stamp-gacha";
         }
 
         if (this.isEnable("checkGift")) {
+            session.put("checkGift", false);
             return "/gift";
         }
 
         if (this.isEnable("battle")) {
+            session.put("battle", false);
             return "/battle";
         }
 
         if (this.isEnable("checkEventInfomation")) {
+            session.put("checkEventInfomation", false);
             return "/event-infomation";
         }
 
         if (this.isEnable("quest")) {
+            session.put("quest", false);
             return "/quest";
         }
 
@@ -91,27 +100,32 @@ public class MypageHandler extends AbstractEventHandler {
         }
     }
 
-    private boolean isEnable(final String funcName) {
-        final Map<String, Object> session = this.robot.getSession();
-        final boolean enable = (Boolean) session.get(funcName);
-        if (enable) {
-            session.put(funcName, false);
-        }
-        return enable;
-    }
-
     private void reset() {
         final Properties config = this.robot.getConfig();
+        final boolean checkStampGachaStatus = Boolean.valueOf(config.getProperty("MypageHandler.checkStampGachaStatus",
+                                                                                 "false"));
+        final boolean checkEventInfomation = Boolean.valueOf(config.getProperty("MypageHandler.checkEventInfomation",
+                                                                                "false"));
+        final boolean checkGift = Boolean.valueOf(config.getProperty("MypageHandler.checkGift",
+                                                                     "false"));
+        final boolean quest = Boolean.valueOf(config.getProperty("MypageHandler.quest",
+                                                                 "false"));
+        final boolean battle = Boolean.valueOf(config.getProperty("MypageHandler.battle",
+                                                                  "false"));
+        final boolean upgrade = Boolean.valueOf(config.getProperty("MypageHandler.upgrade",
+                                                                   "false"));
+
         final Map<String, Object> session = this.robot.getSession();
-        session.put("checkStampGachaStatus",
-                    Boolean.valueOf(config.getProperty("MypageHandler.checkStampGachaStatus")));
-        session.put("checkEventInfomation",
-                    Boolean.valueOf(config.getProperty("MypageHandler.checkEventInfomation")));
-        session.put("checkGift",
-                    Boolean.valueOf(config.getProperty("MypageHandler.checkGift")));
-        session.put("quest",
-                    Boolean.valueOf(config.getProperty("MypageHandler.quest")));
-        session.put("battle",
-                    Boolean.valueOf(config.getProperty("MypageHandler.battle")));
+        session.put("mypage", true);
+        session.put("checkStampGachaStatus", checkStampGachaStatus);
+        session.put("checkEventInfomation", checkEventInfomation);
+        session.put("checkGift", checkGift);
+        session.put("quest", quest);
+        session.put("quest-card-full", false);
+        session.put("quest-find-all", false);
+        session.put("battle", battle);
+        session.put("battle-pt-out", false);
+        session.put("battle-point", false);
+        session.put("upgrade", upgrade);
     }
 }

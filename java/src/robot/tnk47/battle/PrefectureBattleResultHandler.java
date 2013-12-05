@@ -20,6 +20,8 @@ public class PrefectureBattleResultHandler extends AbstractBattleHandler {
     @Override
     protected String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
+        session.put("battle-pt-out", false);
+        session.put("battle-point", false);
 
         final String prefectureBattleId = (String) session.get("prefectureBattleId");
         final String token = (String) session.get("token");

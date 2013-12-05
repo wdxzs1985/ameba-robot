@@ -85,6 +85,7 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                         return "/battle/battle-animation";
                     }
                 }
+                session.put("battle-pt-out", true);
                 if (this.log.isInfoEnabled()) {
                     this.log.info("攻pt不足");
                 }

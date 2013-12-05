@@ -52,18 +52,34 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
         if (data.getBoolean("levelUp")) {
             return this.onLevelUp(data);
         }
-
+        //
         if (this.isMaxPower(data)) {
-            session.put("quest", true);
-            return "/battle";
+            session.put("battle-pt-out", false);
+            if (!this.isEnable("battle-point")) {
+                session.put("quest", true);
+                return "/battle";
+            }
+        }
+        //
+        if (this.isCardFull(data)) {
+            if (!this.isEnable("quest-card-full")) {
+                session.put("quest-card-full", true);
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("你包里的卡满出来了");
+                }
+                if (this.isEnable("upgrade")) {
+                    session.put("upgrade", false);
+                    return "/upgrade";
+                }
+            }
         }
         //
         final String questMessage = data.getString("questMessage");
         if (!StringUtils.equals(questMessage, "null")) {
-            if (this.log.isInfoEnabled()) {
-                this.log.info(questMessage);
-            }
             if (StringUtils.equals("行動Ptが足りません", questMessage)) {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("体力不支");
+                }
                 return this.onStaminaOut(data);
             } else if (StringUtils.equals("隊士発見!!", questMessage)) {
                 // do nothing
@@ -81,16 +97,20 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
 
     private void printStageRewardFindStatuses(final JSONObject data) {
         if (this.log.isInfoEnabled()) {
-            final String stageRewardFindStatusesValue = data.getString("stageRewardFindStatuses");
-            if (!StringUtils.equals(stageRewardFindStatusesValue, "null")) {
-                boolean findAll = true;
-                final JSONArray stageRewardFindStatuses = data.getJSONArray("stageRewardFindStatuses");
-                for (int i = 0; i < stageRewardFindStatuses.size(); i++) {
-                    final JSONObject findStatus = stageRewardFindStatuses.getJSONObject(i);
-                    findAll = findAll && findStatus.getBoolean("rewardGet");
-                }
-                if (findAll) {
-                    this.log.info("这张地图的卡片已经集齐");
+            if (!this.isEnable("quest-find-all")) {
+                final String stageRewardFindStatusesValue = data.getString("stageRewardFindStatuses");
+                if (!StringUtils.equals(stageRewardFindStatusesValue, "null")) {
+                    boolean findAll = true;
+                    final JSONArray stageRewardFindStatuses = data.getJSONArray("stageRewardFindStatuses");
+                    for (int i = 0; i < stageRewardFindStatuses.size(); i++) {
+                        final JSONObject findStatus = stageRewardFindStatuses.getJSONObject(i);
+                        findAll = findAll && findStatus.getBoolean("rewardGet");
+                    }
+                    if (findAll) {
+                        this.log.info("这张地图的卡片已经集齐");
+                        final Map<String, Object> session = this.robot.getSession();
+                        session.put("quest-find-all", true);
+                    }
                 }
             }
         }
@@ -105,8 +125,10 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
                     final String name = encountCardData.getString("name");
                     this.log.info(String.format("隊士発見: %s", name));
                 } else if (StringUtils.equals(areaEncountType, "EVENT")) {
-                    final String encountMessage = data.getString("encountMessage");
-                    this.log.info(encountMessage);
+                    if (this.log.isInfoEnabled()) {
+                        final String encountMessage = data.getString("encountMessage");
+                        this.log.info(encountMessage);
+                    }
                 }
             }
         }
@@ -117,6 +139,13 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
         final int maxPower = userData.getInt("maxPower");
         final int attackPower = userData.getInt("attackPower");
         return maxPower == attackPower;
+    }
+
+    private boolean isCardFull(final JSONObject data) {
+        final JSONObject userData = data.getJSONObject("userData");
+        final int maxCardCount = userData.getInt("maxCardCount");
+        final int cardCount = userData.getInt("cardCount");
+        return maxCardCount == cardCount;
     }
 
     private String onLevelUp(final JSONObject data) {

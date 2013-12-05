@@ -14,7 +14,6 @@ import common.CommonHttpClient;
 
 public abstract class AbstractRobot implements Robot, Runnable {
 
-    public static final int MAX_RETRY = 3;
     public static final int SLEEP_TIME = 5000;
 
     protected final Log log;
@@ -48,19 +47,25 @@ public abstract class AbstractRobot implements Robot, Runnable {
     @Override
     public void run() {
         this.dispatch("/");
-        int wrongTime = 0;
-        while (this.nextHandler != null && AbstractRobot.MAX_RETRY > wrongTime) {
+        while (this.nextHandler != null) {
             try {
                 final EventHandler currEventHandler = this.nextHandler;
                 this.nextHandler = null;
                 currEventHandler.handle();
                 this.httpClient.saveCookie(this.cookieFile);
-                Thread.sleep(AbstractRobot.SLEEP_TIME + RandomUtils.nextInt(AbstractRobot.SLEEP_TIME));
             } catch (final Exception e) {
-                wrongTime++;
                 this.log.error("发生异常", e);
                 this.dispatch("/");
+            } finally {
+                this.sleep();
             }
+        }
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(AbstractRobot.SLEEP_TIME + RandomUtils.nextInt(AbstractRobot.SLEEP_TIME));
+        } catch (final InterruptedException e) {
         }
     }
 

@@ -56,8 +56,8 @@ public class BattleDetailHandler extends AbstractBattleHandler {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("报酬确定,停止攻击。");
                 }
-                session.put("quest", false);
-                session.put("battle", false);
+                session.put("battle-point", true);
+                return "/mypage";
             } else {
                 final JSONObject battleEnemy = this.findBattleEnemy(data);
                 if (battleEnemy != null) {

@@ -153,9 +153,9 @@ public class CommonHttpClient {
             // Consume response content
             EntityUtils.consume(entity);
         } catch (final ClientProtocolException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("网络故障", e);
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("网络故障", e);
         }
         if (this.log.isDebugEnabled()) {
             this.log.debug("result : " + result);
@@ -184,9 +184,9 @@ public class CommonHttpClient {
             // Consume response content
             EntityUtils.consume(entity);
         } catch (final ClientProtocolException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("网络故障", e);
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("网络故障", e);
         }
         if (this.log.isDebugEnabled()) {
             this.log.debug("result : " + result);
@@ -258,7 +258,7 @@ public class CommonHttpClient {
                 this.cookieStore.addCookie(cookie);
             }
         } catch (final IOException e) {
-            this.log.debug("no cookie to load.");
+            this.log.debug("加载cookie失败");
         }
     }
 
@@ -279,7 +279,7 @@ public class CommonHttpClient {
             try {
                 FileUtils.writeLines(localFile, "utf-8", lines);
             } catch (final IOException e) {
-                this.log.error("write cookie failed.", e);
+                this.log.error("保存cookie失败", e);
             }
         }
     }

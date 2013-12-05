@@ -17,8 +17,11 @@ public class BattleHandler extends AbstractBattleHandler {
     @Override
     protected String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
-        final String html = this.httpGet("/battle");
+        if (this.isEnable("battle-pt-out") || this.isEnable("battle-point")) {
+            return "/mypage";
+        }
 
+        final String html = this.httpGet("/battle");
         if (this.isBattleResult(html)) {
             return "/battle/prefecture-battle-result";
         }
