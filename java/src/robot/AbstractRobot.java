@@ -46,18 +46,26 @@ public abstract class AbstractRobot implements Robot, Runnable {
 
     @Override
     public void run() {
+        if (this.log.isInfoEnabled()) {
+            final String version = this.config.getProperty("AbstractRobot.Version");
+            this.log.info(version);
+        }
+
         this.dispatch("/");
         while (this.nextHandler != null) {
+            final EventHandler currEventHandler = this.nextHandler;
+            this.nextHandler = null;
             try {
-                final EventHandler currEventHandler = this.nextHandler;
-                this.nextHandler = null;
                 currEventHandler.handle();
-                this.httpClient.saveCookie(this.cookieFile);
             } catch (final Exception e) {
-                this.log.error("发生异常", e);
-                this.dispatch("/");
+                final String message = e.getMessage();
+                this.log.error("发生异常: " + message, e);
+                if (currEventHandler instanceof LoginHandler == false) {
+                    this.dispatch("/");
+                    this.sleep();
+                }
             } finally {
-                this.sleep();
+                this.httpClient.saveCookie(this.cookieFile);
             }
         }
     }
