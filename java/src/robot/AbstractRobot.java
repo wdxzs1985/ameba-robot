@@ -69,9 +69,8 @@ public abstract class AbstractRobot implements Robot, Runnable {
         this.nextHandler = this.handlerMapping.get(event);
         if (this.nextHandler == null) {
             if (this.log.isInfoEnabled()) {
-                this.log.info(String.format("未知方法[%s]，返回主页", event));
+                this.log.warn(String.format("未知方法[%s]", event));
             }
-            this.dispatch("/mypage");
         }
     }
 
