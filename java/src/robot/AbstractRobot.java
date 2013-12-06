@@ -14,7 +14,7 @@ import common.CommonHttpClient;
 
 public abstract class AbstractRobot implements Robot, Runnable {
 
-    public static final int SLEEP_TIME = 5000;
+    public static final int SLEEP_TIME = 1000;
 
     protected final Log log;
     private final String host;
@@ -62,10 +62,10 @@ public abstract class AbstractRobot implements Robot, Runnable {
                 this.log.error("发生异常: " + message, e);
                 if (currEventHandler instanceof LoginHandler == false) {
                     this.dispatch("/");
-                    this.sleep();
                 }
             } finally {
                 this.httpClient.saveCookie(this.cookieFile);
+                this.sleep();
             }
         }
     }

@@ -25,6 +25,10 @@ import robot.tnk47.quest.QuestHandler;
 import robot.tnk47.quest.QuestStageDetailHandler;
 import robot.tnk47.quest.QuestStageForwardHandler;
 import robot.tnk47.quest.QuestStatusUpHandler;
+import robot.tnk47.upgrade.UpgradeAnimationHandler;
+import robot.tnk47.upgrade.UpgradeAutoConfirmHandler;
+import robot.tnk47.upgrade.UpgradeHandler;
+import robot.tnk47.upgrade.UpgradeSelectBaseHandler;
 
 public class QuestRobot extends AbstractRobot {
 
@@ -90,5 +94,13 @@ public class QuestRobot extends AbstractRobot {
                              new QuestBossHandler(this));
         this.registerHandler("/use-item", new UseItemHandler(this));
         this.registerHandler("/status-up", new QuestStatusUpHandler(this));
+        // 强化
+        this.registerHandler("/upgrade", new UpgradeHandler(this));
+        this.registerHandler("/upgrade/select-base",
+                             new UpgradeSelectBaseHandler(this));
+        this.registerHandler("/upgrade/auto-upgrade-confirm",
+                             new UpgradeAutoConfirmHandler(this));
+        this.registerHandler("/upgrade/upgrade-animation",
+                             new UpgradeAnimationHandler(this));
     }
 }

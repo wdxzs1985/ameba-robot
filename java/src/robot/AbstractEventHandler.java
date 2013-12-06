@@ -17,7 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public abstract class AbstractEventHandler implements EventHandler {
 
-    private static final Pattern PAGE_PARAMS_PATTERN = Pattern.compile("tnk.pageParams = (\\{.*\\});");
+    private static final Pattern PAGE_PARAMS_PATTERN = Pattern.compile(".*\\.pageParams = (\\{.*\\});");
     private static final Pattern INPUT_TOKEN_PATTERN = Pattern.compile("<input id=\"__token\" type=\"hidden\" value=\"([a-zA-Z0-9]{6})\" data-page-id=\".*\">");
 
     protected final Log log;

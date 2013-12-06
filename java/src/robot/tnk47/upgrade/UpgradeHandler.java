@@ -1,19 +1,17 @@
 package robot.tnk47.upgrade;
 
-import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
-import org.apache.http.message.BasicNameValuePair;
-
 import robot.AbstractEventHandler;
 import robot.Robot;
 
 public class UpgradeHandler extends AbstractEventHandler {
 
-    private static final Pattern UPGRADE_PATTERN = Pattern.compile("オススメ強化");
+    private static final Pattern BASE_CARD_ID_PATTERN = Pattern.compile("<img src=\"http://stat100.ameba.jp/tnk47/ratio10/illustrations/card/thumb/.*?\" data-card-id=\"(.*?)\" data-image=\"/illustrations/card/thumb/.*?\" data-rarity=\"srare\" >");
 
     public UpgradeHandler(final Robot robot) {
         super(robot);
@@ -21,35 +19,29 @@ public class UpgradeHandler extends AbstractEventHandler {
 
     @Override
     public String handleIt() {
-        String html = this.httpGet("/upgrade");
+        final Map<String, Object> session = this.robot.getSession();
+        final String html = this.httpGet("/upgrade");
         this.resolveInputToken(html);
-        if (!UpgradeHandler.UPGRADE_PATTERN.matcher(html).find()) {
-            final JSONObject jsonPageParams = this.resolvePageParams(html);
-            if (jsonPageParams != null) {
-                final JSONObject firstPageData = jsonPageParams.getJSONObject("firstPageData");
-                final JSONArray userCards = firstPageData.getJSONArray("userCards");
-                if (userCards.size() > 0) {
-                    final JSONObject userCard = userCards.getJSONObject(0);
-                    final String userCardId = userCard.getString("userCardId");
 
-                    final List<BasicNameValuePair> nvps = this.createNameValuePairs();
-                    nvps.add(new BasicNameValuePair("userCardId", userCardId));
-                    html = this.httpPost("/upgrade", nvps);
-                    this.resolveInputToken(html);
-                }
-            } else {
-                return "/mypage";
-            }
+        Matcher matcher = null;
+        if ((matcher = UpgradeHandler.BASE_CARD_ID_PATTERN.matcher(html)).find()) {
+            final String baseUserCardId = matcher.group(1);
+            session.put("baseUserCardId", baseUserCardId);
+            return "/upgrade/auto-upgrade-confirm";
         }
 
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
-            final List<BasicNameValuePair> nvps = this.createNameValuePairs();
-            nvps.add(new BasicNameValuePair("baseUserCardId", "baseUserCardId"));
-            this.httpPostJSON("/upgrade/ajax/get-auto-upgrade-confirm", nvps);
-        } else {
-            return "/mypage";
+            final JSONObject firstPageData = jsonPageParams.getJSONObject("firstPageData");
+            final JSONArray userCards = firstPageData.getJSONArray("userCards");
+            if (userCards.size() > 0) {
+                final JSONObject userCard = userCards.getJSONObject(0);
+                final String userCardId = userCard.getString("userCardId");
+                session.put("userCardId", userCardId);
+                return "/upgrade/select-base";
+            }
         }
-        return "/quest";
+        return "/mypage";
+
     }
 }
