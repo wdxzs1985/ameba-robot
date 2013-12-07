@@ -11,7 +11,7 @@ import robot.Robot;
 
 public class UpgradeHandler extends AbstractEventHandler {
 
-    private static final Pattern BASE_CARD_ID_PATTERN = Pattern.compile("<img src=\"http://stat100.ameba.jp/tnk47/ratio10/illustrations/card/thumb/.*?\" data-card-id=\"(.*?)\" data-image=\"/illustrations/card/thumb/.*?\" data-rarity=\"srare\" >");
+    private static final Pattern BASE_CARD_ID_PATTERN = Pattern.compile("<img src=\"http://stat100.ameba.jp/tnk47/ratio10/illustrations/card/thumb/.*?\" data-card-id=\"(.*?)\" data-image=\"/illustrations/card/thumb/.*?\" data-rarity=\".*\" >");
 
     public UpgradeHandler(final Robot robot) {
         super(robot);
@@ -38,6 +38,10 @@ public class UpgradeHandler extends AbstractEventHandler {
                 final JSONObject userCard = userCards.getJSONObject(0);
                 final String userCardId = userCard.getString("userCardId");
                 session.put("userCardId", userCardId);
+                if (this.log.isInfoEnabled()) {
+                    final String name = userCard.getString("name");
+                    this.log.info(String.format("开始强化 %s", name));
+                }
                 return "/upgrade/select-base";
             }
         }
