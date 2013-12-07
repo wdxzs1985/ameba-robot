@@ -14,7 +14,7 @@ import common.CommonHttpClient;
 
 public abstract class AbstractRobot implements Robot, Runnable {
 
-    public static final int SLEEP_TIME = 1000;
+    public static final String VERSION = "(/･ω･)/■■■天下自动脚本  0.4.0■■■\\(･ω･\\)";
 
     protected final Log log;
     private final String host;
@@ -47,10 +47,8 @@ public abstract class AbstractRobot implements Robot, Runnable {
     @Override
     public void run() {
         if (this.log.isInfoEnabled()) {
-            final String version = this.config.getProperty("AbstractRobot.Version");
-            this.log.info(version);
+            this.log.info(AbstractRobot.VERSION);
         }
-
         this.dispatch("/");
         while (this.nextHandler != null) {
             final EventHandler currEventHandler = this.nextHandler;
@@ -71,8 +69,12 @@ public abstract class AbstractRobot implements Robot, Runnable {
     }
 
     private void sleep() {
+        final String actionTime = this.config.getProperty("AbstractRobot.actionTime",
+                                                          "3");
+        int sleepTime = Integer.valueOf(actionTime);
+        sleepTime = sleepTime + RandomUtils.nextInt(sleepTime);
         try {
-            Thread.sleep(AbstractRobot.SLEEP_TIME + RandomUtils.nextInt(AbstractRobot.SLEEP_TIME));
+            Thread.sleep(sleepTime * 1000);
         } catch (final InterruptedException e) {
         }
     }
