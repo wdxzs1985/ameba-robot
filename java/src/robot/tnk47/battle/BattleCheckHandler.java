@@ -64,14 +64,16 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                 final int fullRegenTodayCount = fullRegenUserItemDto.getInt("todayCount");
                 if (useTodayPowerRegenItem) {
                     if (halfRegenTodayCount > 0) {
-
+                        final String itemName = halfRegenUserItemDto.getString("itemName");
+                        session.put("itemName", itemName);
                         session.put("powerRegenItemType", "0");
                         session.put("deckId", deckId);
                         session.put("attackType", "1");
                         return "/battle/battle-animation";
                     }
                     if (fullRegenTodayCount > 0) {
-
+                        final String itemName = fullRegenUserItemDto.getString("itemName");
+                        session.put("itemName", itemName);
                         session.put("powerRegenItemType", "1");
                         session.put("deckId", deckId);
                         session.put("attackType", "1");
@@ -79,18 +81,16 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                     }
                 }
                 if (useHalfPowerRegenItem) {
-
-                    if (this.log.isInfoEnabled()) {
-                        final String itemName = halfRegenUserItemDto.getString("itemName");
-                        this.log.info(String.format("不要放弃治疗！使用了%s", itemName));
-                    }
+                    final String itemName = halfRegenUserItemDto.getString("itemName");
+                    session.put("itemName", itemName);
                     session.put("powerRegenItemType", "0");
                     session.put("deckId", deckId);
                     session.put("attackType", "1");
                     return "/battle/battle-animation";
                 }
                 if (useFullPowerRegenItem) {
-
+                    final String itemName = fullRegenUserItemDto.getString("itemName");
+                    session.put("itemName", itemName);
                     session.put("powerRegenItemType", "1");
                     session.put("deckId", deckId);
                     session.put("attackType", "1");
