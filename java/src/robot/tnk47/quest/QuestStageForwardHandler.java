@@ -170,9 +170,6 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
         if (this.isUseItem(data)) {
             return "/use-item";
         } else {
-            if (this.log.isInfoEnabled()) {
-                this.log.info("等回血");
-            }
             return "/mypage";
         }
     }

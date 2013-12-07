@@ -60,27 +60,9 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                 final JSONObject powerRegenItems = jsonPageParams.getJSONObject("powerRegenItems");
                 final JSONObject halfRegenUserItemDto = powerRegenItems.getJSONObject("halfRegenUserItemDto");
                 final JSONObject fullRegenUserItemDto = powerRegenItems.getJSONObject("fullRegenUserItemDto");
+
                 final int halfRegenTodayCount = halfRegenUserItemDto.getInt("todayCount");
-                final int fullRegenTodayCount = fullRegenUserItemDto.getInt("todayCount");
-                if (useTodayPowerRegenItem) {
-                    if (halfRegenTodayCount > 0) {
-                        final String itemName = halfRegenUserItemDto.getString("itemName");
-                        session.put("itemName", itemName);
-                        session.put("powerRegenItemType", "0");
-                        session.put("deckId", deckId);
-                        session.put("attackType", "1");
-                        return "/battle/battle-animation";
-                    }
-                    if (fullRegenTodayCount > 0) {
-                        final String itemName = fullRegenUserItemDto.getString("itemName");
-                        session.put("itemName", itemName);
-                        session.put("powerRegenItemType", "1");
-                        session.put("deckId", deckId);
-                        session.put("attackType", "1");
-                        return "/battle/battle-animation";
-                    }
-                }
-                if (useHalfPowerRegenItem) {
+                if (useTodayPowerRegenItem && halfRegenTodayCount > 0) {
                     final String itemName = halfRegenUserItemDto.getString("itemName");
                     session.put("itemName", itemName);
                     session.put("powerRegenItemType", "0");
@@ -88,7 +70,29 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                     session.put("attackType", "1");
                     return "/battle/battle-animation";
                 }
-                if (useFullPowerRegenItem) {
+
+                final int fullRegenTodayCount = fullRegenUserItemDto.getInt("todayCount");
+                if (useTodayPowerRegenItem && fullRegenTodayCount > 0) {
+                    final String itemName = fullRegenUserItemDto.getString("itemName");
+                    session.put("itemName", itemName);
+                    session.put("powerRegenItemType", "1");
+                    session.put("deckId", deckId);
+                    session.put("attackType", "1");
+                    return "/battle/battle-animation";
+                }
+
+                final int halfRegenTotalCount = fullRegenUserItemDto.getInt("totalCount");
+                if (useHalfPowerRegenItem && halfRegenTotalCount > 0) {
+                    final String itemName = halfRegenUserItemDto.getString("itemName");
+                    session.put("itemName", itemName);
+                    session.put("powerRegenItemType", "0");
+                    session.put("deckId", deckId);
+                    session.put("attackType", "1");
+                    return "/battle/battle-animation";
+                }
+
+                final int fullRegenTotalCount = fullRegenUserItemDto.getInt("totalCount");
+                if (useFullPowerRegenItem && fullRegenTotalCount > 0) {
                     final String itemName = fullRegenUserItemDto.getString("itemName");
                     session.put("itemName", itemName);
                     session.put("powerRegenItemType", "1");

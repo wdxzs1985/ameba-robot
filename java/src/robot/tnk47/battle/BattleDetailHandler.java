@@ -136,7 +136,13 @@ public class BattleDetailHandler extends AbstractBattleHandler {
             final JSONObject enemy = enemyData.getJSONObject(i);
             final String topIcons = enemy.getString("topIcons");
             final int getBattlePoint = enemy.getInt("getBattlePoint");
-            if (!StringUtils.contains(topIcons, "caution") && maxBattlePoint < getBattlePoint) {
+            if (StringUtils.contains(topIcons, "caution")) {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("！！！神壕出没，闪避！！！");
+                }
+                continue;
+            }
+            if (maxBattlePoint < getBattlePoint) {
                 battleEnemy = enemy;
                 maxBattlePoint = getBattlePoint;
             }

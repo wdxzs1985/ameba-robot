@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -66,8 +65,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
     private void sleep() {
         final String actionTime = this.config.getProperty("AbstractRobot.actionTime",
                                                           "3");
-        int sleepTime = Integer.valueOf(actionTime);
-        sleepTime = sleepTime + RandomUtils.nextInt(sleepTime);
+        final int sleepTime = Integer.valueOf(actionTime);
         try {
             Thread.sleep(sleepTime * 1000);
         } catch (final InterruptedException e) {
