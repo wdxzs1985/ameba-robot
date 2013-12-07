@@ -47,6 +47,7 @@ public class BattleCheckHandler extends AbstractBattleHandler {
             if (curPower >= spendAttackPower || spendAttackPower == 0) {
                 session.put("deckId", deckId);
                 session.put("attackType", "1");
+                session.put("powerRegenItemType", "");
                 return "/battle/battle-animation";
             } else {
                 final Properties config = this.robot.getConfig();
@@ -56,35 +57,46 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                                                                                          "false"));
                 final boolean useFullPowerRegenItem = Boolean.valueOf(config.getProperty("BattleCheckHandler.useFullPowerRegenItem",
                                                                                          "false"));
+                final JSONObject powerRegenItems = jsonPageParams.getJSONObject("powerRegenItems");
+                final JSONObject halfRegenUserItemDto = powerRegenItems.getJSONObject("halfRegenUserItemDto");
+                final JSONObject fullRegenUserItemDto = powerRegenItems.getJSONObject("fullRegenUserItemDto");
+                final int halfRegenTodayCount = halfRegenUserItemDto.getInt("todayCount");
+                final int fullRegenTodayCount = fullRegenUserItemDto.getInt("todayCount");
                 if (useTodayPowerRegenItem) {
-                    final JSONObject powerRegenItems = jsonPageParams.getJSONObject("powerRegenItems");
-                    final JSONObject halfRegenUserItemDto = powerRegenItems.getJSONObject("halfRegenUserItemDto");
-                    final int halfRegenTodayCount = halfRegenUserItemDto.getInt("todayCount");
-                    if (useHalfPowerRegenItem || halfRegenTodayCount > 0) {
-                        if (this.log.isInfoEnabled()) {
-                            final String itemName = halfRegenUserItemDto.getString("itemName");
-                            this.log.info(String.format("不要放弃治疗！使用了%s",
-                                                        itemName));
-                        }
+                    if (halfRegenTodayCount > 0) {
+                        final String itemName = halfRegenUserItemDto.getString("itemName");
+                        session.put("itemName", itemName);
                         session.put("powerRegenItemType", "0");
                         session.put("deckId", deckId);
                         session.put("attackType", "1");
                         return "/battle/battle-animation";
                     }
-                    final JSONObject fullRegenUserItemDto = powerRegenItems.getJSONObject("fullRegenUserItemDto");
-                    final int fullRegenTodayCount = fullRegenUserItemDto.getInt("todayCount");
-                    if (useFullPowerRegenItem || fullRegenTodayCount > 0) {
-                        if (this.log.isInfoEnabled()) {
-                            final String itemName = fullRegenUserItemDto.getString("itemName");
-                            this.log.info(String.format("不要放弃治疗！使用了%s",
-                                                        itemName));
-                        }
+                    if (fullRegenTodayCount > 0) {
+                        final String itemName = fullRegenUserItemDto.getString("itemName");
+                        session.put("itemName", itemName);
                         session.put("powerRegenItemType", "1");
                         session.put("deckId", deckId);
                         session.put("attackType", "1");
                         return "/battle/battle-animation";
                     }
                 }
+                if (useHalfPowerRegenItem) {
+                    final String itemName = halfRegenUserItemDto.getString("itemName");
+                    session.put("itemName", itemName);
+                    session.put("powerRegenItemType", "0");
+                    session.put("deckId", deckId);
+                    session.put("attackType", "1");
+                    return "/battle/battle-animation";
+                }
+                if (useFullPowerRegenItem) {
+                    final String itemName = fullRegenUserItemDto.getString("itemName");
+                    session.put("itemName", itemName);
+                    session.put("powerRegenItemType", "1");
+                    session.put("deckId", deckId);
+                    session.put("attackType", "1");
+                    return "/battle/battle-animation";
+                }
+
                 session.put("battle-pt-out", true);
                 if (this.log.isInfoEnabled()) {
                     this.log.info("攻pt不足");

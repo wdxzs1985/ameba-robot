@@ -14,8 +14,6 @@ import common.CommonHttpClient;
 
 public abstract class AbstractRobot implements Robot, Runnable {
 
-    public static final String VERSION = "(/･ω･)/■■■天下自动脚本  0.4.0■■■\\(･ω･\\)";
-
     protected final Log log;
     private final String host;
     private final CommonHttpClient httpClient;
@@ -46,9 +44,6 @@ public abstract class AbstractRobot implements Robot, Runnable {
 
     @Override
     public void run() {
-        if (this.log.isInfoEnabled()) {
-            this.log.info(AbstractRobot.VERSION);
-        }
         this.dispatch("/");
         while (this.nextHandler != null) {
             final EventHandler currEventHandler = this.nextHandler;

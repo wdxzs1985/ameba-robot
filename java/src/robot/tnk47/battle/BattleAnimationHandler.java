@@ -23,6 +23,7 @@ public class BattleAnimationHandler extends AbstractBattleHandler {
         final String attackType = (String) session.get("attackType");
         final String token = (String) session.get("token");
         final String powerRegenItemType = (String) session.get("powerRegenItemType");
+        final String itemName = (String) session.get("itemName");
         final String path = "/battle/battle-animation";
         final List<BasicNameValuePair> nvps = this.createNameValuePairs();
         nvps.add(new BasicNameValuePair("battleStartType", battleStartType));
@@ -34,6 +35,9 @@ public class BattleAnimationHandler extends AbstractBattleHandler {
             nvps.add(new BasicNameValuePair("powerRegenItemType",
                                             powerRegenItemType));
             nvps.add(new BasicNameValuePair("useRegenItemCount", "1"));
+            if (this.log.isInfoEnabled()) {
+                this.log.info(String.format("不要放弃治疗！使用了%s", itemName));
+            }
         }
         final String html = this.httpPost(path, nvps);
 

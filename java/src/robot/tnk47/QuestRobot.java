@@ -32,6 +32,8 @@ import robot.tnk47.upgrade.UpgradeSelectBaseHandler;
 
 public class QuestRobot extends AbstractRobot {
 
+    public static final String VERSION = "(/･ω･)/■■■天下自动脚本  0.4.1■■■\\(･ω･\\)";
+
     public static void main(final String[] args) {
 
         final String setup = args.length > 0 ? args[0] : "setup.properties";
@@ -59,6 +61,9 @@ public class QuestRobot extends AbstractRobot {
 
     public QuestRobot(final Properties config) {
         super(QuestRobot.HOST, config);
+        if (this.log.isInfoEnabled()) {
+            this.log.info(QuestRobot.VERSION);
+        }
         this.registerHandler("/", new HomeHandler(this));
         this.registerHandler("/login", new LoginHandler(this));
         this.registerHandler("/mypage", new MypageHandler(this));
