@@ -32,7 +32,7 @@ import robot.tnk47.upgrade.UpgradeSelectBaseHandler;
 
 public class QuestRobot extends AbstractRobot {
 
-    public static final String VERSION = "(/･ω･)/■■■天下自动脚本  0.4.1■■■\\(･ω･\\)";
+    public static final String VERSION = "(/･ω･)/■■■天下自动脚本  0.4.2■■■\\(･ω･\\)";
 
     public static void main(final String[] args) {
 

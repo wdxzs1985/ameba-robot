@@ -118,16 +118,19 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
 
     private void printAreaEncount(final JSONObject data) {
         if (this.log.isInfoEnabled()) {
-            final String areaEncountType = data.getString("areaEncountType");
-            if (!StringUtils.equals(areaEncountType, "null")) {
-                if (StringUtils.equals(areaEncountType, "ITEM")) {
-                    final JSONObject encountCardData = data.getJSONObject("encountCardData");
-                    final String name = encountCardData.getString("name");
-                    this.log.info(String.format("隊士発見: %s", name));
-                } else if (StringUtils.equals(areaEncountType, "EVENT")) {
-                    if (this.log.isInfoEnabled()) {
-                        final String encountMessage = data.getString("encountMessage");
-                        this.log.info(encountMessage);
+            if (data.containsKey("areaEncountType")) {
+
+                final String areaEncountType = data.getString("areaEncountType");
+                if (!StringUtils.equals(areaEncountType, "null")) {
+                    if (StringUtils.equals(areaEncountType, "ITEM")) {
+                        final JSONObject encountCardData = data.getJSONObject("encountCardData");
+                        final String name = encountCardData.getString("name");
+                        this.log.info(String.format("隊士発見: %s", name));
+                    } else if (StringUtils.equals(areaEncountType, "EVENT")) {
+                        if (this.log.isInfoEnabled()) {
+                            final String encountMessage = data.getString("encountMessage");
+                            this.log.info(encountMessage);
+                        }
                     }
                 }
             }

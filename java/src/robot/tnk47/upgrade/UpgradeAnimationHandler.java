@@ -31,11 +31,8 @@ public class UpgradeAnimationHandler extends AbstractEventHandler {
         this.resolveInputToken(html);
         if (this.log.isInfoEnabled()) {
             final JSONObject jsonPageParams = this.resolvePageParams(html);
-            final int materialAmount = jsonPageParams.getInt("materialAmount");
             final int getExperience = jsonPageParams.getInt("getExperience");
-            this.log.info(String.format("吃了%d张卡，获得%d经验",
-                                        materialAmount,
-                                        getExperience));
+            this.log.info(String.format("获得%d经验", getExperience));
             final boolean isLevelUp = jsonPageParams.getBoolean("isLevelUp");
             if (isLevelUp) {
                 final int levelBeforeUpgrade = jsonPageParams.getInt("levelBeforeUpgrade");
