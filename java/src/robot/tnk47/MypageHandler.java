@@ -5,8 +5,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.math.RandomUtils;
-
 import robot.AbstractEventHandler;
 import robot.Robot;
 
@@ -81,8 +79,7 @@ public class MypageHandler extends AbstractEventHandler {
         final Properties config = this.robot.getConfig();
         final String resetTime = config.getProperty("MypageHandler.resetTime",
                                                     "5");
-        int sleepTime = Integer.valueOf(resetTime);
-        sleepTime = sleepTime + RandomUtils.nextInt(sleepTime);
+        final int sleepTime = Integer.valueOf(resetTime);
         try {
             Thread.sleep(sleepTime * 60 * 1000);
         } catch (final InterruptedException e) {
