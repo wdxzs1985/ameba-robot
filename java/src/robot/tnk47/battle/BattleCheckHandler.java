@@ -81,7 +81,7 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                     return "/battle/battle-animation";
                 }
 
-                final int halfRegenTotalCount = fullRegenUserItemDto.getInt("totalCount");
+                final int halfRegenTotalCount = halfRegenUserItemDto.getInt("totalCount");
                 if (useHalfPowerRegenItem && halfRegenTotalCount > 0) {
                     final String itemName = halfRegenUserItemDto.getString("itemName");
                     session.put("itemName", itemName);
