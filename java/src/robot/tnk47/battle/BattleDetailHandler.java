@@ -148,10 +148,6 @@ public class BattleDetailHandler extends AbstractBattleHandler {
             if (maxBattlePoint < getBattlePoint) {
                 battleEnemy = enemy;
                 maxBattlePoint = getBattlePoint;
-            } else {
-                if (this.log.isInfoEnabled()) {
-                    this.log.info("分数太低，等养肥");
-                }
             }
         }
         return battleEnemy;

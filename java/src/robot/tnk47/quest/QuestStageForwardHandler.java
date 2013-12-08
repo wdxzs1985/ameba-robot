@@ -85,10 +85,15 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
                 // do nothing
             }
         } else {
+            final int needExpForNextLevel = data.getInt("needExpForNextLevel");
+            session.put("needExpForNextLevel", needExpForNextLevel);
             if (this.log.isInfoEnabled()) {
-                final String needExpForNextLevel = data.getString("needExpForNextLevel");
-                session.put("needExpForNextLevel", needExpForNextLevel);
-                this.log.info(String.format("什么都没有发现，还有[%s]经验升级。",
+                final JSONObject userData = data.getJSONObject("userData");
+                final int stamina = userData.getInt("stamina");
+                final int maxStamina = userData.getInt("maxStamina");
+                this.log.info(String.format("什么都没有发现，体力[%d/%d]，还有[%d]经验升级。",
+                                            stamina,
+                                            maxStamina,
                                             needExpForNextLevel));
             }
         }
@@ -190,8 +195,7 @@ public class QuestStageForwardHandler extends AbstractEventHandler {
                                                                             "false"));
             final boolean useStamina100 = Boolean.valueOf(config.getProperty("QuestStageForwardHandler.useStamina100",
                                                                              "false"));
-            final int needExpForNextLevel = Integer.valueOf(config.getProperty("needExpForNextLevel",
-                                                                               "0"));
+            final int needExpForNextLevel = (Integer) session.get("needExpForNextLevel");
             final JSONArray regenStaminaItems = data.getJSONArray("regenStaminaItems");
             for (int i = 0; i < regenStaminaItems.size(); i++) {
                 final JSONObject regenStamina = (JSONObject) regenStaminaItems.get(i);

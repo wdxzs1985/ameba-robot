@@ -41,6 +41,7 @@ public class QuestStageDetailHandler extends AbstractEventHandler implements
                                             charpter,
                                             section,
                                             region));
+                session.put("needExpForNextLevel", 0);
                 session.put("quest-card-full", false);
                 session.put("quest-find-all", false);
             }

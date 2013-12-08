@@ -32,15 +32,31 @@ public class PrefectureBattleListHandler extends AbstractBattleHandler {
         if (StringUtils.equals(prefectureBattleSystemStatus, "ACTIVE")) {
             final JSONArray prefectureBattleOutlines = data.getJSONArray("prefectureBattleOutlines");
             if (prefectureBattleOutlines.size() > 0) {
-                final JSONObject battle = this.filterInviteBattle(prefectureBattleOutlines);
+                final JSONObject battle = this.filterBattle(prefectureBattleOutlines);
                 final String prefectureBattleId = battle.getString("prefectureBattleId");
                 session.put("prefectureBattleId", prefectureBattleId);
                 if (this.log.isInfoEnabled()) {
                     final String ownPrefectureName = battle.getString("ownPrefectureName");
                     final String otherPrefectureName = battle.getString("otherPrefectureName");
-                    this.log.info(String.format("%s vs %s",
+                    final int ownMemberCount = battle.getInt("ownMemberCount");
+                    final int otherMemberCount = battle.getInt("otherMemberCount");
+                    final int ownPrefectureHpRate = battle.getInt("ownPrefectureHPRate");
+                    final int otherPrefectureHpRate = battle.getInt("otherPrefectureHPRate");
+                    final int ownPrefectureHp = battle.getInt("ownPrefectureHp");
+                    final int ownPrefectureHpLast = ownPrefectureHp * ownPrefectureHpRate
+                                                    / 100;
+                    final int otherPrefectureHp = battle.getInt("otherPrefectureHp");
+                    final int otherPrefectureHpLast = otherPrefectureHp * otherPrefectureHpRate
+                                                      / 100;
+                    this.log.info(String.format("%s (共%d人参战，HP:%d/%d) vs %s (共%d人参战，HP:%d/%d)",
                                                 ownPrefectureName,
-                                                otherPrefectureName));
+                                                ownMemberCount,
+                                                ownPrefectureHpLast,
+                                                ownPrefectureHp,
+                                                otherPrefectureName,
+                                                otherMemberCount,
+                                                otherPrefectureHpLast,
+                                                otherPrefectureHp));
                 }
                 return "/battle/detail";
             } else {
@@ -64,7 +80,7 @@ public class PrefectureBattleListHandler extends AbstractBattleHandler {
         return "/mypage";
     }
 
-    private JSONObject filterInviteBattle(final JSONArray outlines) {
+    private JSONObject filterBattle(final JSONArray outlines) {
         for (int i = 0; i < outlines.size(); i++) {
             final JSONObject battle = outlines.getJSONObject(i);
             if (battle.getBoolean("isInvite")) {
@@ -74,6 +90,9 @@ public class PrefectureBattleListHandler extends AbstractBattleHandler {
                 return battle;
             }
         }
+        // TODO 按时间排序
+        // TODO 按人数排序
+        // TODO 按HP排序
         return outlines.getJSONObject(0);
     }
 
