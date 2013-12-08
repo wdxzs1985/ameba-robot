@@ -2,6 +2,7 @@ package robot.tnk47.battle;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -131,7 +132,9 @@ public class BattleDetailHandler extends AbstractBattleHandler {
     private JSONObject findBattleEnemy(final JSONObject data) {
         final JSONArray enemyData = data.getJSONArray("enemyData");
         JSONObject battleEnemy = null;
-        int maxBattlePoint = 0;
+        final Properties config = this.robot.getConfig();
+        int maxBattlePoint = Integer.valueOf(config.getProperty("minBattlePoint",
+                                                                "300"));
         for (int i = 0; i < enemyData.size(); i++) {
             final JSONObject enemy = enemyData.getJSONObject(i);
             final String topIcons = enemy.getString("topIcons");
@@ -145,6 +148,10 @@ public class BattleDetailHandler extends AbstractBattleHandler {
             if (maxBattlePoint < getBattlePoint) {
                 battleEnemy = enemy;
                 maxBattlePoint = getBattlePoint;
+            } else {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("分数太低，等养肥");
+                }
             }
         }
         return battleEnemy;
