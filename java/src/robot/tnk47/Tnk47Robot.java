@@ -11,7 +11,6 @@ import robot.tnk47.battle.PrefectureBattleListHandler;
 import robot.tnk47.battle.PrefectureBattleResultHandler;
 import robot.tnk47.gacha.BattleGachaHandler;
 import robot.tnk47.gacha.StampGachaHandler;
-import robot.tnk47.gift.GiftHandler;
 import robot.tnk47.quest.QuestBossHandler;
 import robot.tnk47.quest.QuestHandler;
 import robot.tnk47.quest.QuestStageDetailHandler;
