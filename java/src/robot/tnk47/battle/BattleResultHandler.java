@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import robot.Robot;
+import robot.tnk47.Tnk47Robot;
 
 public class BattleResultHandler extends AbstractBattleHandler {
 
 	private static final Pattern SINGLE_RESULT_PATTERN = Pattern
 			.compile("<h1 class=\"pageName\">対戦結果</h1><p><span>(.*)に<em>(.*)</em>のダメージ!</span></p>");
 
-	public BattleResultHandler(final Robot robot) {
+	public BattleResultHandler(final Tnk47Robot robot) {
 		super(robot);
 	}
 

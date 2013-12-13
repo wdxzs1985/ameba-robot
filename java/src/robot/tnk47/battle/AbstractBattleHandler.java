@@ -5,14 +5,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import robot.AbstractEventHandler;
-import robot.Robot;
+import robot.tnk47.Tnk47Robot;
 
-public abstract class AbstractBattleHandler extends AbstractEventHandler {
+public abstract class AbstractBattleHandler extends
+		AbstractEventHandler<Tnk47Robot> {
 
 	private static final Pattern BATTLE_RESULT_PATTERN = Pattern
 			.compile("nextUrl: \"/battle/prefecture-battle-result\\?prefectureBattleId=(.*)\"");
 
-	public AbstractBattleHandler(Robot robot) {
+	public AbstractBattleHandler(Tnk47Robot robot) {
 		super(robot);
 	}
 

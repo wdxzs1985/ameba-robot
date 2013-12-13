@@ -1,7 +1,6 @@
 package robot;
 
 import java.util.Map;
-import java.util.Properties;
 
 import common.CommonHttpClient;
 
@@ -15,6 +14,11 @@ public interface Robot {
 
 	public Map<String, Object> getSession();
 
-	public Properties getConfig();
+	public int getActionTime();
 
+	public String getHost();
+
+	public String getUsername();
+
+	public String getPassword();
 }

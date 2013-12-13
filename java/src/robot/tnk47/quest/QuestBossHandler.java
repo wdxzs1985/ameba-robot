@@ -10,14 +10,14 @@ import net.sf.json.JSONObject;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.AbstractEventHandler;
-import robot.Robot;
+import robot.tnk47.Tnk47Robot;
 
-public class QuestBossHandler extends AbstractEventHandler {
+public class QuestBossHandler extends AbstractEventHandler<Tnk47Robot> {
 
 	private static final Pattern BOSS_RESULT_PATTERN = Pattern
 			.compile("var bossResult = '(.*)';");
 
-	public QuestBossHandler(final Robot robot) {
+	public QuestBossHandler(final Tnk47Robot robot) {
 		super(robot);
 	}
 

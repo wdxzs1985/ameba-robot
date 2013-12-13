@@ -4,14 +4,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import robot.AbstractEventHandler;
-import robot.Robot;
 
-public class HomeHandler extends AbstractEventHandler {
+public class HomeHandler extends AbstractEventHandler<Tnk47Robot> {
 
 	private static final Pattern HTML_TITLE_PATTERN = Pattern
 			.compile("<title>天下統一クロニクル</title>");
 
-	public HomeHandler(final Robot robot) {
+	public HomeHandler(final Tnk47Robot robot) {
 		super(robot);
 	}
 
@@ -22,8 +21,7 @@ public class HomeHandler extends AbstractEventHandler {
 		if (matcher.find()) {
 			return ("/mypage");
 		} else {
-			return ("/login");
+			return "/login";
 		}
 	}
-
 }

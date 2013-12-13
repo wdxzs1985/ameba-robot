@@ -1,0 +1,75 @@
+###########################
+# AbstractRobot
+###########################
+# 用户名
+Robot.username=bushing
+# 密码
+Robot.password=wangjue
+# 每次发送请求间隔（单位为秒）
+Robot.actionTime=3
+
+###########################
+# MypageHandler
+###########################
+# 签到开关
+Tnk47Robot.stampGachaEnable=true
+# 活动开关
+Tnk47Robot.eventEnable=true
+# 领取礼物开关（只领药那一排）
+Tnk47Robot.giftEnable=true
+# 冒险开关
+Tnk47Robot.questEnable=true
+# 合战开关
+Tnk47Robot.battleEnable=true
+# 自动强化(N卡和HN卡)开关
+Tnk47Robot.upgradeEnable=true
+# 等待回复时间(单位为分钟)
+Tnk47Robot.delay=5
+
+###########################
+# QuestHandler
+###########################
+# 自动选关开关
+# true=自动选关/false=手动选关
+Tnk47Robot.autoSelectStage=true
+# 指定关（手动选关时有效）
+Tnk47Robot.questId=1
+Tnk47Robot.areaId=1
+Tnk47Robot.stageId=1
+
+###########################
+# QuestStageForwardHandler
+###########################
+# 允许使用当日冒险药
+Tnk47Robot.useStaminaToday=true
+# 允许使用小冒险药
+Tnk47Robot.useStamina50=false
+# 允许使用大冒险药
+Tnk47Robot.useStamina100=false
+
+###########################
+# LevelUpHandler
+###########################
+# 体力加点限制
+# 升级时体力小于设定值时自动加点
+Tnk47Robot.staminaUpLimit=500
+# 攻防加点限制
+# 升级时攻防小于设定值时自动加点
+Tnk47Robot.powerUpLimit=500
+
+###########################
+# BattleDetailHandler
+###########################
+# 合战发动攻击最低分数
+# 低于这个分数的对手将不攻击
+Tnk47Robot.minBattlePoint=200
+
+###########################
+# BattleDetailHandler
+###########################
+# 允许使用当日合战药
+Tnk47Robot.useTodayPowerRegenItem=true
+# 允许使用小合战药
+Tnk47Robot.useHalfPowerRegenItem=false
+# 允许使用大合战药
+Tnk47Robot.useFullPowerRegenItem=false

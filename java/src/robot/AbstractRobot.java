@@ -1,6 +1,5 @@
 package robot;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,94 +13,101 @@ import common.CommonHttpClient;
 
 public abstract class AbstractRobot implements Robot, Runnable {
 
-    protected final Log log;
-    private final String host;
-    private final CommonHttpClient httpClient;
-    private final File cookieFile;
-    private EventHandler nextHandler = null;
-    private final Map<String, EventHandler> handlerMapping;
-    private final Map<String, Object> session;
-    private final Properties config;
+	protected final Log log = LogFactory.getLog(this.getClass());
+	private final Map<String, Object> session = Collections
+			.synchronizedMap(new HashMap<String, Object>());
+	private final Map<String, EventHandler> handlerMapping = new HashMap<String, EventHandler>();
 
-    public AbstractRobot(final String host, final Properties config) {
-        this.host = host;
-        this.log = LogFactory.getLog(this.getClass());
+	private CommonHttpClient httpClient = null;
+	private EventHandler nextHandler = null;
+	private Properties config = null;
 
-        this.session = Collections.synchronizedMap(new HashMap<String, Object>());
-        this.config = config;
+	protected void registerHandler(final String path, final EventHandler handler) {
+		this.handlerMapping.put(path, handler);
+	}
 
-        final String username = this.getConfig()
-                                    .getProperty("LoginHandler.username");
-        this.httpClient = new CommonHttpClient();
-        this.cookieFile = new File(username + ".cookie");
-        this.httpClient.loadCookie(this.cookieFile);
-        this.handlerMapping = new HashMap<String, EventHandler>();
-    }
+	@Override
+	public void run() {
+		this.dispatch("/");
+		while (this.nextHandler != null) {
+			final EventHandler currEventHandler = this.nextHandler;
+			this.nextHandler = null;
+			try {
+				currEventHandler.handle();
+			} catch (final Exception e) {
+				final String message = e.getMessage();
+				this.log.error("发生异常: " + message, e);
+			} finally {
+				this.sleep();
+			}
+		}
+	}
 
-    protected void registerHandler(final String path, final EventHandler handler) {
-        this.handlerMapping.put(path, handler);
-    }
+	private void sleep() {
+		int actionTime = this.getActionTime();
+		int sleepTime = actionTime + RandomUtils.nextInt(actionTime);
+		try {
+			Thread.sleep(sleepTime * 1000);
+		} catch (final InterruptedException e) {
+		}
+	}
 
-    @Override
-    public void run() {
-        this.dispatch("/");
-        while (this.nextHandler != null) {
-            final EventHandler currEventHandler = this.nextHandler;
-            this.nextHandler = null;
-            try {
-                currEventHandler.handle();
-            } catch (final Exception e) {
-                final String message = e.getMessage();
-                this.log.error("发生异常: " + message, e);
-                if (currEventHandler instanceof LoginHandler == false) {
-                    this.dispatch("/");
-                }
-            } finally {
-                this.httpClient.saveCookie(this.cookieFile);
-                this.sleep();
-            }
-        }
-    }
+	@Override
+	public void dispatch(final String event) {
+		this.nextHandler = this.handlerMapping.get(event);
+		if (this.nextHandler == null) {
+			if (this.log.isInfoEnabled()) {
+				this.log.warn(String.format("未知方法[%s]", event));
+			}
+		}
+	}
 
-    private void sleep() {
-        final String actionTime = this.config.getProperty("AbstractRobot.actionTime",
-                                                          "3");
+	@Override
+	public String buildPath(final String path) {
+		String host = this.getHost();
+		return host + path;
+	}
 
-        int sleepTime = Integer.valueOf(actionTime);
-        sleepTime = sleepTime + RandomUtils.nextInt(sleepTime);
-        try {
-            Thread.sleep(sleepTime * 1000);
-        } catch (final InterruptedException e) {
-        }
-    }
+	@Override
+	public Map<String, Object> getSession() {
+		return this.session;
+	}
 
-    @Override
-    public void dispatch(final String event) {
-        this.nextHandler = this.handlerMapping.get(event);
-        if (this.nextHandler == null) {
-            if (this.log.isInfoEnabled()) {
-                this.log.warn(String.format("未知方法[%s]", event));
-            }
-        }
-    }
+	@Override
+	public CommonHttpClient getHttpClient() {
+		return this.httpClient;
+	}
 
-    @Override
-    public String buildPath(final String path) {
-        return this.host + path;
-    }
+	public void setHttpClient(CommonHttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
 
-    @Override
-    public CommonHttpClient getHttpClient() {
-        return this.httpClient;
-    }
+	public Properties getConfig() {
+		return this.config;
+	}
 
-    @Override
-    public Map<String, Object> getSession() {
-        return this.session;
-    }
+	public void setConfig(Properties config) {
+		this.config = config;
+	}
 
-    @Override
-    public Properties getConfig() {
-        return this.config;
-    }
+	@Override
+	public int getActionTime() {
+		String key = "Robot.actionTime";
+		String value = this.getConfig().getProperty(key, "3");
+		return Integer.valueOf(value);
+	}
+
+	@Override
+	public String getUsername() {
+		String key = "Robot.username";
+		String value = this.getConfig().getProperty(key);
+		return value;
+	}
+
+	@Override
+	public String getPassword() {
+		String key = "Robot.password";
+		String value = this.getConfig().getProperty(key);
+		return value;
+	}
 }
