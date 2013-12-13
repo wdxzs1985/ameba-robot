@@ -9,8 +9,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import robot.tnk47.Tnk47Robot;
 
@@ -28,8 +26,6 @@ public class MainApplication {
 	private final ExecutorService executor = Executors.newFixedThreadPool(1);
 	private final Properties config = new Properties();
 	private final CommonHttpClient httpClient = new CommonHttpClient();
-
-	private final Log log = LogFactory.getLog(this.getClass());
 
 	private void init(String setup) {
 		this.initConfig(setup);

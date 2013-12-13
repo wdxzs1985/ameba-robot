@@ -3,7 +3,6 @@ package robot.tnk47.quest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import net.sf.json.JSONObject;
 
@@ -20,7 +19,6 @@ public class QuestStatusUpHandler extends AbstractEventHandler<Tnk47Robot> {
 
 	@Override
 	public String handleIt() {
-		final Properties config = this.robot.getConfig();
 		final int staminaUpLimit = this.robot.getStaminaUpLimit();
 		final int powerUpLimit = this.robot.getPowerUpLimit();
 

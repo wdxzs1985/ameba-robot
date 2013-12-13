@@ -3,7 +3,6 @@ package robot.tnk47.quest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -191,7 +190,6 @@ public class QuestStageForwardHandler extends AbstractEventHandler<Tnk47Robot> {
 				.getString("regenStaminaItems");
 		if (!StringUtils.equals(regenStaminaItemsValue, "null")) {
 			final Map<String, Object> session = this.robot.getSession();
-			final Properties config = this.robot.getConfig();
 			final JSONObject userData = data.getJSONObject("userData");
 			final int maxStamina = userData.getInt("maxStamina");
 			final int needExpForNextLevel = (Integer) session

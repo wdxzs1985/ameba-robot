@@ -9,11 +9,10 @@ import net.sf.json.JSONObject;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.AbstractEventHandler;
-import robot.Robot;
 
-public class UseItemHandler extends AbstractEventHandler {
+public class UseItemHandler extends AbstractEventHandler<Tnk47Robot> {
 
-	public UseItemHandler(final Robot robot) {
+	public UseItemHandler(final Tnk47Robot robot) {
 		super(robot);
 	}
 
