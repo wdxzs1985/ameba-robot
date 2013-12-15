@@ -113,10 +113,6 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
             } else if (StringUtils.equals("隊士発見!!", questMessage)) {
                 // do nothing
             }
-        } else {
-            if (this.log.isInfoEnabled()) {
-                this.log.info("什么都没有发现");
-            }
         }
         return "/marathon/stage/forward";
     }

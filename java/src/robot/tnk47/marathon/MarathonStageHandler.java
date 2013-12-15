@@ -10,7 +10,7 @@ import robot.tnk47.Tnk47Robot;
 public class MarathonStageHandler extends Tnk47EventHandler {
 
     private static final Pattern STAGE_DETAIL_PATTERN = Pattern.compile("<a href=\"/event/marathon/event-stage-detail\\?eventId=[0-9]+\">(.*?)</a>");
-    private static final Pattern BOSS_PATTERN = Pattern.compile("bossUrl: '/event/marathon/event-boss-animation'");
+    private static final Pattern BOSS_PATTERN = Pattern.compile("<section class=\"questInfo infoBox boss\">");
 
     public MarathonStageHandler(final Tnk47Robot robot) {
         super(robot);
