@@ -35,7 +35,7 @@ public class MarathonStageDetailHandler extends Tnk47EventHandler {
             session.put("missionKeyId", missionKeyId);
             return "/marathon/mission/animation";
         }
-        if (session.containsKey("needExpForNextLevel")) {
+        if (!session.containsKey("needExpForNextLevel")) {
             session.put("needExpForNextLevel", 0);
         }
         session.put("isQuestCardFull", false);
