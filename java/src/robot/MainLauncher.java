@@ -22,7 +22,7 @@ public class MainLauncher {
         final MainLauncher app = new MainLauncher();
         app.init(setup);
         app.runTnk47Robot();
-        app.runGFRobot();
+        // app.runGFRobot();
     }
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -47,12 +47,12 @@ public class MainLauncher {
     }
 
     private void initHttpClient(final String setup) {
-        final String username = this.config.getProperty("MainApplication.username");
+        final String username = this.config.getProperty("Robot.username");
         final File cookieFile = new File(username + ".cookie");
         this.httpClient.loadCookie(cookieFile);
     }
 
-    protected void runTnk47Robot() {
+    public void runTnk47Robot() {
         final Tnk47Robot robot = new Tnk47Robot();
         robot.setConfig(this.config);
         robot.setHttpClient(this.httpClient);
@@ -60,7 +60,7 @@ public class MainLauncher {
         this.executor.execute(robot);
     }
 
-    private void runGFRobot() {
+    public void runGFRobot() {
         final GFRobot robot = new GFRobot();
         robot.setConfig(this.config);
         robot.setHttpClient(this.httpClient);

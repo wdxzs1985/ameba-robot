@@ -2,6 +2,9 @@ package robot.tnk47;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
@@ -12,12 +15,16 @@ import robot.AbstractEventHandler;
 
 public class EvnetInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
 
+    private static final Pattern MARATHON_PATTERN = Pattern.compile("/event/marathon/event-marathon\\?eventId=([0-9]+)");
+    private static final Pattern POINTRACE_PATTERN = Pattern.compile("/event/pointrace");
+
     public EvnetInfomationHandler(final Tnk47Robot robot) {
         super(robot);
     }
 
     @Override
     public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
         final String input = this.robot.buildPath("/event/ajax/get-current-event-information");
         final List<BasicNameValuePair> nvps = Collections.emptyList();
         final String html = this.robot.getHttpClient().post(input, nvps);
@@ -38,7 +45,17 @@ public class EvnetInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
             }
 
             final String linkUrl = currentEventInfoDto.getString("linkUrl");
-            return linkUrl;
+            Matcher matcher = null;
+            if ((matcher = EvnetInfomationHandler.POINTRACE_PATTERN.matcher(linkUrl)).find()) {
+                session.put("isBattle", false);
+                return "/pointrace";
+            }
+            if ((matcher = EvnetInfomationHandler.MARATHON_PATTERN.matcher(linkUrl)).find()) {
+                final String eventId = matcher.group(1);
+                session.put("eventId", eventId);
+                session.put("isQuest", false);
+                return "/marathon";
+            }
         }
         return "/mypage";
     }

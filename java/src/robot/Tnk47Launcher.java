@@ -45,7 +45,7 @@ public class Tnk47Launcher {
     }
 
     private void initHttpClient(final String setup) {
-        final String username = this.config.getProperty("MainApplication.username");
+        final String username = this.config.getProperty("Robot.username");
         final File cookieFile = new File(username + ".cookie");
         this.httpClient.loadCookie(cookieFile);
     }

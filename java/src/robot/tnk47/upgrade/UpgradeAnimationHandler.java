@@ -44,7 +44,6 @@ public class UpgradeAnimationHandler extends Tnk47EventHandler {
                 this.log.info("没有升级。。。");
             }
             session.put("isQuestCardFull", false);
-            return "/quest";
         }
         return "/mypage";
     }

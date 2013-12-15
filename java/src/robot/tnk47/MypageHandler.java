@@ -50,14 +50,14 @@ public class MypageHandler extends Tnk47EventHandler {
             return "/gift";
         }
 
-        if (this.is("isBattleEnable")) {
-            session.put("isBattleEnable", false);
-            return "/battle";
-        }
-
         if (this.is("isEventEnable")) {
             session.put("isEventEnable", false);
             return "/event-infomation";
+        }
+
+        if (this.is("isBattleEnable")) {
+            session.put("isBattleEnable", false);
+            return "/battle";
         }
 
         if (this.is("isQuestEnable")) {
@@ -72,7 +72,7 @@ public class MypageHandler extends Tnk47EventHandler {
 
     private void sleep() {
         final int delay = this.robot.getDelay();
-        this.log.info(String.format("休息 %d min _(:3_", 5));
+        this.log.info(String.format("休息 %d分钟 _(:3_", delay));
         try {
             Thread.sleep(delay * 60 * 1000);
         } catch (final InterruptedException e) {
