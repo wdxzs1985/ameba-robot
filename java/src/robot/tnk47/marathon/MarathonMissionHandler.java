@@ -11,7 +11,8 @@ import robot.tnk47.Tnk47Robot;
 
 public class MarathonMissionHandler extends Tnk47EventHandler {
 
-    private static final Pattern MISSION_PATTERN = Pattern.compile("href=\"/event/marathon/marathon-mission-animation\\?eventId=[0-9]+&userMissionId=[0-9_]+&missionId=([0-9]+)&missionKeyId=[0-9]+&token=[a-zA-Z0-9]{6}\"");
+    private static final Pattern MISSION_PATTERN = Pattern.compile("/event/marathon/marathon-mission-animation\\?eventId=[0-9]+&userMissionId=[0-9_]+&missionId=([0-9]+)&missionKeyId=[0-9]+&token=[a-zA-Z0-9]{6}");
+    private static final Pattern BOSS_PATTERN = Pattern.compile("bossUrl: '/event/marathon/event-boss-animation'");
 
     private static final Pattern GIVE_ITEM_PATTERN = Pattern.compile("所持数:(\\d+)個");
     private static final Pattern GIVE_ITEM_TODAY_PATTERN = Pattern.compile("所持数（当日）:(\\d+)個");
@@ -32,6 +33,14 @@ public class MarathonMissionHandler extends Tnk47EventHandler {
                                           token);
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
+
+        final Matcher bossMatcher = MarathonMissionHandler.BOSS_PATTERN.matcher(html);
+        if (bossMatcher.find()) {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("BOSS出现");
+            }
+            return "/marathon/stage/boss";
+        }
 
         final Matcher missionMatcher = MarathonMissionHandler.MISSION_PATTERN.matcher(html);
         String missionId = null;
