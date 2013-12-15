@@ -34,7 +34,6 @@ public class MarathonStageBossHandler extends AbstractEventHandler<Tnk47Robot> {
 
         if (this.log.isInfoEnabled()) {
             String bossName = "???";
-            this.log.info(html);
             final Matcher bossResultMatcher = MarathonStageBossHandler.BOSS_RESULT_PATTERN.matcher(html);
             if (bossResultMatcher.find()) {
                 final String jsonString = bossResultMatcher.group(1);
