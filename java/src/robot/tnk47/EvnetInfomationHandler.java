@@ -47,13 +47,13 @@ public class EvnetInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
             final String linkUrl = currentEventInfoDto.getString("linkUrl");
             Matcher matcher = null;
             if ((matcher = EvnetInfomationHandler.POINTRACE_PATTERN.matcher(linkUrl)).find()) {
-                session.put("isBattle", false);
+                session.put("isBattleEnable", false);
                 return "/pointrace";
             }
             if ((matcher = EvnetInfomationHandler.MARATHON_PATTERN.matcher(linkUrl)).find()) {
                 final String eventId = matcher.group(1);
                 session.put("eventId", eventId);
-                session.put("isQuest", false);
+                session.put("isQuestEnable", false);
                 return "/marathon";
             }
         }

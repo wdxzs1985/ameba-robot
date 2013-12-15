@@ -9,7 +9,7 @@ import robot.tnk47.Tnk47Robot;
 
 public class MarathonStageDetailHandler extends Tnk47EventHandler {
 
-    private static final Pattern FIND_PATTERN = Pattern.compile("<a class=\"actBtnSq\" href=\"/event/marathon/marathon-mission-animation\\?eventId=[0-9]+&userMissionId=([0-9_]+)&missionId=([0-9]+)&missionKeyId=([0-9]+)&token=[a-zA-Z0-9]{6}\">");
+    private static final Pattern MISSION_PATTERN = Pattern.compile("/event/marathon/marathon-mission-animation\\?eventId=[0-9]+&userMissionId=([0-9_]+)&missionId=([0-9]+)&missionKeyId=([0-9]+)&token=[a-zA-Z0-9]{6}");
 
     public MarathonStageDetailHandler(final Tnk47Robot robot) {
         super(robot);
@@ -24,7 +24,7 @@ public class MarathonStageDetailHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        final Matcher matcher = MarathonStageDetailHandler.FIND_PATTERN.matcher(html);
+        final Matcher matcher = MarathonStageDetailHandler.MISSION_PATTERN.matcher(html);
         if (matcher.find()) {
             final String userMissionId = matcher.group(1);
             final String missionId = matcher.group(2);
@@ -35,7 +35,9 @@ public class MarathonStageDetailHandler extends Tnk47EventHandler {
             session.put("missionKeyId", missionKeyId);
             return "/marathon/mission/animation";
         }
-        session.put("needExpForNextLevel", 0);
+        if (session.containsKey("needExpForNextLevel")) {
+            session.put("needExpForNextLevel", 0);
+        }
         session.put("isQuestCardFull", false);
         session.put("isQuestFindAll", false);
         return "/marathon/stage/forward";

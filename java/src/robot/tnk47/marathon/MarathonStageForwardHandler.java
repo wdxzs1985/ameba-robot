@@ -35,6 +35,20 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
         }
 
         final JSONObject data = jsonResponse.getJSONObject("data");
+        if (!StringUtils.equals(data.getString("needExpForNextLevel"), "null")) {
+            final int needExpForNextLevel = data.getInt("needExpForNextLevel");
+            session.put("needExpForNextLevel", needExpForNextLevel);
+            final JSONObject userData = data.getJSONObject("userData");
+            final int stamina = userData.getInt("stamina");
+            final int maxStamina = userData.getInt("maxStamina");
+
+            if (this.log.isInfoEnabled()) {
+                this.log.info(String.format("体力[%d/%d]，还有[%d]经验升级。",
+                                            stamina,
+                                            maxStamina,
+                                            needExpForNextLevel));
+            }
+        }
 
         final String areaEncountType = data.getString("areaEncountType");
         if (!StringUtils.equals(areaEncountType, "null")) {
@@ -100,16 +114,8 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
                 // do nothing
             }
         } else {
-            final int needExpForNextLevel = data.getInt("needExpForNextLevel");
-            session.put("needExpForNextLevel", needExpForNextLevel);
             if (this.log.isInfoEnabled()) {
-                final JSONObject userData = data.getJSONObject("userData");
-                final int stamina = userData.getInt("stamina");
-                final int maxStamina = userData.getInt("maxStamina");
-                this.log.info(String.format("什么都没有发现，体力[%d/%d]，还有[%d]经验升级。",
-                                            stamina,
-                                            maxStamina,
-                                            needExpForNextLevel));
+                this.log.info("什么都没有发现");
             }
         }
         return "/marathon/stage/forward";

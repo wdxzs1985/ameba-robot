@@ -39,7 +39,9 @@ public class QuestStageDetailHandler extends Tnk47EventHandler {
                                             charpter,
                                             section,
                                             region));
-                session.put("needExpForNextLevel", 0);
+                if (session.containsKey("needExpForNextLevel")) {
+                    session.put("needExpForNextLevel", 0);
+                }
                 session.put("isQuestCardFull", false);
                 session.put("isQuestFindAll", false);
             }

@@ -28,7 +28,7 @@ public class MarathonNotificationHandler extends Tnk47EventHandler {
                                           userId,
                                           token);
         final String html = this.httpGet(path);
-        this.log.info(html);
+        this.resolveInputToken(html);
         return "/marathon";
     }
 }
