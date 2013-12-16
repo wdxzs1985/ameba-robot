@@ -31,4 +31,40 @@ public class GFRobot extends AbstractRobot {
 		return Integer.valueOf(value);
 	}
 
+	public boolean isCupidEnable() {
+		final String key = "GFRobot.cupidEnable";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
+	public boolean isCupidStampEnable() {
+		final String key = "Tnk47Robot.cupidStampEnable";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
+	public boolean isGiftEnable() {
+		final String key = "Tnk47Robot.giftEnable";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
+	public boolean isQuestEnable() {
+		final String key = "Tnk47Robot.questEnable";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
+	public boolean isBattleEnable() {
+		final String key = "Tnk47Robot.battleEnable";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
+	public boolean isJobEnable() {
+		final String key = "Tnk47Robot.jobEnable";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
 }

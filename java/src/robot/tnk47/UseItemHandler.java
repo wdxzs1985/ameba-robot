@@ -29,7 +29,7 @@ public class UseItemHandler extends Tnk47EventHandler {
         nvps.add(new BasicNameValuePair("itemId", itemId));
         nvps.add(new BasicNameValuePair("token", token));
 
-        final String html = this.robot.getHttpClient().post(input, nvps);
+        final String html = this.robot.getHttpClient().postForHtml(input, nvps);
 
         final JSONObject jsonResponse = JSONObject.fromObject(html);
         this.resolveJsonToken(jsonResponse);

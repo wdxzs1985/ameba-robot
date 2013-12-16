@@ -33,6 +33,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHeader;
@@ -48,6 +49,8 @@ public class CommonHttpClient {
 	private final HttpClient client;
 	private final BasicCookieStore cookieStore;
 	private String referer = "";
+	private String authorization = "";
+
 	private File cookieFile = null;
 
 	public CommonHttpClient() {
@@ -62,7 +65,7 @@ public class CommonHttpClient {
 		final RequestConfig defaultRequestConfig = RequestConfig.custom()
 				.setCookieSpec(CookieSpecs.BROWSER_COMPATIBILITY).build();
 
-		final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+		final HttpClientBuilder clientBuilder = HttpClients.custom();
 		clientBuilder.setConnectionManager(connManager);
 		clientBuilder.setDefaultCookieStore(this.cookieStore);
 		clientBuilder.setDefaultRequestConfig(defaultRequestConfig);
@@ -84,7 +87,7 @@ public class CommonHttpClient {
 
 	}
 
-	public String get(final String url) {
+	public HttpResponse get(final String url) {
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("method : GET");
 			this.log.debug("   url : " + url);
@@ -97,7 +100,6 @@ public class CommonHttpClient {
 		httpget.setConfig(defaultRequestConfig);
 		this.initHttpHeader(httpget);
 
-		String result = null;
 		final HttpClientContext localContext = new HttpClientContext();
 		// Bind custom cookie store to the local context
 		localContext.setCookieStore(this.cookieStore);
@@ -105,22 +107,15 @@ public class CommonHttpClient {
 			// Pass local context as a parameter
 			final HttpResponse response = this.client.execute(httpget,
 					localContext);
-			final HttpEntity entity = response.getEntity();
-			result = this.entityToString(entity);
-			// Consume response content
-			EntityUtils.consume(entity);
+			return response;
 		} catch (final ClientProtocolException e) {
 			throw new RuntimeException(e);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("result : " + result);
-		}
-		return result;
 	}
 
-	public String post(final String url,
+	public HttpResponse post(final String url,
 			final List<? extends NameValuePair> nvps) {
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("method : POST");
@@ -137,7 +132,6 @@ public class CommonHttpClient {
 		httppost.setConfig(defaultRequestConfig);
 		this.initHttpHeader(httppost);
 
-		String result = null;
 		final HttpClientContext localContext = new HttpClientContext();
 		// Bind custom cookie store to the local context
 		localContext.setCookieStore(this.cookieStore);
@@ -145,35 +139,52 @@ public class CommonHttpClient {
 			final UrlEncodedFormEntity postEntity = new UrlEncodedFormEntity(
 					nvps, SystemConstants.ENCODING);
 			httppost.setEntity(postEntity);
-			if (this.log.isDebugEnabled()) {
-				this.log.debug("entity : " + this.entityToString(postEntity));
-			}
-			final HttpResponse response = this.client.execute(httppost,
-					localContext);
-			final HttpEntity entity = response.getEntity();
-			result = this.entityToString(entity);
-
-			// Consume response content
-			EntityUtils.consume(entity);
+			return this.client.execute(httppost, localContext);
 		} catch (final ClientProtocolException e) {
 			throw new RuntimeException("网络故障", e);
 		} catch (final IOException e) {
 			throw new RuntimeException("网络故障", e);
 		}
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("result : " + result);
-		}
-		return result;
 	}
 
-	public JSONObject getJSON(final String url) {
-		String html = this.get(url);
+	public String getForHtml(final String url) {
+		// Pass local context as a parameter
+		final HttpResponse response = this.get(url);
+		final HttpEntity entity = response.getEntity();
+		String result = null;
+		try {
+			result = this.entityToString(entity);
+			// Consume response content
+			EntityUtils.consume(entity);
+			return result;
+		} catch (ParseException | IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public String postForHtml(final String url,
+			final List<? extends NameValuePair> nvps) {
+		final HttpResponse response = this.post(url, nvps);
+		final HttpEntity entity = response.getEntity();
+		String result;
+		try {
+			result = this.entityToString(entity);
+			// Consume response content
+			EntityUtils.consume(entity);
+			return result;
+		} catch (ParseException | IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public JSONObject getForJSON(final String url) {
+		String html = this.getForHtml(url);
 		return JSONObject.fromObject(html);
 	}
 
-	public JSONObject postJSON(final String url,
+	public JSONObject postForJSON(final String url,
 			final List<BasicNameValuePair> nvps) {
-		String html = this.post(url, nvps);
+		String html = this.postForHtml(url, nvps);
 		return JSONObject.fromObject(html);
 	}
 
@@ -188,7 +199,12 @@ public class CommonHttpClient {
 	}
 
 	protected void initHttpHeader(final HttpMessage httpMessage) {
-		httpMessage.addHeader("Referer", this.referer);
+		if (StringUtils.isNotBlank(this.referer)) {
+			httpMessage.addHeader("Referer", this.referer);
+		}
+		if (StringUtils.isNotBlank(this.getAuthorization())) {
+			httpMessage.addHeader("Authorization", this.authorization);
+		}
 	}
 
 	private String entityToString(final HttpEntity entity)
@@ -293,5 +309,13 @@ public class CommonHttpClient {
 
 	public void setReferer(final String referer) {
 		this.referer = referer;
+	}
+
+	public String getAuthorization() {
+		return this.authorization;
+	}
+
+	public void setAuthorization(String authorization) {
+		this.authorization = authorization;
 	}
 }

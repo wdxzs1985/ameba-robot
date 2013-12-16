@@ -4,7 +4,7 @@
 # 用户名
 Robot.username=bushing
 # 密码
-Robot.password=
+Robot.password=wangjue
 # 每次发送请求间隔（单位为秒）
 Robot.actionTime=1
 
@@ -89,11 +89,11 @@ Tnk47Robot.useGiveItem=false
 #
 ###########################
 GFRobot.enable=false
+GFRobot.delay=false
 
-
-###########################
-#
-# RoletteRobot
-#
-###########################
-RoletteRobot.enable=false
+GFRobot.cupidEnable=true
+GFRobot.cupidStampEnable=false
+GFRobot.giftEnable=false
+GFRobot.questEnable=false
+GFRobot.battleEnable=false
+GFRobot.jobEnable=false

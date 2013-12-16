@@ -32,7 +32,7 @@ public class PrefectureBattleResultHandler extends AbstractBattleHandler {
 				.buildPath(String
 						.format("/battle/prefecture-battle-result?prefectureBattleId=%s&token=&s",
 								prefectureBattleId, token));
-		final String html = this.robot.getHttpClient().get(input);
+		final String html = this.robot.getHttpClient().getForHtml(input);
 		this.resolveInputToken(html);
 
 		if (this.log.isInfoEnabled()) {

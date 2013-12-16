@@ -1,4 +1,6 @@
-package robot;
+package robot.tnk47;
+
+import robot.MainLauncher;
 
 
 public class Tnk47Launcher {

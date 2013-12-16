@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class MypageHandler extends GFEventHandler {
 
 	private static final Pattern HTML_TITLE_PATTERN = Pattern
-			.compile("<title>(.*)?</title>");
+			.compile("<title>(.*?)</title>");
 	private static final Pattern HTML_USER_NAME_PATTERN = Pattern
 			.compile("<h1><a href=\"/profile\">(.*?)</a></h1>");
 
@@ -21,7 +21,7 @@ public class MypageHandler extends GFEventHandler {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
 		this.resolveInputToken(html);
-
+		this.log.debug(html);
 		if (!this.is("isMypage")) {
 			final Matcher userNameMatcher = MypageHandler.HTML_USER_NAME_PATTERN
 					.matcher(html);
@@ -74,6 +74,10 @@ public class MypageHandler extends GFEventHandler {
 	private void reset() {
 		final Map<String, Object> session = this.robot.getSession();
 		session.put("isMypage", false);
+		session.put("isCupidEnable", this.robot.isCupidEnable());
+		session.put("isGiftEnable", this.robot.isGiftEnable());
+		session.put("isQuestEnable", this.robot.isQuestEnable());
+		session.put("isBattleEnable", this.robot.isBattleEnable());
 
 	}
 }

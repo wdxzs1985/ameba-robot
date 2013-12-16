@@ -41,7 +41,7 @@ public abstract class AbstractEventHandler<T extends Robot> implements
 
     protected String httpGet(final String path) {
         final String url = this.robot.buildPath(path);
-        final String html = this.robot.getHttpClient().get(url);
+        final String html = this.robot.getHttpClient().getForHtml(url);
         this.robot.getHttpClient().setReferer(url);
         return html;
     }
@@ -49,21 +49,21 @@ public abstract class AbstractEventHandler<T extends Robot> implements
     protected String httpPost(final String path,
                               final List<BasicNameValuePair> nvps) {
         final String url = this.robot.buildPath(path);
-        final String html = this.robot.getHttpClient().post(url, nvps);
+        final String html = this.robot.getHttpClient().postForHtml(url, nvps);
         this.robot.getHttpClient().setReferer(url);
         return html;
     }
 
     protected JSONObject httpGetJSON(final String path) {
         final String url = this.robot.buildPath(path);
-        final String html = this.robot.getHttpClient().get(url);
+        final String html = this.robot.getHttpClient().getForHtml(url);
         return JSONObject.fromObject(html);
     }
 
     protected JSONObject httpPostJSON(final String path,
                                       final List<BasicNameValuePair> nvps) {
         final String url = this.robot.buildPath(path);
-        final String html = this.robot.getHttpClient().post(url, nvps);
+        final String html = this.robot.getHttpClient().postForHtml(url, nvps);
         return JSONObject.fromObject(html);
     }
 

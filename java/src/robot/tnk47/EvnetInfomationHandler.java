@@ -27,7 +27,7 @@ public class EvnetInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
         final Map<String, Object> session = this.robot.getSession();
         final String input = this.robot.buildPath("/event/ajax/get-current-event-information");
         final List<BasicNameValuePair> nvps = Collections.emptyList();
-        final String html = this.robot.getHttpClient().post(input, nvps);
+        final String html = this.robot.getHttpClient().postForHtml(input, nvps);
         final JSONObject currentEventInfomation = JSONObject.fromObject(html);
         final JSONObject data = currentEventInfomation.getJSONObject("data");
 

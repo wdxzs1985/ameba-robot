@@ -3,14 +3,13 @@ package robot;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.message.BasicNameValuePair;
 
-public class LoginHandler extends AbstractEventHandler<Robot> {
+import common.CommonHttpClient;
 
-	private final Log log = LogFactory.getLog(LoginHandler.class);
+public class LoginHandler extends AbstractEventHandler<Robot> {
 
 	public LoginHandler(final Robot robot) {
 		super(robot);
@@ -18,6 +17,7 @@ public class LoginHandler extends AbstractEventHandler<Robot> {
 
 	@Override
 	public String handleIt() {
+
 		final String url = "https://login.user.ameba.jp/web/login";
 		final String username = this.robot.getUsername();
 		final String password = this.robot.getPassword();
@@ -25,15 +25,14 @@ public class LoginHandler extends AbstractEventHandler<Robot> {
 		final List<BasicNameValuePair> nvps = new LinkedList<BasicNameValuePair>();
 		nvps.add(new BasicNameValuePair("username", username));
 		nvps.add(new BasicNameValuePair("password", password));
-		final String html = this.robot.getHttpClient().post(url, nvps);
+		CommonHttpClient httpClient = this.robot.getHttpClient();
+		final HttpResponse webLoginResponse = httpClient.post(url, nvps);
 
-		if (StringUtils.isNotBlank(html)) {
-			throw new RuntimeException("登录失败");
+		if (webLoginResponse.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+			return "/mypage";
 		}
 
-		if (this.log.isInfoEnabled()) {
-			this.log.info("登录成功");
-		}
-		return "/mypage";
+		throw new RuntimeException("登录失败");
 	}
+
 }

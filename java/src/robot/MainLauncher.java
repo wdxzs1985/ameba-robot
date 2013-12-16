@@ -13,7 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import robot.gf.GFRobot;
-import robot.roulette.RouletteRobot;
 import robot.tnk47.Tnk47Robot;
 
 import common.CommonHttpClient;
@@ -29,9 +28,6 @@ public class MainLauncher {
 		}
 		if (launcher.is("GFRobot.enable")) {
 			launcher.runGFRobot();
-		}
-		if (launcher.is("RouletteRobot.enable")) {
-			launcher.runRouletteRobot();
 		}
 	}
 
@@ -90,14 +86,4 @@ public class MainLauncher {
 		return Boolean.valueOf(value);
 	}
 
-	public void runRouletteRobot() {
-		if (this.log.isInfoEnabled()) {
-			this.log.info(RouletteRobot.VERSION);
-		}
-		final RouletteRobot robot = new RouletteRobot();
-		robot.setConfig(this.config);
-		robot.setHttpClient(this.httpClient);
-		robot.init();
-		this.executor.execute(robot);
-	}
 }
