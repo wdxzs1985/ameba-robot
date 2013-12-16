@@ -14,6 +14,8 @@ public interface Robot {
 
 	public Map<String, Object> getSession();
 
+	public void init();
+
 	public int getActionTime();
 
 	public String getHost();

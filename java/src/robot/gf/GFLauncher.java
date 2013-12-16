@@ -1,15 +1,25 @@
 package robot.gf;
 
-import robot.MainLauncher;
+import robot.Launcher;
 
-
-public class GFLauncher {
+public class GFLauncher extends Launcher {
 
 	public static void main(final String[] args) {
 		final String setup = args.length > 0 ? args[0] : "setup.txt";
-		final MainLauncher launcher = new MainLauncher();
+		final GFLauncher launcher = new GFLauncher();
 		launcher.init(setup);
-		launcher.runGFRobot();
+		launcher.launch();
+	}
+
+	public void launch() {
+		if (this.log.isInfoEnabled()) {
+			this.log.info(GFRobot.VERSION);
+		}
+		final GFRobot robot = new GFRobot();
+		robot.setConfig(this.config);
+		robot.setHttpClient(this.httpClient);
+		robot.init();
+		this.executor.execute(robot);
 	}
 
 }

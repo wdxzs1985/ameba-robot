@@ -88,7 +88,7 @@ Tnk47Robot.useGiveItem=false
 # GFRobot
 #
 ###########################
-GFRobot.enable=false
+GFRobot.enable=true
 GFRobot.delay=5
 
 GFRobot.upgradeEnable=true
