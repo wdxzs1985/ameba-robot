@@ -2,12 +2,18 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing2
+Robot.username=bushing
 # 密码
 Robot.password=
 # 每次发送请求间隔（单位为秒）
 Robot.actionTime=1
 
+###########################
+#
+# Tnk47Robot
+#
+###########################
+Tnk47Robot.enable=true
 # 签到开关
 Tnk47Robot.stampGachaEnable=true
 # 活动开关
@@ -76,3 +82,18 @@ Tnk47Robot.notificationUser=860866
 Tnk47Robot.useGiveItemToday=true
 # 允许使用爬塔道具
 Tnk47Robot.useGiveItem=false
+
+###########################
+#
+# GFRobot
+#
+###########################
+GFRobot.enable=false
+
+
+###########################
+#
+# RoletteRobot
+#
+###########################
+RoletteRobot.enable=false
