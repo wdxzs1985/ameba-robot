@@ -36,6 +36,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
             } catch (final Exception e) {
                 final String message = e.getMessage();
                 this.log.error("发生异常: " + message, e);
+                this.dispatch("/mypage");
             } finally {
                 this.httpClient.saveCookie();
                 this.sleep();

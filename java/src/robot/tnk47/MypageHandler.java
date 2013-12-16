@@ -21,7 +21,6 @@ public class MypageHandler extends Tnk47EventHandler {
         final Map<String, Object> session = this.robot.getSession();
         final String html = this.httpGet("/mypage");
         this.resolveInputToken(html);
-
         if (!this.is("isMypage")) {
             final Matcher userStatusMatcher = MypageHandler.HTML_USER_STATUS_PATTERN.matcher(html);
             if (userStatusMatcher.find()) {
