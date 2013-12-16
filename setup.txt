@@ -82,19 +82,3 @@ Tnk47Robot.notificationUser=860866
 Tnk47Robot.useGiveItemToday=true
 # 允许使用爬塔道具
 Tnk47Robot.useGiveItem=false
-
-###########################
-#
-# GFRobot
-#
-###########################
-GFRobot.enable=true
-GFRobot.delay=5
-
-GFRobot.upgradeEnable=true
-GFRobot.cupidEnable=true
-GFRobot.cupidStampEnable=false
-GFRobot.giftEnable=true
-GFRobot.questEnable=false
-GFRobot.battleEnable=false
-GFRobot.jobEnable=false
