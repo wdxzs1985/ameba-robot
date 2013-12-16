@@ -89,11 +89,12 @@ Tnk47Robot.useGiveItem=false
 #
 ###########################
 GFRobot.enable=false
-GFRobot.delay=false
+GFRobot.delay=5
 
+GFRobot.upgradeEnable=true
 GFRobot.cupidEnable=true
 GFRobot.cupidStampEnable=false
-GFRobot.giftEnable=false
+GFRobot.giftEnable=true
 GFRobot.questEnable=false
 GFRobot.battleEnable=false
 GFRobot.jobEnable=false

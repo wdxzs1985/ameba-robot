@@ -20,8 +20,9 @@ public class MypageHandler extends GFEventHandler {
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
-		this.resolveInputToken(html);
-		this.log.debug(html);
+		if (this.log.isDebugEnabled()) {
+			this.log.debug(html);
+		}
 		if (!this.is("isMypage")) {
 			final Matcher userNameMatcher = MypageHandler.HTML_USER_NAME_PATTERN
 					.matcher(html);
@@ -45,6 +46,11 @@ public class MypageHandler extends GFEventHandler {
 		if (this.is("isCupidEnable")) {
 			session.put("isCupidEnable", false);
 			return "/cupid";
+		}
+
+		if (this.is("isUpgradeEnable")) {
+			session.put("isUpgradeEnable", false);
+			return "/upgrade";
 		}
 
 		if (this.is("isGiftEnable")) {
@@ -74,10 +80,10 @@ public class MypageHandler extends GFEventHandler {
 	private void reset() {
 		final Map<String, Object> session = this.robot.getSession();
 		session.put("isMypage", false);
+		session.put("isUpgradeEnable", this.robot.isUpgradeEnable());
 		session.put("isCupidEnable", this.robot.isCupidEnable());
 		session.put("isGiftEnable", this.robot.isGiftEnable());
 		session.put("isQuestEnable", this.robot.isQuestEnable());
 		session.put("isBattleEnable", this.robot.isBattleEnable());
-
 	}
 }
