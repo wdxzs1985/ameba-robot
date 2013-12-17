@@ -4,22 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import common.CommonHttpClient;
 
 public class Launcher {
 
-	protected final ExecutorService executor = Executors.newFixedThreadPool(1);
 	protected final Properties config = new Properties();
 	protected final CommonHttpClient httpClient = new CommonHttpClient();
-	protected final Log log = LogFactory.getLog(this.getClass());
 
 	public void init(final String setup) {
 		this.initConfig(setup);

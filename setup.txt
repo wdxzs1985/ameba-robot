@@ -6,7 +6,9 @@ Robot.username=bushing
 # 密码
 Robot.password=wangjue
 # 每次发送请求间隔（单位为秒）
-Robot.actionTime=1
+Robot.requestDelay=2
+# 等待回复时间(单位为分钟)
+Robot.scheduleDelay=5
 
 ###########################
 #
@@ -26,8 +28,6 @@ Tnk47Robot.questEnable=true
 Tnk47Robot.battleEnable=true
 # 自动强化(N卡和HN卡)开关
 Tnk47Robot.upgradeEnable=true
-# 等待回复时间(单位为分钟)
-Tnk47Robot.delay=5
 
 ###########################
 # 冒险

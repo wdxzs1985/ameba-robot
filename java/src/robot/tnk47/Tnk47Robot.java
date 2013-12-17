@@ -36,6 +36,7 @@ public class Tnk47Robot extends AbstractRobot {
 
 	public static final String VERSION = "天下自动脚本  0.5.2";
 
+	@Override
 	public void init() {
 		this.registerHandler("/", new HomeHandler(this));
 		this.registerHandler("/login", new LoginHandler(this));
@@ -102,12 +103,6 @@ public class Tnk47Robot extends AbstractRobot {
 	@Override
 	public String getHost() {
 		return Tnk47Robot.HOST;
-	}
-
-	public int getDelay() {
-		final String key = "Tnk47Robot.delay";
-		final String value = this.getConfig().getProperty(key, "5");
-		return Integer.valueOf(value);
 	}
 
 	public boolean isStampGachaEnable() {
