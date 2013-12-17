@@ -8,78 +8,79 @@ import robot.gf.GFRobot;
 
 public class QuestRunHandler extends GFEventHandler {
 
-	public QuestRunHandler(final GFRobot robot) {
-		super(robot);
-	}
+    public QuestRunHandler(final GFRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		Map<String, Object> session = this.robot.getSession();
-		String questId = (String) session.get("questId");
-		String stageId = (String) session.get("stageId");
-		String token = (String) session.get("token");
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String questId = (String) session.get("questId");
+        final String stageId = (String) session.get("stageId");
+        final String token = (String) session.get("token");
 
-		String path = String.format(
-				"/quest/ajax/quest-run?questId=%s&stageId=%s&token=%s",
-				questId, stageId, token);
-		JSONObject jsonResponse = this.httpGetJSON(path);
-		this.resolveJsonToken(jsonResponse);
+        final String path = String.format("/quest/ajax/quest-run?questId=%s&stageId=%s&token=%s",
+                                          questId,
+                                          stageId,
+                                          token);
+        final JSONObject jsonResponse = this.httpGetJSON(path);
+        this.resolveJsonToken(jsonResponse);
 
-		JSONObject data = jsonResponse.optJSONObject("data");
+        final JSONObject data = jsonResponse.optJSONObject("data");
 
-		if (data.containsKey("tiredWord")) {
-			if (this.log.isInfoEnabled()) {
-				JSONObject tiredWord = data.getJSONObject("tiredWord");
-				this.log.info("ti li bu zhi");
-				this.log.info(tiredWord.optString("word"));
-			}
-			return "/mypage";
-		}
+        if (data.containsKey("tiredWord")) {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("精尽人亡");
+            }
+            return "/mypage";
+        }
 
-		if (this.log.isInfoEnabled()) {
-			String questName = data.optString("questName");
-			String stageName = data.optString("stageName");
-			String afterProgress = data.optString("afterProgress");
-			this.log.info(String.format("%s / %s (%s%%)", questName, stageName,
-					afterProgress));
-		}
+        if (this.log.isInfoEnabled()) {
+            final String questName = data.optString("questName");
+            final String stageName = data.optString("stageName");
+            final String afterProgress = data.optString("afterProgress");
+            this.log.info(String.format("%s / %s (%s%%)",
+                                        questName,
+                                        stageName,
+                                        afterProgress));
+        }
 
-		if (data.optBoolean("newGetFlg", false)) {
-			String rewardCardName = data.optString("rewardCardName");
-			if (this.log.isInfoEnabled()) {
-				this.log.info(String.format("new card get: %s", rewardCardName));
-			}
-			if (this.isCardFull(data)) {
-				if (this.log.isInfoEnabled()) {
-					this.log.info("card is full");
-				}
-				if (this.robot.isUpgradeEnable()) {
-					return "/upgrade";
-				}
-			}
-		}
+        if (data.optBoolean("newGetFlg", false)) {
+            final String rewardCardName = data.optString("rewardCardName");
+            if (this.log.isInfoEnabled()) {
+                this.log.info(String.format("发现新妹纸: %s", rewardCardName));
+            }
+            if (this.isCardFull(data)) {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("后宫里的妹子满出来了");
+                }
+                if (this.robot.isUpgradeEnable()) {
+                    return "/upgrade";
+                }
+            }
+        }
 
-		if (data.optBoolean("questClear", false)) {
-			if (this.log.isInfoEnabled()) {
-				this.log.info("quest Clear");
-			}
-			return "/quest";
-		}
+        if (data.optBoolean("questClear", false)) {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("quest Clear");
+            }
+            return "/quest";
+        }
 
-		if (data.optBoolean("stageClear", false)) {
-			if (this.log.isInfoEnabled()) {
-				this.log.info("stage Clear");
-			}
-			return "/quest";
-		}
+        if (data.optBoolean("stageClear", false)) {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("stage Clear");
+            }
+            return "/quest";
+        }
 
-		return "/quest/run";
-	}
+        return "/quest/run";
+    }
 
-	private boolean isCardFull(JSONObject data) {
-		int cardCount = data.optInt("cardCount", 0);
-		int maxCardCount = data.optInt("maxCardCount", 0);
-		return cardCount == maxCardCount;
-	}
+    private boolean isCardFull(final JSONObject data) {
+        final int cardCount = data.optInt("cardCount", 0);
+        final int maxCardCount = data.optInt("maxCardCount", 0);
+        return cardCount == maxCardCount;
+    }
 
 }

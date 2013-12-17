@@ -12,41 +12,35 @@ import robot.AbstractEventHandler;
 
 public abstract class GFEventHandler extends AbstractEventHandler<GFRobot> {
 
-	private static final Pattern PAGE_PARAMS_PATTERN = Pattern
-			.compile(".*\\.pageParams = (\\{.*\\});");
-	private static final Pattern JS_TOKEN_PATTERN = Pattern
-			.compile("var token = '([a-zA-Z0-9]{6})';");
+    private static final Pattern PAGE_PARAMS_PATTERN = Pattern.compile(".*\\.pageParams = (\\{.*\\});");
+    private static final Pattern JS_TOKEN_PATTERN = Pattern.compile("var token = '([a-zA-Z0-9]{6})';");
 
-	public GFEventHandler(final GFRobot robot) {
-		super(robot);
-	}
+    public GFEventHandler(final GFRobot robot) {
+        super(robot);
+    }
 
-	protected void resolveJavascriptToken(final String html) {
-		final Map<String, Object> session = this.robot.getSession();
-		final Matcher tokenMatcher = GFEventHandler.JS_TOKEN_PATTERN
-				.matcher(html);
-		if (tokenMatcher.find()) {
-			final String newToken = tokenMatcher.group(1);
-			session.put("token", newToken);
-		} else {
-			this.log.warn("token not found");
-		}
-	}
+    protected void resolveJavascriptToken(final String html) {
+        final Map<String, Object> session = this.robot.getSession();
+        final Matcher tokenMatcher = GFEventHandler.JS_TOKEN_PATTERN.matcher(html);
+        if (tokenMatcher.find()) {
+            final String newToken = tokenMatcher.group(1);
+            session.put("token", newToken);
+        }
+    }
 
-	protected void resolveJsonToken(final JSONObject jsonResponse) {
-		final Map<String, Object> session = this.robot.getSession();
-		final String newToken = jsonResponse.getString("token");
-		session.put("token", newToken);
-	}
+    protected void resolveJsonToken(final JSONObject jsonResponse) {
+        final Map<String, Object> session = this.robot.getSession();
+        final String newToken = jsonResponse.optString("token");
+        session.put("token", newToken);
+    }
 
-	protected JSONObject resolvePageParams(final String html) {
-		final Matcher pageParamsMatcher = GFEventHandler.PAGE_PARAMS_PATTERN
-				.matcher(html);
-		if (pageParamsMatcher.find()) {
-			final String pageParams = pageParamsMatcher.group(1);
-			final JSONObject jsonPageParams = JSONObject.fromObject(pageParams);
-			return jsonPageParams;
-		}
-		return null;
-	}
+    protected JSONObject resolvePageParams(final String html) {
+        final Matcher pageParamsMatcher = GFEventHandler.PAGE_PARAMS_PATTERN.matcher(html);
+        if (pageParamsMatcher.find()) {
+            final String pageParams = pageParamsMatcher.group(1);
+            final JSONObject jsonPageParams = JSONObject.fromObject(pageParams);
+            return jsonPageParams;
+        }
+        return null;
+    }
 }

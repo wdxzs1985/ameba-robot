@@ -9,23 +9,22 @@ import robot.gf.GFRobot;
 
 public class JobSettingHandler extends GFEventHandler {
 
-	private static final Pattern USER_CARD_ID_PATTERN = Pattern
-			.compile("<li class=\"clickableArea listbox noteBg listId0 .*\" rel=\"([0-9\\._]+)\">");
+    private static final Pattern USER_CARD_ID_PATTERN = Pattern.compile("<li class=\"clickableArea listbox noteBg listId0 .*?\" rel=\"([0-9\\._]+)\">");
 
-	public JobSettingHandler(final GFRobot robot) {
-		super(robot);
-	}
+    public JobSettingHandler(final GFRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		Map<String, Object> session = this.robot.getSession();
-		final String html = this.httpGet("/job/job-card-setting");
-		Matcher userCardIdMatcher = USER_CARD_ID_PATTERN.matcher(html);
-		if (userCardIdMatcher.find()) {
-			String userCardId = userCardIdMatcher.group(1);
-			session.put("userCardId", userCardId);
-			return "/job/start";
-		}
-		return "/mypage";
-	}
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String html = this.httpGet("/job/job-card-setting");
+        final Matcher userCardIdMatcher = JobSettingHandler.USER_CARD_ID_PATTERN.matcher(html);
+        if (userCardIdMatcher.find()) {
+            final String userCardId = userCardIdMatcher.group(1);
+            session.put("userCardId", userCardId);
+            return "/job/start";
+        }
+        return "/mypage";
+    }
 }

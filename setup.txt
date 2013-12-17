@@ -4,11 +4,13 @@
 # 用户名
 Robot.username=bushing2
 # 密码
-Robot.password=
+Robot.password=wdxzs1985
+# Robot.cookie
+Robot.cookie=_gf.cookie
 # 每次发送请求间隔（单位为秒）
 Robot.requestDelay=1
 # scheduleDelay
-Robot.scheduleDelay=1
+Robot.scheduleDelay=60
 
 ###########################
 #
