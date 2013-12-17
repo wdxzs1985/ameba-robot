@@ -26,11 +26,7 @@ public class GiftReceiveHandler extends GFEventHandler {
 		nvps.add(new BasicNameValuePair("selectedGift", "0"));
 
 		final String html = this.httpPost(path, nvps);
-
 		this.resolveJavascriptToken(html);
-		if (this.log.isDebugEnabled()) {
-			this.log.debug(html);
-		}
 
 		return "/gift";
 	}

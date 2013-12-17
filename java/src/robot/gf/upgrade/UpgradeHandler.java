@@ -34,9 +34,9 @@ public class UpgradeHandler extends GFEventHandler {
 			if (StringUtils.equals(step, "base")) {
 				Matcher userCardIdMatcher = USER_CARD_ID_PATTERN.matcher(html);
 				if (userCardIdMatcher.find()) {
-					String path = "/upgrade/ajax/upgrade-card-search";
 					String userCardId = userCardIdMatcher.group(1);
 
+					String path = "/upgrade/ajax/upgrade-card-search";
 					List<BasicNameValuePair> nvps = this.createNameValuePairs();
 					nvps.add(new BasicNameValuePair("cond", "material"));
 					nvps.add(new BasicNameValuePair("sphere", "ALL"));

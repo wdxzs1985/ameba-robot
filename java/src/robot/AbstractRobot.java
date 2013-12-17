@@ -46,8 +46,8 @@ public abstract class AbstractRobot implements Robot, Runnable {
 	}
 
 	private void sleep() {
-		final int actionTime = this.getActionTime();
-		final int sleepTime = actionTime + RandomUtils.nextInt(actionTime);
+		final int requestDelay = this.getRequestDelay();
+		final int sleepTime = requestDelay + RandomUtils.nextInt(requestDelay);
 		try {
 			Thread.sleep(sleepTime * 1000);
 		} catch (final InterruptedException e) {
@@ -98,9 +98,16 @@ public abstract class AbstractRobot implements Robot, Runnable {
 	}
 
 	@Override
-	public int getActionTime() {
-		final String key = "Robot.actionTime";
+	public int getRequestDelay() {
+		final String key = "Robot.requestDelay";
 		final String value = this.getConfig().getProperty(key, "3");
+		return Integer.valueOf(value);
+	}
+
+	@Override
+	public int getScheduleDelay() {
+		final String key = "Robot.scheduleDelay";
+		final String value = this.getConfig().getProperty(key, "5");
 		return Integer.valueOf(value);
 	}
 

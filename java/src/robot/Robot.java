@@ -14,11 +14,13 @@ public interface Robot {
 
 	public Map<String, Object> getSession();
 
-	public int getActionTime();
-
 	public String getHost();
 
 	public String getUsername();
 
 	public String getPassword();
+
+	public int getRequestDelay();
+
+	public int getScheduleDelay();
 }

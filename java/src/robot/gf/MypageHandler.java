@@ -10,6 +10,8 @@ public class MypageHandler extends GFEventHandler {
 			.compile("<title>(.*?)</title>");
 	private static final Pattern HTML_USER_NAME_PATTERN = Pattern
 			.compile("<h1><a href=\"/profile\">(.*?)</a></h1>");
+	private static final Pattern HTML_JOB_CARD_SETTING_PATTERN = Pattern
+			.compile("/job/job-card-setting");
 
 	public MypageHandler(final GFRobot robot) {
 		super(robot);
@@ -22,6 +24,7 @@ public class MypageHandler extends GFEventHandler {
 		session.put("isUpgradeEnable", this.robot.isUpgradeEnable());
 		session.put("isCupidEnable", this.robot.isCupidEnable());
 		session.put("isGiftEnable", this.robot.isGiftEnable());
+		session.put("isJobEnable", this.robot.isJobEnable());
 		session.put("isQuestEnable", this.robot.isQuestEnable());
 		session.put("isBattleEnable", this.robot.isBattleEnable());
 	}
@@ -30,9 +33,6 @@ public class MypageHandler extends GFEventHandler {
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
-		if (this.log.isDebugEnabled()) {
-			this.log.debug(html);
-		}
 		if (!this.is("isMypage")) {
 			final Matcher userNameMatcher = MypageHandler.HTML_USER_NAME_PATTERN
 					.matcher(html);
@@ -66,6 +66,13 @@ public class MypageHandler extends GFEventHandler {
 		if (this.is("isGiftEnable")) {
 			session.put("isGiftEnable", false);
 			return "/gift";
+		}
+
+		if (this.is("isJobEnable")) {
+			session.put("isJobEnable", false);
+			if (HTML_JOB_CARD_SETTING_PATTERN.matcher(html).find()) {
+				return "/job/setting";
+			}
 		}
 
 		if (this.is("isQuestEnable")) {

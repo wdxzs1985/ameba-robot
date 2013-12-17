@@ -7,6 +7,10 @@ import robot.gf.cupid.CupidHandler;
 import robot.gf.cupid.CupidResultHandler;
 import robot.gf.gift.GiftHandler;
 import robot.gf.gift.GiftReceiveHandler;
+import robot.gf.job.JobSettingHandler;
+import robot.gf.job.JobStartHandler;
+import robot.gf.quest.QuestHandler;
+import robot.gf.quest.QuestRunHandler;
 import robot.gf.upgrade.UpgradeAnimationHandler;
 import robot.gf.upgrade.UpgradeConfirmHandler;
 import robot.gf.upgrade.UpgradeHandler;
@@ -17,6 +21,7 @@ public class GFRobot extends AbstractRobot {
 
 	public static final String VERSION = "GF自动脚本  0.0.1";
 
+	@Override
 	public void init() {
 		this.registerHandler("/", new HomeHandler(this));
 		this.registerHandler("/login", new LoginHandler(this));
@@ -35,17 +40,18 @@ public class GFRobot extends AbstractRobot {
 		this.registerHandler("/upgrade/animation", new UpgradeAnimationHandler(
 				this));
 
+		// quest
+		this.registerHandler("/quest", new QuestHandler(this));
+		this.registerHandler("/quest/run", new QuestRunHandler(this));
+
+		// job
+		this.registerHandler("/job/setting", new JobSettingHandler(this));
+		this.registerHandler("/job/start", new JobStartHandler(this));
 	}
 
 	@Override
 	public String getHost() {
 		return GFRobot.HOST;
-	}
-
-	public int getDelay() {
-		final String key = "GFRobot.delay";
-		final String value = this.getConfig().getProperty(key, "5");
-		return Integer.valueOf(value);
 	}
 
 	public boolean isCupidEnable() {
@@ -88,6 +94,24 @@ public class GFRobot extends AbstractRobot {
 		final String key = "GFRobot.upgradeEnable";
 		final String value = this.getConfig().getProperty(key, "false");
 		return Boolean.valueOf(value);
+	}
+
+	public boolean isAutoSelectStage() {
+		final String key = "GFRobot.autoSelectStage";
+		final String value = this.getConfig().getProperty(key, "false");
+		return Boolean.valueOf(value);
+	}
+
+	public String getQuestId() {
+		final String key = "GFRobot.questId";
+		final String value = this.getConfig().getProperty(key, "1");
+		return value;
+	}
+
+	public String getStageId() {
+		final String key = "GFRobot.stageId";
+		final String value = this.getConfig().getProperty(key, "1");
+		return value;
 	}
 
 }

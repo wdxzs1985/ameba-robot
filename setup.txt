@@ -6,7 +6,9 @@ Robot.username=bushing
 # 密码
 Robot.password=wangjue
 # 每次发送请求间隔（单位为秒）
-Robot.actionTime=1
+Robot.requestDelay=1
+# scheduleDelay
+Robot.scheduleDelay=5
 
 ###########################
 #
@@ -14,12 +16,21 @@ Robot.actionTime=1
 #
 ###########################
 GFRobot.enable=true
-GFRobot.delay=1
 
 GFRobot.upgradeEnable=true
 GFRobot.cupidEnable=true
 GFRobot.cupidStampEnable=false
 GFRobot.giftEnable=true
-GFRobot.questEnable=false
+GFRobot.questEnable=true
+GFRobot.jobEnable=true
 GFRobot.battleEnable=false
-GFRobot.jobEnable=false
+
+###########################
+# 冒险
+###########################
+# 自动选关开关
+# true=自动选关/false=手动选关
+GFRobot.autoSelectStage=true
+# 指定关（手动选关时有效）
+GFRobot.questId=1
+GFRobot.stageId=1
