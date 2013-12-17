@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing
+Robot.username=
 # 密码
-Robot.password=wangjue
+Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
@@ -77,8 +77,8 @@ Tnk47Robot.useFullPowerRegenItem=false
 # 爬塔
 ###########################
 # 指定发送情报的ID
-# Tnk47Robot.notificationUser=949646
-Tnk47Robot.notificationUser=860866
+# Tnk47Robot.notificationUser=949612
+Tnk47Robot.notificationUser=949646
 
 # 允许使用当日爬塔道具
 Tnk47Robot.useGiveItemToday=true
