@@ -44,15 +44,15 @@ public class JobStartHandler extends GFEventHandler {
 				Matcher matcher = null;
 				if ((matcher = JOB_NAME_PATTERN.matcher(html)).find()) {
 					String jobName = matcher.group(1);
-					this.log.info(String.format("バイト先：", jobName));
+					this.log.info(String.format("バイト先：%s", jobName));
 				}
 				if ((matcher = PAYMENT_PATTERN.matcher(html)).find()) {
 					String payment = matcher.group(1);
-					this.log.info(String.format("時給：", payment));
+					this.log.info(String.format("時給：%s", payment));
 				}
 				if ((matcher = REST_PATTERN.matcher(html)).find()) {
 					String rest = matcher.group(1);
-					this.log.info(String.format("残り時間：", rest));
+					this.log.info(String.format("残り時間：%s", rest));
 				}
 			}
 		}

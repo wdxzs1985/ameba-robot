@@ -2,13 +2,13 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing
+Robot.username=bushing2
 # 密码
-Robot.password=wangjue
+Robot.password=
 # 每次发送请求间隔（单位为秒）
 Robot.requestDelay=1
 # scheduleDelay
-Robot.scheduleDelay=5
+Robot.scheduleDelay=1
 
 ###########################
 #
@@ -19,7 +19,7 @@ GFRobot.enable=true
 
 GFRobot.upgradeEnable=true
 GFRobot.cupidEnable=true
-GFRobot.cupidStampEnable=false
+GFRobot.cupidStampEnable=true
 GFRobot.giftEnable=true
 GFRobot.questEnable=true
 GFRobot.jobEnable=true

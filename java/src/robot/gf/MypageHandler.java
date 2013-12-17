@@ -12,6 +12,8 @@ public class MypageHandler extends GFEventHandler {
 			.compile("<h1><a href=\"/profile\">(.*?)</a></h1>");
 	private static final Pattern HTML_JOB_CARD_SETTING_PATTERN = Pattern
 			.compile("/job/job-card-setting");
+	private static final Pattern HTML_JOB_FINISH_PATTERN = Pattern
+			.compile("<a id=\"finishJobBtn\" class=\"btnPink\">受け取る</a>");
 
 	public MypageHandler(final GFRobot robot) {
 		super(robot);
@@ -23,6 +25,7 @@ public class MypageHandler extends GFEventHandler {
 		session.put("isMypage", false);
 		session.put("isUpgradeEnable", this.robot.isUpgradeEnable());
 		session.put("isCupidEnable", this.robot.isCupidEnable());
+		session.put("isCupidStampEnable", this.robot.isCupidStampEnable());
 		session.put("isGiftEnable", this.robot.isGiftEnable());
 		session.put("isJobEnable", this.robot.isJobEnable());
 		session.put("isQuestEnable", this.robot.isQuestEnable());
@@ -33,6 +36,8 @@ public class MypageHandler extends GFEventHandler {
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
+		this.resolveJavascriptToken(html);
+
 		if (!this.is("isMypage")) {
 			final Matcher userNameMatcher = MypageHandler.HTML_USER_NAME_PATTERN
 					.matcher(html);
@@ -58,6 +63,11 @@ public class MypageHandler extends GFEventHandler {
 			return "/cupid";
 		}
 
+		if (this.is("isCupidStampEnable")) {
+			session.put("isCupidStampEnable", false);
+			return "/cupid/stamp";
+		}
+
 		if (this.is("isUpgradeEnable")) {
 			session.put("isUpgradeEnable", false);
 			return "/upgrade";
@@ -72,6 +82,9 @@ public class MypageHandler extends GFEventHandler {
 			session.put("isJobEnable", false);
 			if (HTML_JOB_CARD_SETTING_PATTERN.matcher(html).find()) {
 				return "/job/setting";
+			}
+			if (HTML_JOB_FINISH_PATTERN.matcher(html).find()) {
+				return "/job/payment";
 			}
 		}
 

@@ -5,8 +5,12 @@ import robot.LoginHandler;
 import robot.gf.cupid.CupidExecHandler;
 import robot.gf.cupid.CupidHandler;
 import robot.gf.cupid.CupidResultHandler;
+import robot.gf.cupid.CupidStampExecHandler;
+import robot.gf.cupid.CupidStampHandler;
+import robot.gf.cupid.CupidStampResultHandler;
 import robot.gf.gift.GiftHandler;
 import robot.gf.gift.GiftReceiveHandler;
+import robot.gf.job.JobPaymentHandler;
 import robot.gf.job.JobSettingHandler;
 import robot.gf.job.JobStartHandler;
 import robot.gf.quest.QuestHandler;
@@ -30,6 +34,12 @@ public class GFRobot extends AbstractRobot {
 		this.registerHandler("/cupid", new CupidHandler(this));
 		this.registerHandler("/cupid/exec", new CupidExecHandler(this));
 		this.registerHandler("/cupid/result", new CupidResultHandler(this));
+		// cupid stamp
+		this.registerHandler("/cupid/stamp", new CupidStampHandler(this));
+		this.registerHandler("/cupid/stamp/exec", new CupidStampExecHandler(
+				this));
+		this.registerHandler("/cupid/stamp/result",
+				new CupidStampResultHandler(this));
 		// gift
 		this.registerHandler("/gift", new GiftHandler(this));
 		this.registerHandler("/gift/receive", new GiftReceiveHandler(this));
@@ -47,6 +57,7 @@ public class GFRobot extends AbstractRobot {
 		// job
 		this.registerHandler("/job/setting", new JobSettingHandler(this));
 		this.registerHandler("/job/start", new JobStartHandler(this));
+		this.registerHandler("/job/payment", new JobPaymentHandler(this));
 	}
 
 	@Override
