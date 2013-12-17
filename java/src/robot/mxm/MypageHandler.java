@@ -10,8 +10,8 @@ public class MypageHandler extends MxmEventHandler {
 			.compile("<title>(.*)?</title>");
 	private static final Pattern HTML_USER_NAME_PATTERN = Pattern
 			.compile("<div class=\"fsLarge marginRight10\">(.*?)</div>");
-	private static final Pattern HTML_USER_LEVEL_PATTERN = Pattern
-			.compile("<dl class=\"userLevel\"><dt>Lv</dt><dd>(.*?)</dd></dl>");
+	private static final Pattern DAILY_ELEMENT_PATTERN = Pattern
+			.compile("http://stat100.ameba.jp/mxm/ver01/page/img/orgn/daily_mission/icon_daily_element([\\d]).png");
 
 	public MypageHandler(final MxmRobot robot) {
 		super(robot);
@@ -22,7 +22,7 @@ public class MypageHandler extends MxmEventHandler {
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
-		this.resolveInputToken(html);
+		this.resolveMxmToken(html);
 		this.log.debug(html);
 		if (!this.is("isMypage")) {
 			final Matcher userNameMatcher = MypageHandler.HTML_USER_NAME_PATTERN
@@ -44,13 +44,29 @@ public class MypageHandler extends MxmEventHandler {
 			}
 		}
 
+		this.findDailyElement(html);
+
+		if (this.is("isQuestEnable")) {
+			session.put("isQuestEnable", false);
+			return "/quest/user/list";
+		}
+
 		this.reset();
 		return "/exit";
+	}
+
+	private void findDailyElement(String html) {
+		final Map<String, Object> session = this.robot.getSession();
+		Matcher matcher = DAILY_ELEMENT_PATTERN.matcher(html);
+		if (matcher.find()) {
+			String dailyElement = matcher.group(1);
+			session.put("dailyElement", dailyElement);
+		}
 	}
 
 	private void reset() {
 		final Map<String, Object> session = this.robot.getSession();
 		session.put("isMypage", false);
-
+		session.put("isQuestEnable", this.robot.isQuestEnable());
 	}
 }
