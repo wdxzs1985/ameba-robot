@@ -29,6 +29,9 @@ public class LoginHandler extends AbstractEventHandler<AbstractRobot> {
 		final HttpResponse webLoginResponse = httpClient.post(url, nvps);
 
 		if (webLoginResponse.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+			if (this.log.isInfoEnabled()) {
+				this.log.info("登录ok");
+			}
 			return "/mypage";
 		}
 

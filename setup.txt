@@ -8,77 +8,13 @@ Robot.password=wangjue
 # 每次发送请求间隔（单位为秒）
 Robot.requestDelay=2
 # 等待回复时间(单位为分钟)
-Robot.scheduleDelay=5
+Robot.scheduleDelay=1
 
 ###########################
 #
-# Tnk47Robot
+# MxmRobot
 #
 ###########################
-Tnk47Robot.enable=true
-# 签到开关
-Tnk47Robot.stampGachaEnable=true
-# 活动开关
-Tnk47Robot.eventEnable=true
-# 领取礼物开关（只领药那一排）
-Tnk47Robot.giftEnable=true
-# 冒险开关
-Tnk47Robot.questEnable=true
-# 合战开关
-Tnk47Robot.battleEnable=true
-# 自动强化(N卡和HN卡)开关
-Tnk47Robot.upgradeEnable=true
+MxmRobot.enable=true
 
-###########################
-# 冒险
-###########################
-# 自动选关开关
-# true=自动选关/false=手动选关
-Tnk47Robot.autoSelectStage=true
-# 指定关（手动选关时有效）
-Tnk47Robot.questId=1
-Tnk47Robot.areaId=1
-Tnk47Robot.stageId=1
-
-# 允许使用当日冒险药
-Tnk47Robot.useStaminaToday=true
-# 允许使用小冒险药
-Tnk47Robot.useStamina50=true
-# 允许使用大冒险药
-Tnk47Robot.useStamina100=true
-
-###########################
-# 升级
-###########################
-# 体力加点限制
-# 升级时体力小于设定值时自动加点
-Tnk47Robot.staminaUpLimit=500
-# 攻防加点限制
-# 升级时攻防小于设定值时自动加点
-Tnk47Robot.powerUpLimit=500
-
-###########################
-# 合战
-###########################
-# 合战发动攻击最低分数
-# 低于这个分数的对手将不攻击
-Tnk47Robot.minBattlePoint=200
-
-# 允许使用当日合战药
-Tnk47Robot.useTodayPowerRegenItem=true
-# 允许使用小合战药
-Tnk47Robot.useHalfPowerRegenItem=false
-# 允许使用大合战药
-Tnk47Robot.useFullPowerRegenItem=false
-
-###########################
-# 爬塔
-###########################
-# 指定发送情报的ID
-# Tnk47Robot.notificationUser=949646
-Tnk47Robot.notificationUser=860866
-
-# 允许使用当日爬塔道具
-Tnk47Robot.useGiveItemToday=true
-# 允许使用爬塔道具
-Tnk47Robot.useGiveItem=false
+MxmRobot.questEnable=true

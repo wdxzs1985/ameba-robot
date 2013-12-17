@@ -1,4 +1,4 @@
-package robot.tnk47;
+package robot.mxm;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,9 +8,9 @@ import net.sf.json.JSONObject;
 
 import org.apache.http.message.BasicNameValuePair;
 
-public class UseItemHandler extends Tnk47EventHandler {
+public class UseItemHandler extends MxmEventHandler {
 
-    public UseItemHandler(final Tnk47Robot robot) {
+    public UseItemHandler(final MxmRobot robot) {
         super(robot);
     }
 

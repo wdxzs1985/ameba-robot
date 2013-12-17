@@ -1,4 +1,4 @@
-package robot.tnk47;
+package robot.mxm;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import robot.Launcher;
 
-public class Tnk47Launcher extends Launcher {
+public class MxmLauncher extends Launcher {
 
 	private final ScheduledExecutorService executor = Executors
 			.newScheduledThreadPool(1);
@@ -17,16 +17,16 @@ public class Tnk47Launcher extends Launcher {
 
 	public static void main(final String[] args) {
 		final String setup = args.length > 0 ? args[0] : "setup.txt";
-		final Tnk47Launcher launcher = new Tnk47Launcher();
+		final MxmLauncher launcher = new MxmLauncher();
 		launcher.init(setup);
 		launcher.launch();
 	}
 
 	public void launch() {
 		if (this.log.isInfoEnabled()) {
-			this.log.info(Tnk47Robot.VERSION);
+			this.log.info(MxmRobot.VERSION);
 		}
-		final Tnk47Robot robot = new Tnk47Robot();
+		final MxmRobot robot = new MxmRobot();
 		robot.setConfig(this.config);
 		robot.setHttpClient(this.httpClient);
 		robot.init();

@@ -1,4 +1,4 @@
-package robot.tnk47;
+package robot.mxm;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,12 +13,12 @@ import org.apache.http.message.BasicNameValuePair;
 
 import robot.AbstractEventHandler;
 
-public class EvnetInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
+public class EvnetInfomationHandler extends AbstractEventHandler<MxmRobot> {
 
     private static final Pattern MARATHON_PATTERN = Pattern.compile("/event/marathon/event-marathon\\?eventId=([0-9]+)");
     private static final Pattern POINTRACE_PATTERN = Pattern.compile("/event/pointrace");
 
-    public EvnetInfomationHandler(final Tnk47Robot robot) {
+    public EvnetInfomationHandler(final MxmRobot robot) {
         super(robot);
     }
 

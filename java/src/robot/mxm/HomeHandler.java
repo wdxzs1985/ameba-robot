@@ -1,16 +1,16 @@
-package robot.tnk47;
+package robot.mxm;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import robot.AbstractEventHandler;
 
-public class HomeHandler extends AbstractEventHandler<Tnk47Robot> {
+public class HomeHandler extends AbstractEventHandler<MxmRobot> {
 
 	private static final Pattern HTML_TITLE_PATTERN = Pattern
-			.compile("<title>天下統一クロニクル</title>");
+			.compile("<title>フレンダリアと魔法の指輪</title>");
 
-	public HomeHandler(final Tnk47Robot robot) {
+	public HomeHandler(final MxmRobot robot) {
 		super(robot);
 	}
 

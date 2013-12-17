@@ -1,4 +1,4 @@
-package robot.tnk47;
+package robot.mxm;
 
 import java.util.List;
 import java.util.Map;
@@ -8,9 +8,9 @@ import net.sf.json.JSONObject;
 
 import org.apache.http.message.BasicNameValuePair;
 
-public class GiftHandler extends Tnk47EventHandler {
+public class GiftHandler extends MxmEventHandler {
 
-    public GiftHandler(final Tnk47Robot robot) {
+    public GiftHandler(final MxmRobot robot) {
         super(robot);
     }
 
