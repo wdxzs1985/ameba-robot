@@ -38,9 +38,10 @@ public class QuestRunHandler extends GFEventHandler {
 
 		if (this.log.isInfoEnabled()) {
 			String questName = data.optString("questName");
-			this.log.info(questName);
 			String stageName = data.optString("stageName");
-			this.log.info(stageName);
+			String afterProgress = data.optString("afterProgress");
+			this.log.info(String.format("%s / %s (%s%%)", questName, stageName,
+					afterProgress));
 		}
 
 		if (data.optBoolean("newGetFlg", false)) {
