@@ -9,15 +9,14 @@ import org.apache.http.message.BasicNameValuePair;
 
 import common.CommonHttpClient;
 
-public class LoginHandler extends AbstractEventHandler<Robot> {
+public class LoginHandler extends AbstractEventHandler<AbstractRobot> {
 
-	public LoginHandler(final Robot robot) {
+	public LoginHandler(final AbstractRobot robot) {
 		super(robot);
 	}
 
 	@Override
 	public String handleIt() {
-
 		final String url = "https://login.user.ameba.jp/web/login";
 		final String username = this.robot.getUsername();
 		final String password = this.robot.getPassword();

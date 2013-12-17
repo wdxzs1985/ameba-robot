@@ -16,6 +16,16 @@ public class MypageHandler extends GFEventHandler {
 		this.reset();
 	}
 
+	private void reset() {
+		final Map<String, Object> session = this.robot.getSession();
+		session.put("isMypage", false);
+		session.put("isUpgradeEnable", this.robot.isUpgradeEnable());
+		session.put("isCupidEnable", this.robot.isCupidEnable());
+		session.put("isGiftEnable", this.robot.isGiftEnable());
+		session.put("isQuestEnable", this.robot.isQuestEnable());
+		session.put("isBattleEnable", this.robot.isBattleEnable());
+	}
+
 	@Override
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
@@ -62,28 +72,7 @@ public class MypageHandler extends GFEventHandler {
 			session.put("isQuestEnable", false);
 			return "/quest";
 		}
-
 		this.reset();
-		this.sleep();
-		return "/mypage";
-	}
-
-	private void sleep() {
-		final int delay = this.robot.getDelay();
-		this.log.info(String.format("休息 %d min _(:3_", delay));
-		try {
-			Thread.sleep(delay * 60 * 1000);
-		} catch (final InterruptedException e) {
-		}
-	}
-
-	private void reset() {
-		final Map<String, Object> session = this.robot.getSession();
-		session.put("isMypage", false);
-		session.put("isUpgradeEnable", this.robot.isUpgradeEnable());
-		session.put("isCupidEnable", this.robot.isCupidEnable());
-		session.put("isGiftEnable", this.robot.isGiftEnable());
-		session.put("isQuestEnable", this.robot.isQuestEnable());
-		session.put("isBattleEnable", this.robot.isBattleEnable());
+		return "/exit";
 	}
 }

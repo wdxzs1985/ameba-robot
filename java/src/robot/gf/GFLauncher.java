@@ -1,5 +1,7 @@
 package robot.gf;
 
+import java.util.concurrent.TimeUnit;
+
 import robot.Launcher;
 
 public class GFLauncher extends Launcher {
@@ -19,7 +21,9 @@ public class GFLauncher extends Launcher {
 		robot.setConfig(this.config);
 		robot.setHttpClient(this.httpClient);
 		robot.init();
-		this.executor.execute(robot);
+		// this.executor.execute(robot);
+		final int delay = robot.getDelay();
+		this.executor.schedule(robot, delay, TimeUnit.MINUTES);
 	}
 
 }

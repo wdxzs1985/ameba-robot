@@ -14,7 +14,7 @@ Robot.actionTime=1
 #
 ###########################
 GFRobot.enable=true
-GFRobot.delay=5
+GFRobot.delay=1
 
 GFRobot.upgradeEnable=true
 GFRobot.cupidEnable=true

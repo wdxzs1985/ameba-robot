@@ -6,15 +6,13 @@ import common.CommonHttpClient;
 
 public interface Robot {
 
-	public CommonHttpClient getHttpClient();
+	public void init();
 
 	public void dispatch(String string);
 
-	public String buildPath(String string);
+	public CommonHttpClient getHttpClient();
 
 	public Map<String, Object> getSession();
-
-	public void init();
 
 	public int getActionTime();
 
