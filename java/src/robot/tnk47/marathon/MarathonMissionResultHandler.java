@@ -38,6 +38,7 @@ public class MarathonMissionResultHandler extends Tnk47EventHandler {
                 final String success = matcher.group(1);
                 final String failed = matcher.group(2);
                 this.log.info(String.format("%s匹成功 %s匹失敗", success, failed));
+                this.printSuccessRatio(Integer.valueOf(success) > 0);
             }
             if ((matcher = MarathonMissionResultHandler.TOTAL_ITEM_PATTERN.matcher(html)).find()) {
                 final String totalItemCount = matcher.group(1);
@@ -62,5 +63,32 @@ public class MarathonMissionResultHandler extends Tnk47EventHandler {
             return "/marathon/notification";
         }
         return "/marathon";
+    }
+
+    private void printSuccessRatio(final boolean isSuccess) {
+        final Map<String, Object> session = this.robot.getSession();
+        final String missionKeyId = (String) session.get("missionKeyId");
+        if (StringUtils.equals("1", missionKeyId)) {
+            int suzumeCount = (Integer) (session.containsKey("suzumeCount") ? session.get("suzumeCount")
+                                                                           : 0);
+            int suzumeSuccess = (Integer) (session.containsKey("suzumeSuccess") ? session.get("suzumeSuccess")
+                                                                               : 0);
+
+            suzumeCount++;
+            if (isSuccess) {
+                suzumeSuccess++;
+            }
+
+            session.put("suzumeCount", suzumeCount);
+            session.put("suzumeSuccess", suzumeSuccess);
+
+            if (this.log.isInfoEnabled()) {
+                this.log.info(String.format("遇到麻雀%d只，暴击%d只，暴击率%d%%",
+                                            suzumeCount,
+                                            suzumeSuccess,
+                                            suzumeSuccess * 100 / suzumeCount));
+            }
+        }
+
     }
 }

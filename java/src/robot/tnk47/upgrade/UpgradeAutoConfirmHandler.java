@@ -30,16 +30,16 @@ public class UpgradeAutoConfirmHandler extends Tnk47EventHandler {
         this.resolveJsonToken(jsonResponse);
 
         if (jsonResponse.containsKey("data")) {
-            final JSONObject data = jsonResponse.getJSONObject("data");
-            if (data.getBoolean("canUpgrade")) {
-                final JSONArray materialUserCards = data.getJSONArray("materialUserCards");
+            final JSONObject data = jsonResponse.optJSONObject("data");
+            if (data.optBoolean("canUpgrade")) {
+                final JSONArray materialUserCards = data.optJSONArray("materialUserCards");
                 final StringBuilder materialUserCardIds = new StringBuilder();
                 for (int i = 0; i < materialUserCards.size(); i++) {
                     if (i != 0) {
                         materialUserCardIds.append(",");
                     }
-                    final JSONObject materialUserCard = materialUserCards.getJSONObject(i);
-                    final String materialUserCardId = materialUserCard.getString("userCardId");
+                    final JSONObject materialUserCard = materialUserCards.optJSONObject(i);
+                    final String materialUserCardId = materialUserCard.optString("userCardId");
                     materialUserCardIds.append(materialUserCardId);
                 }
                 session.put("baseUserCardId", baseUserCardId);
@@ -48,7 +48,7 @@ public class UpgradeAutoConfirmHandler extends Tnk47EventHandler {
                 return "/upgrade/upgrade-animation";
             }
         } else if (jsonResponse.containsKey("message")) {
-            final String message = jsonResponse.getString("message");
+            final String message = jsonResponse.optString("message");
             if (this.log.isInfoEnabled()) {
                 this.log.info(message);
             }

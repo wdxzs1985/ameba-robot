@@ -40,14 +40,14 @@ public class BattleDetailHandler extends AbstractBattleHandler {
 
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
-            final String battleStartType = jsonPageParams.getString("battleStartType");
+            final String battleStartType = jsonPageParams.optString("battleStartType");
             session.put("battleStartType", battleStartType);
-            final JSONObject userData = jsonPageParams.getJSONObject("userData");
-            final JSONObject data = userData.getJSONObject("data");
+            final JSONObject userData = jsonPageParams.optJSONObject("userData");
+            final JSONObject data = userData.optJSONObject("data");
 
             final JSONObject supportFriend = this.findSupportFriend(data);
             if (supportFriend != null) {
-                final String supportUserId = supportFriend.getString("userId");
+                final String supportUserId = supportFriend.optString("userId");
                 this.sendSupport(supportUserId);
             }
 
@@ -61,11 +61,11 @@ public class BattleDetailHandler extends AbstractBattleHandler {
             } else {
                 final JSONObject battleEnemy = this.findBattleEnemy(data);
                 if (battleEnemy != null) {
-                    final String userId = battleEnemy.getString("userId");
+                    final String userId = battleEnemy.optString("userId");
                     session.put("enemyId", userId);
                     if (this.log.isInfoEnabled()) {
-                        final String userName = battleEnemy.getString("userName");
-                        final String userLevel = battleEnemy.getString("userLevel");
+                        final String userName = battleEnemy.optString("userName");
+                        final String userLevel = battleEnemy.optString("userLevel");
                         this.log.info(String.format("向 %s(%s) 发动攻击",
                                                     userName,
                                                     userLevel));
@@ -88,21 +88,21 @@ public class BattleDetailHandler extends AbstractBattleHandler {
             final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
             this.resolveJsonToken(jsonResponse);
             if (this.log.isInfoEnabled()) {
-                final JSONObject data = jsonResponse.getJSONObject("data");
-                final String resultMessage = data.getString("resultMessage");
+                final JSONObject data = jsonResponse.optJSONObject("data");
+                final String resultMessage = data.optString("resultMessage");
                 this.log.info(resultMessage);
             }
         }
     }
 
     private JSONObject findSupportFriend(final JSONObject data) {
-        final JSONArray friendData = data.getJSONArray("friendData");
+        final JSONArray friendData = data.optJSONArray("friendData");
         int maxUserLoseCount = 0;
         JSONObject supportFriend = null;
         for (int i = 0; i < friendData.size(); i++) {
-            final JSONObject friend = friendData.getJSONObject(i);
-            if (friend.getBoolean("canSupport")) {
-                final int userLoseCount = friend.getInt("userLoseCount");
+            final JSONObject friend = friendData.optJSONObject(i);
+            if (friend.optBoolean("canSupport", false)) {
+                final int userLoseCount = friend.optInt("userLoseCount");
                 if (maxUserLoseCount <= userLoseCount) {
                     supportFriend = friend;
                     maxUserLoseCount = userLoseCount;
@@ -122,20 +122,20 @@ public class BattleDetailHandler extends AbstractBattleHandler {
         final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
         this.resolveJsonToken(jsonResponse);
         if (this.log.isInfoEnabled()) {
-            final JSONObject data = jsonResponse.getJSONObject("data");
-            final String supportUserName = data.getString("supportUserName");
+            final JSONObject data = jsonResponse.optJSONObject("data");
+            final String supportUserName = data.optString("supportUserName");
             this.log.info(String.format("给%s发送了应援", supportUserName));
         }
     }
 
     private JSONObject findBattleEnemy(final JSONObject data) {
-        final JSONArray enemyData = data.getJSONArray("enemyData");
+        final JSONArray enemyData = data.optJSONArray("enemyData");
         JSONObject battleEnemy = null;
         int maxBattlePoint = this.robot.getMinBattlePoint();
         for (int i = 0; i < enemyData.size(); i++) {
-            final JSONObject enemy = enemyData.getJSONObject(i);
-            final String topIcons = enemy.getString("topIcons");
-            final int getBattlePoint = enemy.getInt("getBattlePoint");
+            final JSONObject enemy = enemyData.optJSONObject(i);
+            final String topIcons = enemy.optString("topIcons");
+            final int getBattlePoint = enemy.optInt("getBattlePoint");
             if (StringUtils.contains(topIcons, "caution")) {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("！！！神壕出没，闪避！！！");

@@ -20,8 +20,8 @@ public class GiftHandler extends Tnk47EventHandler {
         this.resolveInputToken(html);
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
-            final JSONObject firstPageData = jsonPageParams.getJSONObject("firstPageData");
-            final int page = firstPageData.getInt("page");
+            final JSONObject firstPageData = jsonPageParams.optJSONObject("firstPageData");
+            final int page = firstPageData.optInt("page");
             if (page > 0) {
                 final String giftIds = this.buildGiftIds(firstPageData);
                 this.sendReceiveAllGift(giftIds);
@@ -36,14 +36,14 @@ public class GiftHandler extends Tnk47EventHandler {
     }
 
     private String buildGiftIds(final JSONObject firstPageData) {
-        final JSONArray giftDtos = firstPageData.getJSONArray("giftDtos");
+        final JSONArray giftDtos = firstPageData.optJSONArray("giftDtos");
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < giftDtos.size(); i++) {
             if (i != 0) {
                 builder.append(",");
             }
-            final JSONObject giftDto = giftDtos.getJSONObject(i);
-            builder.append(giftDto.getString("giftId"));
+            final JSONObject giftDto = giftDtos.optJSONObject(i);
+            builder.append(giftDto.optString("giftId"));
         }
         return builder.toString();
     }
@@ -58,10 +58,10 @@ public class GiftHandler extends Tnk47EventHandler {
 
         final JSONObject jsonResponse = this.httpPostJSON("/gift/ajax/put-recive-all-gift",
                                                           nvps);
-        final JSONArray data = jsonResponse.getJSONArray("data");
+        final JSONArray data = jsonResponse.optJSONArray("data");
         for (int i = 0; i < data.size(); i++) {
-            final JSONObject reward = data.getJSONObject(i);
-            final String rewardName = reward.getString("rewardName");
+            final JSONObject reward = data.optJSONObject(i);
+            final String rewardName = reward.optString("rewardName");
             if (this.log.isInfoEnabled()) {
                 this.log.info(String.format("领取礼物： %s", rewardName));
             }

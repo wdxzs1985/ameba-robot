@@ -31,12 +31,12 @@ public class UpgradeAnimationHandler extends Tnk47EventHandler {
         this.resolveInputToken(html);
         if (this.log.isInfoEnabled()) {
             final JSONObject jsonPageParams = this.resolvePageParams(html);
-            final int getExperience = jsonPageParams.getInt("getExperience");
+            final int getExperience = jsonPageParams.optInt("getExperience");
             this.log.info(String.format("获得%d经验", getExperience));
-            final boolean isLevelUp = jsonPageParams.getBoolean("isLevelUp");
+            final boolean isLevelUp = jsonPageParams.optBoolean("isLevelUp");
             if (isLevelUp) {
-                final int levelBeforeUpgrade = jsonPageParams.getInt("levelBeforeUpgrade");
-                final int levelAfterUpgrade = jsonPageParams.getInt("levelAfterUpgrade");
+                final int levelBeforeUpgrade = jsonPageParams.optInt("levelBeforeUpgrade");
+                final int levelAfterUpgrade = jsonPageParams.optInt("levelAfterUpgrade");
                 this.log.info(String.format("等级 %d → %d",
                                             levelBeforeUpgrade,
                                             levelAfterUpgrade));

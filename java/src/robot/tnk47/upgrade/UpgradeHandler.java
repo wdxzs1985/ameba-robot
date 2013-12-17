@@ -32,14 +32,14 @@ public class UpgradeHandler extends Tnk47EventHandler {
 
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
-            final JSONObject firstPageData = jsonPageParams.getJSONObject("firstPageData");
-            final JSONArray userCards = firstPageData.getJSONArray("userCards");
+            final JSONObject firstPageData = jsonPageParams.optJSONObject("firstPageData");
+            final JSONArray userCards = firstPageData.optJSONArray("userCards");
             if (userCards.size() > 0) {
-                final JSONObject userCard = userCards.getJSONObject(0);
-                final String userCardId = userCard.getString("userCardId");
+                final JSONObject userCard = userCards.optJSONObject(0);
+                final String userCardId = userCard.optString("userCardId");
                 session.put("userCardId", userCardId);
                 if (this.log.isInfoEnabled()) {
-                    final String name = userCard.getString("name");
+                    final String name = userCard.optString("name");
                     this.log.info(String.format("开始强化 %s", name));
                 }
                 return "/upgrade/select-base";

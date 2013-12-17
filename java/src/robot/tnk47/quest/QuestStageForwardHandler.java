@@ -39,14 +39,14 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
             this.resolveJsonToken(jsonResponse);
         }
 
-        final JSONObject data = jsonResponse.getJSONObject("data");
+        final JSONObject data = jsonResponse.optJSONObject("data");
 
-        if (!StringUtils.equals(data.getString("needExpForNextLevel"), "null")) {
-            final int needExpForNextLevel = data.getInt("needExpForNextLevel");
+        final int needExpForNextLevel = data.optInt("needExpForNextLevel", 0);
+        if (needExpForNextLevel > 0) {
             session.put("needExpForNextLevel", needExpForNextLevel);
-            final JSONObject userData = data.getJSONObject("userData");
-            final int stamina = userData.getInt("stamina");
-            final int maxStamina = userData.getInt("maxStamina");
+            final JSONObject userData = data.optJSONObject("userData");
+            final int stamina = userData.optInt("stamina");
+            final int maxStamina = userData.optInt("maxStamina");
 
             if (this.log.isInfoEnabled()) {
                 this.log.info(String.format("体力[%d/%d]，还有[%d]经验升级。",
@@ -59,12 +59,12 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
         this.printAreaEncount(data);
         this.printStageRewardFindStatuses(data);
         // 通关
-        if (data.getBoolean("clearStage")) {
+        if (data.optBoolean("clearStage")) {
             return "/quest";
         }
 
         // 升级
-        if (data.getBoolean("levelUp")) {
+        if (data.optBoolean("levelUp")) {
             return this.onLevelUp(data);
         }
         //
@@ -88,7 +88,7 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
             }
         }
         //
-        final String questMessage = data.getString("questMessage");
+        final String questMessage = data.optString("questMessage");
         if (!StringUtils.equals(questMessage, "null")) {
             if (StringUtils.equals("行動Ptが足りません", questMessage)) {
                 if (this.log.isInfoEnabled()) {
@@ -109,14 +109,12 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
     private void printStageRewardFindStatuses(final JSONObject data) {
         if (this.log.isInfoEnabled()) {
             if (!this.is("isQuestFindAll")) {
-                data.getString("stageRewardFindStatuses");
-                if (!StringUtils.equals(data.getString("stageRewardFindStatuses"),
-                                        "null")) {
+                final JSONArray stageRewardFindStatuses = data.optJSONArray("stageRewardFindStatuses");
+                if (stageRewardFindStatuses != null) {
                     boolean findAll = true;
-                    final JSONArray stageRewardFindStatuses = data.getJSONArray("stageRewardFindStatuses");
                     for (int i = 0; i < stageRewardFindStatuses.size(); i++) {
-                        final JSONObject findStatus = stageRewardFindStatuses.getJSONObject(i);
-                        findAll = findAll && findStatus.getBoolean("rewardGet");
+                        final JSONObject findStatus = stageRewardFindStatuses.optJSONObject(i);
+                        findAll = findAll && findStatus.optBoolean("rewardGet");
                     }
                     if (findAll) {
                         this.log.info("这张地图的卡片已经集齐");
@@ -132,15 +130,15 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
         if (this.log.isInfoEnabled()) {
             if (data.containsKey("areaEncountType")) {
 
-                final String areaEncountType = data.getString("areaEncountType");
+                final String areaEncountType = data.optString("areaEncountType");
                 if (!StringUtils.equals(areaEncountType, "null")) {
                     if (StringUtils.equals(areaEncountType, "ITEM")) {
-                        final JSONObject encountCardData = data.getJSONObject("encountCardData");
-                        final String name = encountCardData.getString("name");
+                        final JSONObject encountCardData = data.optJSONObject("encountCardData");
+                        final String name = encountCardData.optString("name");
                         this.log.info(String.format("隊士発見: %s", name));
                     } else if (StringUtils.equals(areaEncountType, "EVENT")) {
                         if (this.log.isInfoEnabled()) {
-                            final String encountMessage = data.getString("encountMessage");
+                            final String encountMessage = data.optString("encountMessage");
                             this.log.info(encountMessage);
                         }
                     }
@@ -150,27 +148,27 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
     }
 
     private boolean isMaxPower(final JSONObject data) {
-        final JSONObject userData = data.getJSONObject("userData");
-        final int maxPower = userData.getInt("maxPower");
-        final int attackPower = userData.getInt("attackPower");
+        final JSONObject userData = data.optJSONObject("userData");
+        final int maxPower = userData.optInt("maxPower");
+        final int attackPower = userData.optInt("attackPower");
         return maxPower == attackPower;
     }
 
     private boolean isCardFull(final JSONObject data) {
-        final JSONObject userData = data.getJSONObject("userData");
-        final int maxCardCount = userData.getInt("maxCardCount");
-        final int cardCount = userData.getInt("cardCount");
+        final JSONObject userData = data.optJSONObject("userData");
+        final int maxCardCount = userData.optInt("maxCardCount");
+        final int cardCount = userData.optInt("cardCount");
         return maxCardCount == cardCount;
     }
 
     private String onLevelUp(final JSONObject data) {
         final Map<String, Object> session = this.robot.getSession();
 
-        final JSONObject userData = data.getJSONObject("userData");
-        final int maxStamina = userData.getInt("maxStamina");
-        final int maxPower = userData.getInt("maxPower");
-        final int attrPoints = userData.getInt("attrPoints");
-        final int level = userData.getInt("level");
+        final JSONObject userData = data.optJSONObject("userData");
+        final int maxStamina = userData.optInt("maxStamina");
+        final int maxPower = userData.optInt("maxPower");
+        final int attrPoints = userData.optInt("attrPoints");
+        final int level = userData.optInt("level");
         if (this.log.isInfoEnabled()) {
             this.log.info(String.format("升到了%d级", level));
         }
@@ -190,18 +188,17 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
     }
 
     private boolean isUseItem(final JSONObject data) {
-        final String regenStaminaItemsValue = data.getString("regenStaminaItems");
-        if (!StringUtils.equals(regenStaminaItemsValue, "null")) {
+        final JSONArray regenStaminaItems = data.optJSONArray("regenStaminaItems");
+        if (regenStaminaItems != null) {
             final Map<String, Object> session = this.robot.getSession();
-            final JSONObject userData = data.getJSONObject("userData");
-            final int maxStamina = userData.getInt("maxStamina");
+            final JSONObject userData = data.optJSONObject("userData");
+            final int maxStamina = userData.optInt("maxStamina");
             final int needExpForNextLevel = (Integer) session.get("needExpForNextLevel");
-            final JSONArray regenStaminaItems = data.getJSONArray("regenStaminaItems");
             for (int i = 0; i < regenStaminaItems.size(); i++) {
                 final JSONObject regenStamina = (JSONObject) regenStaminaItems.get(i);
-                final String code = regenStamina.getString("code");
-                final String name = regenStamina.getString("name");
-                final String itemId = regenStamina.getString("itemId");
+                final String code = regenStamina.optString("code");
+                final String name = regenStamina.optString("name");
+                final String itemId = regenStamina.optString("itemId");
                 if (this.robot.isUseStaminaToday() && StringUtils.contains(name,
                                                                            "当日")) {
                     session.put("itemId", itemId);

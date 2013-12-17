@@ -23,10 +23,10 @@ public abstract class AbstractGachaHandler extends Tnk47EventHandler {
             if (pageParamsMatcher.find()) {
                 final String group = pageParamsMatcher.group(1);
                 final JSONObject gachaResultObj = JSONObject.fromObject(group);
-                final JSONArray cardList = gachaResultObj.getJSONArray("cardList");
+                final JSONArray cardList = gachaResultObj.optJSONArray("cardList");
                 for (int i = 0; i < cardList.size(); i++) {
-                    final JSONObject card = cardList.getJSONObject(i);
-                    final String name = card.getString("name");
+                    final JSONObject card = cardList.optJSONObject(i);
+                    final String name = card.optString("name");
                     this.log.info(String.format("获得报酬： %s", name));
                 }
             } else {

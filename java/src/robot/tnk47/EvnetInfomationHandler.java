@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.AbstractEventHandler;
@@ -29,22 +28,22 @@ public class EvnetInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
         final List<BasicNameValuePair> nvps = Collections.emptyList();
         final String html = this.robot.getHttpClient().postForHtml(input, nvps);
         final JSONObject currentEventInfomation = JSONObject.fromObject(html);
-        final JSONObject data = currentEventInfomation.getJSONObject("data");
+        final JSONObject data = currentEventInfomation.optJSONObject("data");
 
-        if (!StringUtils.equals(data.getString("currentEventInfoDto"), "null")) {
-            final JSONObject currentEventInfoDto = data.getJSONObject("currentEventInfoDto");
+        final JSONObject currentEventInfoDto = data.optJSONObject("currentEventInfoDto");
+        if (currentEventInfoDto != null) {
             if (this.log.isInfoEnabled()) {
-                final int rank = currentEventInfoDto.getInt("rank");
-                final int score = currentEventInfoDto.getInt("score");
-                final String term = currentEventInfoDto.getString("term");
-                final String mainText = currentEventInfoDto.getString("mainText");
+                final int rank = currentEventInfoDto.optInt("rank");
+                final int score = currentEventInfoDto.optInt("score");
+                final String term = currentEventInfoDto.optString("term");
+                final String mainText = currentEventInfoDto.optString("mainText");
                 this.log.info("イベント中");
                 this.log.info(term);
                 this.log.info(mainText);
                 this.log.info(String.format("获得总分: %d，排名: %d", score, rank));
             }
 
-            final String linkUrl = currentEventInfoDto.getString("linkUrl");
+            final String linkUrl = currentEventInfoDto.optString("linkUrl");
             Matcher matcher = null;
             if ((matcher = EvnetInfomationHandler.POINTRACE_PATTERN.matcher(linkUrl)).find()) {
                 session.put("isBattleEnable", false);

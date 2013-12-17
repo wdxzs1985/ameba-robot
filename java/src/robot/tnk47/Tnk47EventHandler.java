@@ -41,7 +41,7 @@ public abstract class Tnk47EventHandler extends
 
     protected void resolveJsonToken(final JSONObject jsonResponse) {
         final Map<String, Object> session = this.robot.getSession();
-        final String newToken = jsonResponse.getString("token");
+        final String newToken = jsonResponse.optString("token");
         session.put("token", newToken);
     }
 }

@@ -37,10 +37,10 @@ public class MarathonStageBossHandler extends AbstractEventHandler<Tnk47Robot> {
             final Matcher bossResultMatcher = MarathonStageBossHandler.BOSS_RESULT_PATTERN.matcher(html);
             if (bossResultMatcher.find()) {
                 final String jsonString = bossResultMatcher.group(1);
-                final JSONObject bossResult = JSONObject.fromObject(jsonString)
-                                                        .getJSONObject("bossResult");
-                final JSONObject bossInfo = bossResult.getJSONObject("bossInfo");
-                bossName = bossInfo.getString("name");
+                final JSONObject data = JSONObject.fromObject(jsonString);
+                final JSONObject bossResult = data.optJSONObject("bossResult");
+                final JSONObject bossInfo = bossResult.optJSONObject("bossInfo");
+                bossName = bossInfo.optString("name");
                 this.log.info("击败BOSS: " + bossName);
             }
         }
