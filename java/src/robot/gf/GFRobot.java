@@ -98,7 +98,7 @@ public class GFRobot extends AbstractRobot {
 
 	public boolean isAutoSelectStage() {
 		final String key = "GFRobot.autoSelectStage";
-		final String value = this.getConfig().getProperty(key, "false");
+		final String value = this.getConfig().getProperty(key, "true");
 		return Boolean.valueOf(value);
 	}
 
