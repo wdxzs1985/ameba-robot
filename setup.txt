@@ -5,6 +5,8 @@
 Robot.username=bushing
 # 密码
 Robot.password=wangjue
+# cookie
+Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
 Robot.requestDelay=2
 # 等待回复时间(单位为分钟)
