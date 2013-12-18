@@ -18,11 +18,6 @@ public class CupidStampResultHandler extends GFEventHandler {
 	@Override
 	public String handleIt() {
 		final String html = this.httpGet("/cupid/stamp-result");
-
-		if (this.log.isDebugEnabled()) {
-			this.log.debug(html);
-		}
-
 		final Matcher matcher = CupidStampResultHandler.CARD_NAME_PATTERN
 				.matcher(html);
 		while (matcher.find()) {

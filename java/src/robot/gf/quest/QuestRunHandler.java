@@ -45,7 +45,7 @@ public class QuestRunHandler extends GFEventHandler {
 					afterProgress));
 		}
 
-		if (data.optBoolean("newGetFlg", false)) {
+		if (data.containsKey("rewardCardName")) {
 			final String rewardCardName = data.optString("rewardCardName");
 			if (this.log.isInfoEnabled()) {
 				this.log.info(String.format("发现新妹纸: %s", rewardCardName));
@@ -58,6 +58,28 @@ public class QuestRunHandler extends GFEventHandler {
 					session.put("isQuestEnable", true);
 					return "/upgrade";
 				}
+			}
+		}
+
+		if (data.containsKey("treasureSetName")) {
+			final String treasureSetName = data.optString("treasureSetName");
+			final String treasureName = data.optString("treasureName");
+			if (this.log.isInfoEnabled()) {
+				this.log.info(String.format("发现: %s (%s)", treasureSetName,
+						treasureName));
+			}
+		}
+
+		if (data.optBoolean("dearUpFlg")) {
+			if (this.log.isInfoEnabled()) {
+				String dearCardName = data.optString("dearCardName");
+				int beforeDearLevel = data.optInt("beforeDearLevel");
+				int beforeDearPoint = data.optInt("beforeDearPoint");
+				int afterDearLevel = data.optInt("afterDearLevel");
+				int afterDearPoint = data.optInt("afterDearPoint");
+				this.log.info(String.format("%s dearup %d(%d) > %d(%d)",
+						dearCardName, beforeDearLevel, beforeDearPoint,
+						afterDearLevel, afterDearPoint));
 			}
 		}
 

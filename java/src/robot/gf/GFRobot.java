@@ -13,6 +13,8 @@ import robot.gf.gift.GiftReceiveHandler;
 import robot.gf.job.JobPaymentHandler;
 import robot.gf.job.JobSettingHandler;
 import robot.gf.job.JobStartHandler;
+import robot.gf.quest.QuestBossHandler;
+import robot.gf.quest.QuestDetailHandler;
 import robot.gf.quest.QuestHandler;
 import robot.gf.quest.QuestRunHandler;
 import robot.gf.upgrade.UpgradeAnimationHandler;
@@ -52,7 +54,9 @@ public class GFRobot extends AbstractRobot {
 
 		// quest
 		this.registerHandler("/quest", new QuestHandler(this));
+		this.registerHandler("/quest/detail", new QuestDetailHandler(this));
 		this.registerHandler("/quest/run", new QuestRunHandler(this));
+		this.registerHandler("/quest/boss", new QuestBossHandler(this));
 
 		// job
 		this.registerHandler("/job/setting", new JobSettingHandler(this));

@@ -41,7 +41,9 @@ public class JobStartHandler extends GFEventHandler {
 					userCardId);
 			final String html = this.httpGet(path);
 			if (this.log.isInfoEnabled()) {
-				String name = jsonResponse.optString("name");
+				JSONObject data = jsonResponse.optJSONObject("data");
+				JSONObject accompanyCard = data.optJSONObject("accompanyCard");
+				String name = accompanyCard.optString("name");
 				this.log.info(String.format("MEIZHI：%s", name));
 
 				Matcher matcher = null;

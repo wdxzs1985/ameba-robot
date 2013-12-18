@@ -1,15 +1,11 @@
 package robot.gf.cupid;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import robot.gf.GFEventHandler;
 import robot.gf.GFRobot;
 
 public class CupidStampExecHandler extends GFEventHandler {
-
-	private static final Pattern POST_URL_PATTERN = Pattern
-			.compile("var postUrl = \"/cupid/stamp-result\";");
 
 	public CupidStampExecHandler(final GFRobot robot) {
 		super(robot);
