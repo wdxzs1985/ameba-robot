@@ -2,10 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing2
+Robot.username=
 # 密码
 Robot.password=
-
 # Robot.cookie
 Robot.cookie=_gf.cookie
 # 每次发送请求间隔（单位为秒）
