@@ -89,14 +89,14 @@ public class QuestRunHandler extends GFEventHandler {
 
         if (data.optBoolean("questClear", false)) {
             if (this.log.isInfoEnabled()) {
-                this.log.info("quest Clear");
+                this.log.info("Quest Clear");
             }
             return "/quest";
         }
 
         if (data.optBoolean("stageClear", false)) {
             if (this.log.isInfoEnabled()) {
-                this.log.info("stage Clear");
+                this.log.info("Stage Clear");
             }
             return "/quest";
         }

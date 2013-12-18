@@ -9,27 +9,26 @@ import robot.gf.GFRobot;
 
 public class CupidResultHandler extends GFEventHandler {
 
-	private static final Pattern CARD_NAME_PATTERN = Pattern
-			.compile("<input id=\"memberName\" type=\"hidden\" value=\"(.*?)\"/>");
+    private static final Pattern CARD_NAME_PATTERN = Pattern.compile("<input id=\"memberName\" type=\"hidden\" value=\"(.*?)\"/>");
 
-	public CupidResultHandler(final GFRobot robot) {
-		super(robot);
-	}
+    public CupidResultHandler(final GFRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		final Map<String, Object> session = this.robot.getSession();
-		final String token = (String) session.get("token");
-		final String html = this.httpGet(String.format(
-				"/cupid/cupid-result?token=%s", token));
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String token = (String) session.get("token");
+        final String html = this.httpGet(String.format("/cupid/cupid-result?token=%s",
+                                                       token));
 
-		Matcher cardNameMatcher = CARD_NAME_PATTERN.matcher(html);
-		while (cardNameMatcher.find()) {
-			String cardName = cardNameMatcher.group(1);
-			if (this.log.isInfoEnabled()) {
-				this.log.info(String.format("get card: %s", cardName));
-			}
-		}
-		return "/cupid";
-	}
+        final Matcher cardNameMatcher = CupidResultHandler.CARD_NAME_PATTERN.matcher(html);
+        while (cardNameMatcher.find()) {
+            final String cardName = cardNameMatcher.group(1);
+            if (this.log.isInfoEnabled()) {
+                this.log.info(String.format("抽到妹子: %s", cardName));
+            }
+        }
+        return "/cupid";
+    }
 }
