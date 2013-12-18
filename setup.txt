@@ -17,7 +17,6 @@ Robot.scheduleDelay=5
 # Tnk47Robot
 #
 ###########################
-Tnk47Robot.enable=true
 # 签到开关
 Tnk47Robot.stampGachaEnable=true
 # 活动开关
@@ -38,9 +37,9 @@ Tnk47Robot.upgradeEnable=true
 # true=自动选关/false=手动选关
 Tnk47Robot.autoSelectStage=true
 # 指定关（手动选关时有效）
-Tnk47Robot.questId=1
-Tnk47Robot.areaId=1
-Tnk47Robot.stageId=1
+Tnk47Robot.selectedQuestId=1
+Tnk47Robot.selectedAreaId=1
+Tnk47Robot.selectedStageId=1
 
 # 允许使用当日冒险药
 Tnk47Robot.useStaminaToday=true
@@ -48,6 +47,9 @@ Tnk47Robot.useStaminaToday=true
 Tnk47Robot.useStamina50=true
 # 允许使用大冒险药
 Tnk47Robot.useStamina100=true
+# 使用冒险药的经验比例
+# 如果剩余升级经验小于总体力 x N% 的时候不会吃药
+Tnk47Robot.useStaminaRatio=75
 
 ###########################
 # 升级
@@ -64,7 +66,11 @@ Tnk47Robot.powerUpLimit=500
 ###########################
 # 合战发动攻击最低分数
 # 低于这个分数的对手将不攻击
-Tnk47Robot.minBattlePoint=200
+Tnk47Robot.battlePointFilter=200
+# 每场合战最低总分
+# 超过这个值将不继续攻击
+# 设0为自动停止
+Tnk47Robot.minBattlePoint=0
 
 # 允许使用当日合战药
 Tnk47Robot.useTodayPowerRegenItem=true
@@ -77,10 +83,11 @@ Tnk47Robot.useFullPowerRegenItem=false
 # 爬塔
 ###########################
 # 指定发送情报的ID
-# Tnk47Robot.notificationUser=949612
 Tnk47Robot.notificationUser=949646
 
 # 允许使用当日爬塔道具
 Tnk47Robot.useGiveItemToday=true
 # 允许使用爬塔道具
 Tnk47Robot.useGiveItem=false
+# 使用爬塔道具策略
+Tnk47Robot.onlyGiveOne=false

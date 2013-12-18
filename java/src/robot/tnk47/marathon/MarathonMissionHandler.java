@@ -17,8 +17,16 @@ public class MarathonMissionHandler extends Tnk47EventHandler {
     private static final Pattern GIVE_ITEM_PATTERN = Pattern.compile("所持数:(\\d+)個");
     private static final Pattern GIVE_ITEM_TODAY_PATTERN = Pattern.compile("所持数（当日）:(\\d+)個");
 
+    private final boolean useGiveItemToday;
+    private final boolean useGiveItem;
+    private final boolean onlyGiveOne;
+
     public MarathonMissionHandler(final Tnk47Robot robot) {
         super(robot);
+        this.useGiveItemToday = robot.isUseGiveItemToday();
+        this.useGiveItem = robot.isUseGiveItem();
+        this.onlyGiveOne = robot.isOnlyGiveOne();
+
     }
 
     @Override
@@ -48,23 +56,48 @@ public class MarathonMissionHandler extends Tnk47EventHandler {
         String useItemCount = "";
         if (missionMatcher.find()) {
             missionId = missionMatcher.group(1);
-            if (StringUtils.equals(missionId, "3")) {
+            if (StringUtils.equals(missionId, "2")) {
                 int giveItemCount = 0;
-                // int giveItemTodayCount = 0;
                 Matcher matcher = null;
-                if ((matcher = MarathonMissionHandler.GIVE_ITEM_TODAY_PATTERN.matcher(html)).find()) {
-                    if (this.robot.isUseGiveItemToday()) {
+                if (this.useGiveItemToday) {
+                    if ((matcher = MarathonMissionHandler.GIVE_ITEM_TODAY_PATTERN.matcher(html)).find()) {
                         giveItemCount += Integer.valueOf(matcher.group(1));
                     }
                 }
-                if ((matcher = MarathonMissionHandler.GIVE_ITEM_PATTERN.matcher(html)).find()) {
-                    if (this.robot.isUseGiveItem()) {
+                if (this.useGiveItem) {
+                    if ((matcher = MarathonMissionHandler.GIVE_ITEM_PATTERN.matcher(html)).find()) {
                         giveItemCount += Integer.valueOf(matcher.group(1));
                     }
                 }
-                if (giveItemCount > 5) {
-                    missionKeyId = "2";
-                    useItemCount = "5";
+                if (this.onlyGiveOne) {
+                    if (giveItemCount > 1) {
+                        missionKeyId = "2";
+                        useItemCount = "1";
+                    }
+                }
+            } else if (StringUtils.equals(missionId, "3")) {
+                int giveItemCount = 0;
+                Matcher matcher = null;
+                if (this.useGiveItemToday) {
+                    if ((matcher = MarathonMissionHandler.GIVE_ITEM_TODAY_PATTERN.matcher(html)).find()) {
+                        giveItemCount += Integer.valueOf(matcher.group(1));
+                    }
+                }
+                if (this.useGiveItem) {
+                    if ((matcher = MarathonMissionHandler.GIVE_ITEM_PATTERN.matcher(html)).find()) {
+                        giveItemCount += Integer.valueOf(matcher.group(1));
+                    }
+                }
+                if (this.onlyGiveOne) {
+                    if (giveItemCount > 1) {
+                        missionKeyId = "2";
+                        useItemCount = "1";
+                    }
+                } else {
+                    if (giveItemCount > 5) {
+                        missionKeyId = "2";
+                        useItemCount = "5";
+                    }
                 }
             }
             session.put("userMissionId", userMissionId);

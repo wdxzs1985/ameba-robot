@@ -13,14 +13,17 @@ import robot.tnk47.Tnk47Robot;
 
 public class QuestStatusUpHandler extends Tnk47EventHandler {
 
+    final int staminaUpLimit;
+    final int powerUpLimit;
+
     public QuestStatusUpHandler(final Tnk47Robot robot) {
         super(robot);
+        this.staminaUpLimit = this.robot.getStaminaUpLimit();
+        this.powerUpLimit = this.robot.getPowerUpLimit();
     }
 
     @Override
     public String handleIt() {
-        final int staminaUpLimit = this.robot.getStaminaUpLimit();
-        final int powerUpLimit = this.robot.getPowerUpLimit();
 
         final Map<String, Object> session = this.robot.getSession();
         final int maxStamina = (Integer) session.get("maxStamina");
@@ -31,7 +34,7 @@ public class QuestStatusUpHandler extends Tnk47EventHandler {
         int attrStaminaP = 0;
         int attrPowerP = 0;
         while (attrPoints > 0) {
-            if (staminaUpLimit > maxStamina + attrStaminaP) {
+            if (this.staminaUpLimit > maxStamina + attrStaminaP) {
                 attrStaminaP++;
                 attrPoints--;
             } else {
@@ -39,7 +42,7 @@ public class QuestStatusUpHandler extends Tnk47EventHandler {
             }
         }
         while (attrPoints > 0) {
-            if (powerUpLimit > maxPower + attrPowerP) {
+            if (this.powerUpLimit > maxPower + attrPowerP) {
                 attrPowerP++;
                 attrPoints--;
             } else {

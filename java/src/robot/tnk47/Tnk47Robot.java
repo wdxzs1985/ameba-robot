@@ -165,20 +165,20 @@ public class Tnk47Robot extends AbstractRobot {
         return Boolean.valueOf(value);
     }
 
-    public String getQuestId() {
-        final String key = "Tnk47Robot.questId";
+    public String getSelectedQuestId() {
+        final String key = "Tnk47Robot.selectedQuestId";
         final String value = this.getConfig().getProperty(key, "1");
         return value;
     }
 
-    public String getareaId() {
-        final String key = "Tnk47Robot.areaId";
+    public String getSelectedAreaId() {
+        final String key = "Tnk47Robot.selectedAreaId";
         final String value = this.getConfig().getProperty(key, "1");
         return value;
     }
 
-    public String getStageId() {
-        final String key = "Tnk47Robot.stageId";
+    public String getSelectedStageId() {
+        final String key = "Tnk47Robot.selectedStageId";
         final String value = this.getConfig().getProperty(key, "1");
         return value;
     }
@@ -219,6 +219,12 @@ public class Tnk47Robot extends AbstractRobot {
         return Integer.valueOf(value);
     }
 
+    public int getBattlePointFilter() {
+        final String key = "Tnk47Robot.battlePointFilter";
+        final String value = this.getConfig().getProperty(key, "0");
+        return Integer.valueOf(value);
+    }
+
     public String getNotificationUser() {
         final String key = "Tnk47Robot.notificationUser";
         final String value = this.getConfig().getProperty(key);
@@ -235,6 +241,18 @@ public class Tnk47Robot extends AbstractRobot {
         final String key = "Tnk47Robot.useGiveItem";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
+    }
+
+    public boolean isOnlyGiveOne() {
+        final String key = "Tnk47Robot.onlyGiveOne";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public int getUseStaminaRatio() {
+        final String key = "Tnk47Robot.useStaminaRatio";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Integer.valueOf(value);
     }
 
 }

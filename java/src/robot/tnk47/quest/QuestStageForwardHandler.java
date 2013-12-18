@@ -15,8 +15,17 @@ import robot.tnk47.Tnk47Robot;
 
 public class QuestStageForwardHandler extends Tnk47EventHandler {
 
+    private final boolean useStaminaToday;
+    private final boolean useStamina50;
+    private final boolean useStamina100;
+    private final int useStaminaRatio;
+
     public QuestStageForwardHandler(final Tnk47Robot robot) {
         super(robot);
+        this.useStaminaToday = robot.isUseStaminaToday();
+        this.useStamina50 = robot.isUseStamina50();
+        this.useStamina100 = robot.isUseStamina100();
+        this.useStaminaRatio = robot.getUseStaminaRatio();
     }
 
     @Override
@@ -192,30 +201,39 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
         if (regenStaminaItems != null) {
             final Map<String, Object> session = this.robot.getSession();
             final JSONObject userData = data.optJSONObject("userData");
-            final int maxStamina = userData.optInt("maxStamina");
+            final int maxStamina = userData.optInt("maxStamina") * this.useStaminaRatio
+                                   / 100;
             final int needExpForNextLevel = (Integer) session.get("needExpForNextLevel");
             for (int i = 0; i < regenStaminaItems.size(); i++) {
                 final JSONObject regenStamina = (JSONObject) regenStaminaItems.get(i);
                 final String code = regenStamina.optString("code");
                 final String name = regenStamina.optString("name");
                 final String itemId = regenStamina.optString("itemId");
-                if (this.robot.isUseStaminaToday() && StringUtils.contains(name,
-                                                                           "当日")) {
-                    session.put("itemId", itemId);
-                    session.put("name", name);
-                    session.put("callback", "/quest/stage/forward");
-                    return true;
-                }
-                if (this.robot.isUseStamina50() && StringUtils.contains(code,
-                                                                        "stamina50")
+                if (this.useStaminaToday && StringUtils.contains(name, "当日")
+                    && StringUtils.contains(code, "stamina50")
                     && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
                     return true;
                 }
-                if (this.robot.isUseStamina100() && StringUtils.contains(code,
-                                                                         "stamina100")
+                if (this.useStaminaToday && StringUtils.contains(name, "当日")
+                    && StringUtils.contains(code, "stamina100")
+                    && needExpForNextLevel > maxStamina) {
+                    session.put("itemId", itemId);
+                    session.put("name", name);
+                    session.put("callback", "/quest/stage/forward");
+                    return true;
+                }
+                if (this.useStamina50 && StringUtils.contains(code, "stamina50")
+                    && needExpForNextLevel > maxStamina / 2) {
+                    session.put("itemId", itemId);
+                    session.put("name", name);
+                    session.put("callback", "/quest/stage/forward");
+                    return true;
+                }
+                if (this.useStamina100 && StringUtils.contains(code,
+                                                               "stamina100")
                     && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);

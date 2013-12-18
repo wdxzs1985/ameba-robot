@@ -13,17 +13,26 @@ public class QuestHandler extends Tnk47EventHandler {
     private static final Pattern STAGE_DETAIL_PATTERN = Pattern.compile("<a href=\"/quest/stage-detail\\?questId=(\\d+)&areaId=(\\d+)&stageId=(\\d+)\">(.*)</a>");
     private static final Pattern BOSS_PATTERN = Pattern.compile("<section class=\"questInfo infoBox boss\">");
 
+    private final boolean autoSelectStage;
+    private final String selectedQuestId;
+    private final String selectedAreaId;
+    private final String selectedStageId;
+
     public QuestHandler(final Tnk47Robot robot) {
         super(robot);
+        this.autoSelectStage = robot.isAutoSelectStage();
+        this.selectedQuestId = this.robot.getSelectedQuestId();
+        this.selectedAreaId = this.robot.getSelectedAreaId();
+        this.selectedStageId = this.robot.getSelectedStageId();
     }
 
     @Override
     protected String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
-        String questId = this.robot.getQuestId();
-        String areaId = this.robot.getareaId();
-        String stageId = this.robot.getStageId();
-        if (this.robot.isAutoSelectStage()) {
+        String questId = this.selectedQuestId;
+        String areaId = this.selectedAreaId;
+        String stageId = this.selectedStageId;
+        if (this.autoSelectStage) {
             String html = this.httpGet("/quest");
             final Matcher stageIntrodutionMatcher = QuestHandler.STAGE_INTRODUCTION_PATTERN.matcher(html);
             if (stageIntrodutionMatcher.find()) {

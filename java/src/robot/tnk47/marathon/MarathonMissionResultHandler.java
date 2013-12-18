@@ -18,8 +18,11 @@ public class MarathonMissionResultHandler extends Tnk47EventHandler {
     private static final Pattern DISCOVERY_FLAG_PATTERN = Pattern.compile("'/event/marathon/marathon-notification\\?eventId=\\d+&missionId=\\d+&userMissionId=[\\d_]+&discoveryFlg=(.*?)'");
     private static final Pattern NOTIFICATION_USER_PATTERN = Pattern.compile("<li class=\"user selected\" data-user-id=\"(\\d+)\">");
 
+    private final String notificationUser;
+
     public MarathonMissionResultHandler(final Tnk47Robot robot) {
         super(robot);
+        this.notificationUser = robot.getNotificationUser();
     }
 
     @Override
@@ -51,7 +54,7 @@ public class MarathonMissionResultHandler extends Tnk47EventHandler {
         }
 
         if ((matcher = MarathonMissionResultHandler.NOTIFICATION_USER_PATTERN.matcher(html)).find()) {
-            String userId = this.robot.getNotificationUser();
+            String userId = this.notificationUser;
             if (StringUtils.isBlank(userId)) {
                 userId = matcher.group(1);
             }
