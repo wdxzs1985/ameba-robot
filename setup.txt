@@ -83,11 +83,11 @@ Tnk47Robot.useFullPowerRegenItem=false
 # 爬塔
 ###########################
 # 指定发送情报的ID
-Tnk47Robot.notificationUser=949646
+Tnk47Robot.notificationUser=
 
 # 允许使用当日爬塔道具
 Tnk47Robot.useGiveItemToday=true
 # 允许使用爬塔道具
 Tnk47Robot.useGiveItem=false
-# 使用爬塔道具策略
+# 一次只给一个道具（小号发情报专用）
 Tnk47Robot.onlyGiveOne=false
