@@ -9,7 +9,7 @@ Robot.password=
 Robot.cookie=_gf.cookie
 # 每次发送请求间隔（单位为秒）
 Robot.requestDelay=3
-# scheduleDelay
+# scheduleDelay（单位为分钟）
 Robot.scheduleDelay=60
 
 ###########################

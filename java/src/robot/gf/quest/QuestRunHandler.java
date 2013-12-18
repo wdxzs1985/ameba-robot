@@ -78,7 +78,7 @@ public class QuestRunHandler extends GFEventHandler {
                 final int beforeDearPoint = data.optInt("beforeDearPoint");
                 final int afterDearLevel = data.optInt("afterDearLevel");
                 final int afterDearPoint = data.optInt("afterDearPoint");
-                this.log.info(String.format("%s dearup %d(%d) > %d(%d)",
+                this.log.info(String.format("%s的好感度提升 %d(%d) > %d(%d)",
                                             dearCardName,
                                             beforeDearLevel,
                                             beforeDearPoint,
