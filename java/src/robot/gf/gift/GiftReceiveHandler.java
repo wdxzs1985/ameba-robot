@@ -28,6 +28,9 @@ public class GiftReceiveHandler extends GFEventHandler {
 		final String html = this.httpPost(path, nvps);
 		this.resolveJavascriptToken(html);
 
+		if (this.log.isDebugEnabled()) {
+			this.log.debug(html);
+		}
 		return "/gift";
 	}
 

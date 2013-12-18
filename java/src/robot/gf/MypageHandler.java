@@ -36,6 +36,7 @@ public class MypageHandler extends GFEventHandler {
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
+
 		this.resolveJavascriptToken(html);
 
 		if (!this.is("isMypage")) {

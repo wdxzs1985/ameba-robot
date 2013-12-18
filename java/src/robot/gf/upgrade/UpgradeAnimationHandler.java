@@ -10,7 +10,7 @@ import robot.gf.GFRobot;
 public class UpgradeAnimationHandler extends GFEventHandler {
 
 	private static final Pattern CARD_NAME_PATTERN = Pattern
-			.compile("var cardName = \"(.*)\";");
+			.compile("var cardName = \"(.*?)\";");
 	private static final Pattern CARD_LEVEL_PATTERN = Pattern
 			.compile("var cardAfterLevelNumber = (\\d+);");
 
@@ -28,6 +28,7 @@ public class UpgradeAnimationHandler extends GFEventHandler {
 				.format("/upgrade/upgrade-animation?baseUserCardId=%s&materialUserCardId=%s&token=%s",
 						baseUserCardId, materialUserCardId, token);
 		final String html = this.httpGet(path);
+
 		if (this.log.isInfoEnabled()) {
 			String cardName = null;
 			String cardLevel = null;

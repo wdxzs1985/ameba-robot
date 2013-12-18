@@ -27,6 +27,10 @@ public class GiftHandler extends GFEventHandler {
 			String result = matcher.group(1);
 			if (!StringUtils.equals(result, "[]")) {
 				return "/gift/receive";
+			} else {
+				if (this.log.isInfoEnabled()) {
+					this.log.info("giftbox is empty");
+				}
 			}
 		}
 		return "/mypage";

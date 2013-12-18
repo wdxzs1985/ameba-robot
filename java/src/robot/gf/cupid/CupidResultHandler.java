@@ -22,6 +22,7 @@ public class CupidResultHandler extends GFEventHandler {
 		final String token = (String) session.get("token");
 		final String html = this.httpGet(String.format(
 				"/cupid/cupid-result?token=%s", token));
+
 		Matcher cardNameMatcher = CARD_NAME_PATTERN.matcher(html);
 		while (cardNameMatcher.find()) {
 			String cardName = cardNameMatcher.group(1);

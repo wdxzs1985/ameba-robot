@@ -24,6 +24,7 @@ public class CupidHandler extends GFEventHandler {
 	public String handleIt() {
 		Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/cupid");
+
 		Matcher matcher = null;
 		if ((matcher = FREE_CUPID_PATTERN.matcher(html)).find()) {
 			String cupidId = matcher.group(1);
