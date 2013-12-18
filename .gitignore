@@ -6,8 +6,5 @@
 *.ear
 /bin
 /jar
-/bushing.cookie
-/error.log
-/bushing2.cookie
-/setup.txt
-/bushing2_gf.cookie
+*.cookie
+*.log
