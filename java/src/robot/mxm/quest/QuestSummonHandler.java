@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.mxm.MxmEventHandler;
@@ -66,6 +67,14 @@ public class QuestSummonHandler extends MxmEventHandler {
 					this.log.info("ti li bu zhi");
 				}
 				return "/mypage";
+			}
+
+			String redirectType = data.optString("redirectType");
+			if (StringUtils.equals("RAID", redirectType)) {
+				//
+				this.log.info("RAID");
+			} else if (StringUtils.equals("TOUCH_RESULT", redirectType)) {
+				this.log.info("TOUCH_RESULT");
 			}
 		}
 		return "/quest/user/list";

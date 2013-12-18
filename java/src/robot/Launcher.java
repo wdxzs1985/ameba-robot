@@ -34,7 +34,8 @@ public class Launcher {
 
 	private void initHttpClient(final String setup) {
 		final String username = this.config.getProperty("Robot.username");
-		final File cookieFile = new File(username + ".cookie");
+		final String cookie = this.config.getProperty("Robot.cookie");
+		final File cookieFile = new File(username + cookie);
 		this.httpClient.loadCookie(cookieFile);
 	}
 

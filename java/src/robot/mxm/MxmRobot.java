@@ -17,6 +17,7 @@ public class MxmRobot extends AbstractRobot {
 		this.registerHandler("/", new HomeHandler(this));
 		this.registerHandler("/login", new LoginHandler(this));
 		this.registerHandler("/mypage", new MypageHandler(this));
+		this.registerHandler("/monster", new MonsterHandler(this));
 		// quest
 		this.registerHandler("/quest/user/list", new QuestUserlistHandler(this));
 		this.registerHandler("/quest/user/room", new QuestUserRoomHandler(this));
@@ -32,5 +33,11 @@ public class MxmRobot extends AbstractRobot {
 		final String key = "MxmRobot.questEnable";
 		final String value = this.getConfig().getProperty(key, "false");
 		return Boolean.valueOf(value);
+	}
+
+	public String getUserRoom() {
+		final String key = "MxmRobot.userRoom";
+		final String value = this.getConfig().getProperty(key);
+		return value;
 	}
 }

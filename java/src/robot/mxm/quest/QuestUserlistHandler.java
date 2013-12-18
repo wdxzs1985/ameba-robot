@@ -25,6 +25,7 @@ public class QuestUserlistHandler extends MxmEventHandler {
 			String userId = matcher.group(1);
 			session.put("userId", userId);
 			return "/quest/user/room";
+
 		}
 		return "/mypage";
 	}

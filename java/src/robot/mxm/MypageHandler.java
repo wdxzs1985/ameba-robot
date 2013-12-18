@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 public class MypageHandler extends MxmEventHandler {
 
 	private static final Pattern HTML_TITLE_PATTERN = Pattern
@@ -22,8 +24,6 @@ public class MypageHandler extends MxmEventHandler {
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
 		final String html = this.httpGet("/mypage");
-		this.resolveMxmToken(html);
-		this.log.debug(html);
 		if (!this.is("isMypage")) {
 			final Matcher userNameMatcher = MypageHandler.HTML_USER_NAME_PATTERN
 					.matcher(html);
@@ -43,8 +43,13 @@ public class MypageHandler extends MxmEventHandler {
 				return "/mypage";
 			}
 		}
-
+		this.log.debug(html);
+		this.resolveMxmToken(html);
 		this.findDailyElement(html);
+
+		if (!this.hasMonsterType()) {
+			return "/monster";
+		}
 
 		if (this.is("isQuestEnable")) {
 			session.put("isQuestEnable", false);
@@ -61,7 +66,27 @@ public class MypageHandler extends MxmEventHandler {
 		if (matcher.find()) {
 			String dailyElement = matcher.group(1);
 			session.put("dailyElement", dailyElement);
+			if (this.log.isInfoEnabled()) {
+				if (StringUtils.equals("1", dailyElement)) {
+					this.log.info("今日の召喚獣は火です。");
+				} else if (StringUtils.equals("2", dailyElement)) {
+					this.log.info("今日の召喚獣は水です。");
+				} else if (StringUtils.equals("3", dailyElement)) {
+					this.log.info("今日の召喚獣は木です。");
+				} else if (StringUtils.equals("4", dailyElement)) {
+					this.log.info("今日の召喚獣は雷です。");
+				} else if (StringUtils.equals("5", dailyElement)) {
+					this.log.info("今日の召喚獣は風です。");
+				} else if (StringUtils.equals("6", dailyElement)) {
+					this.log.info("今日の召喚獣は土です。");
+				}
+			}
 		}
+	}
+
+	private boolean hasMonsterType() {
+		final Map<String, Object> session = this.robot.getSession();
+		return session.containsKey("monsterType");
 	}
 
 	private void reset() {
