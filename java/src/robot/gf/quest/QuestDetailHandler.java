@@ -9,54 +9,49 @@ import robot.gf.GFRobot;
 
 public class QuestDetailHandler extends GFEventHandler {
 
-	private static final Pattern QUEST_ID_PATTERN = Pattern
-			.compile("var questId = ([\\d]+);");
-	private static final Pattern STAGE_ID_PATTERN = Pattern
-			.compile("var stageId = ([\\d]+);");
+    private static final Pattern QUEST_ID_PATTERN = Pattern.compile("var questId = ([\\d]+);");
+    private static final Pattern STAGE_ID_PATTERN = Pattern.compile("var stageId = ([\\d]+);");
 
-	public QuestDetailHandler(final GFRobot robot) {
-		super(robot);
-	}
+    public QuestDetailHandler(final GFRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		Map<String, Object> session = this.robot.getSession();
-		String path = null;
-		String questId = null;
-		String stageId = null;
-		if (this.robot.isAutoSelectStage()) {
-			path = "/quest/quest-detail";
-		} else {
-			questId = this.robot.getQuestId();
-			stageId = this.robot.getStageId();
-			path = String.format("/quest/quest-detail?questId=%s&stageId=%s",
-					questId, stageId);
-		}
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        String path = null;
+        String questId = null;
+        String stageId = null;
+        if (this.robot.isAutoSelectStage()) {
+            path = "/quest/quest-detail";
+        } else {
+            questId = this.robot.getQuestId();
+            stageId = this.robot.getStageId();
+            path = String.format("/quest/quest-detail?questId=%s&stageId=%s",
+                                 questId,
+                                 stageId);
+        }
 
-		String html = this.httpGet(path);
-		this.resolveJavascriptToken(html);
+        final String html = this.httpGet(path);
+        this.resolveJavascriptToken(html);
 
-		if (this.log.isDebugEnabled()) {
-			this.log.debug(html);
-		}
+        final Matcher questIdMatcher = QuestDetailHandler.QUEST_ID_PATTERN.matcher(html);
+        if (questIdMatcher.find()) {
+            questId = questIdMatcher.group(1);
+            session.put("questId", questId);
+        } else {
+            return "/mypage";
+        }
 
-		Matcher questIdMatcher = QUEST_ID_PATTERN.matcher(html);
-		if (questIdMatcher.find()) {
-			questId = questIdMatcher.group(1);
-			session.put("questId", questId);
-		} else {
-			return "/mypage";
-		}
+        final Matcher stageIdMatcher = QuestDetailHandler.STAGE_ID_PATTERN.matcher(html);
+        if (stageIdMatcher.find()) {
+            stageId = stageIdMatcher.group(1);
+            session.put("stageId", stageId);
+        } else {
+            return "/mypage";
+        }
 
-		Matcher stageIdMatcher = STAGE_ID_PATTERN.matcher(html);
-		if (stageIdMatcher.find()) {
-			stageId = stageIdMatcher.group(1);
-			session.put("stageId", stageId);
-		} else {
-			return "/mypage";
-		}
-
-		return "/quest/run";
-	}
+        return "/quest/run";
+    }
 
 }

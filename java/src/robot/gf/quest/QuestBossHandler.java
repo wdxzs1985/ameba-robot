@@ -7,57 +7,63 @@ import robot.gf.GFRobot;
 
 public class QuestBossHandler extends GFEventHandler {
 
-	public QuestBossHandler(final GFRobot robot) {
-		super(robot);
-	}
+    public QuestBossHandler(final GFRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		this.questBoss();
-		this.questBossAnimation();
-		this.questMasterAnimation();
-		this.questMaster();
-		if (this.log.isInfoEnabled()) {
-			this.log.info("ボス撃破");
-		}
-		return "/quest";
-	}
+    @Override
+    public String handleIt() {
+        if (this.log.isInfoEnabled()) {
+            this.log.info("BOSS妹纸出现了");
+        }
+        this.questBoss();
+        this.questBossAnimation();
+        this.questMasterAnimation();
+        this.questMaster();
+        if (this.log.isInfoEnabled()) {
+            this.log.info("BOSS妹纸被推倒了");
+        }
+        return "/quest";
+    }
 
-	private void questBoss() {
-		Map<String, Object> session = this.robot.getSession();
-		String questId = (String) session.get("questId");
-		String path = String.format("/quest/quest-boss?questId=%s", questId);
-		String html = this.httpGet(path);
-		this.resolveJavascriptToken(html);
-	}
+    private void questBoss() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String questId = (String) session.get("questId");
+        final String path = String.format("/quest/quest-boss?questId=%s",
+                                          questId);
+        final String html = this.httpGet(path);
+        this.resolveJavascriptToken(html);
+    }
 
-	private void questBossAnimation() {
-		Map<String, Object> session = this.robot.getSession();
-		String token = (String) session.get("token");
-		String path = String.format("/quest/boss-animation?token=%s", token);
-		String html = this.httpGet(path);
-		this.resolveJavascriptToken(html);
-	}
+    private void questBossAnimation() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String token = (String) session.get("token");
+        final String path = String.format("/quest/boss-animation?token=%s",
+                                          token);
+        final String html = this.httpGet(path);
+        this.resolveJavascriptToken(html);
+    }
 
-	private void questMasterAnimation() {
-		Map<String, Object> session = this.robot.getSession();
-		String questId = (String) session.get("questId");
-		String token = (String) session.get("token");
-		String path = String
-				.format("/quest/quest-master-animation?questId=%s&token=%s&player=false",
-						questId, token);
-		String html = this.httpGet(path);
-		this.resolveJavascriptToken(html);
-	}
+    private void questMasterAnimation() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String questId = (String) session.get("questId");
+        final String token = (String) session.get("token");
+        final String path = String.format("/quest/quest-master-animation?questId=%s&token=%s&player=false",
+                                          questId,
+                                          token);
+        final String html = this.httpGet(path);
+        this.resolveJavascriptToken(html);
+    }
 
-	private void questMaster() {
-		Map<String, Object> session = this.robot.getSession();
-		String questId = (String) session.get("questId");
-		String token = (String) session.get("token");
-		String path = String.format("/quest/quest-master?questId=%s&token=%s",
-				questId, token);
-		String html = this.httpGet(path);
-		this.resolveJavascriptToken(html);
-	}
+    private void questMaster() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String questId = (String) session.get("questId");
+        final String token = (String) session.get("token");
+        final String path = String.format("/quest/quest-master?questId=%s&token=%s",
+                                          questId,
+                                          token);
+        final String html = this.httpGet(path);
+        this.resolveJavascriptToken(html);
+    }
 
 }
