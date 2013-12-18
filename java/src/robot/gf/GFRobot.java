@@ -23,110 +23,110 @@ import robot.gf.upgrade.UpgradeHandler;
 
 public class GFRobot extends AbstractRobot {
 
-	public static final String HOST = "http://vcard.ameba.jp";
+    public static final String HOST = "http://vcard.ameba.jp";
 
-	public static final String VERSION = "GF自动脚本  0.0.1";
+    public static final String VERSION = "GF印花脚本  0.0.1";
 
-	@Override
-	public void init() {
-		this.registerHandler("/", new HomeHandler(this));
-		this.registerHandler("/login", new LoginHandler(this));
-		this.registerHandler("/mypage", new MypageHandler(this));
-		// cupid
-		this.registerHandler("/cupid", new CupidHandler(this));
-		this.registerHandler("/cupid/exec", new CupidExecHandler(this));
-		this.registerHandler("/cupid/result", new CupidResultHandler(this));
-		// cupid stamp
-		this.registerHandler("/cupid/stamp", new CupidStampHandler(this));
-		this.registerHandler("/cupid/stamp/exec", new CupidStampExecHandler(
-				this));
-		this.registerHandler("/cupid/stamp/result",
-				new CupidStampResultHandler(this));
-		// gift
-		this.registerHandler("/gift", new GiftHandler(this));
-		this.registerHandler("/gift/receive", new GiftReceiveHandler(this));
-		// upgrade
-		this.registerHandler("/upgrade", new UpgradeHandler(this));
-		this.registerHandler("/upgrade/confirm",
-				new UpgradeConfirmHandler(this));
-		this.registerHandler("/upgrade/animation", new UpgradeAnimationHandler(
-				this));
+    @Override
+    public void init() {
+        this.registerHandler("/", new HomeHandler(this));
+        this.registerHandler("/login", new LoginHandler(this));
+        this.registerHandler("/mypage", new MypageHandler(this));
+        // cupid
+        this.registerHandler("/cupid", new CupidHandler(this));
+        this.registerHandler("/cupid/exec", new CupidExecHandler(this));
+        this.registerHandler("/cupid/result", new CupidResultHandler(this));
+        // cupid stamp
+        this.registerHandler("/cupid/stamp", new CupidStampHandler(this));
+        this.registerHandler("/cupid/stamp/exec",
+                             new CupidStampExecHandler(this));
+        this.registerHandler("/cupid/stamp/result",
+                             new CupidStampResultHandler(this));
+        // gift
+        this.registerHandler("/gift", new GiftHandler(this));
+        this.registerHandler("/gift/receive", new GiftReceiveHandler(this));
+        // upgrade
+        this.registerHandler("/upgrade", new UpgradeHandler(this));
+        this.registerHandler("/upgrade/confirm",
+                             new UpgradeConfirmHandler(this));
+        this.registerHandler("/upgrade/animation",
+                             new UpgradeAnimationHandler(this));
 
-		// quest
-		this.registerHandler("/quest", new QuestHandler(this));
-		this.registerHandler("/quest/detail", new QuestDetailHandler(this));
-		this.registerHandler("/quest/run", new QuestRunHandler(this));
-		this.registerHandler("/quest/boss", new QuestBossHandler(this));
+        // quest
+        this.registerHandler("/quest", new QuestHandler(this));
+        this.registerHandler("/quest/detail", new QuestDetailHandler(this));
+        this.registerHandler("/quest/run", new QuestRunHandler(this));
+        this.registerHandler("/quest/boss", new QuestBossHandler(this));
 
-		// job
-		this.registerHandler("/job/setting", new JobSettingHandler(this));
-		this.registerHandler("/job/start", new JobStartHandler(this));
-		this.registerHandler("/job/payment", new JobPaymentHandler(this));
-	}
+        // job
+        this.registerHandler("/job/setting", new JobSettingHandler(this));
+        this.registerHandler("/job/start", new JobStartHandler(this));
+        this.registerHandler("/job/payment", new JobPaymentHandler(this));
+    }
 
-	@Override
-	public String getHost() {
-		return GFRobot.HOST;
-	}
+    @Override
+    public String getHost() {
+        return GFRobot.HOST;
+    }
 
-	public boolean isCupidEnable() {
-		final String key = "GFRobot.cupidEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isCupidEnable() {
+        final String key = "GFRobot.cupidEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isCupidStampEnable() {
-		final String key = "GFRobot.cupidStampEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isCupidStampEnable() {
+        final String key = "GFRobot.cupidStampEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isGiftEnable() {
-		final String key = "GFRobot.giftEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isGiftEnable() {
+        final String key = "GFRobot.giftEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isQuestEnable() {
-		final String key = "GFRobot.questEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isQuestEnable() {
+        final String key = "GFRobot.questEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isBattleEnable() {
-		final String key = "GFRobot.battleEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isBattleEnable() {
+        final String key = "GFRobot.battleEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isJobEnable() {
-		final String key = "GFRobot.jobEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isJobEnable() {
+        final String key = "GFRobot.jobEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isUpgradeEnable() {
-		final String key = "GFRobot.upgradeEnable";
-		final String value = this.getConfig().getProperty(key, "false");
-		return Boolean.valueOf(value);
-	}
+    public boolean isUpgradeEnable() {
+        final String key = "GFRobot.upgradeEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 
-	public boolean isAutoSelectStage() {
-		final String key = "GFRobot.autoSelectStage";
-		final String value = this.getConfig().getProperty(key, "true");
-		return Boolean.valueOf(value);
-	}
+    public boolean isAutoSelectStage() {
+        final String key = "GFRobot.autoSelectStage";
+        final String value = this.getConfig().getProperty(key, "true");
+        return Boolean.valueOf(value);
+    }
 
-	public String getQuestId() {
-		final String key = "GFRobot.questId";
-		final String value = this.getConfig().getProperty(key, "1");
-		return value;
-	}
+    public String getQuestId() {
+        final String key = "GFRobot.questId";
+        final String value = this.getConfig().getProperty(key, "1");
+        return value;
+    }
 
-	public String getStageId() {
-		final String key = "GFRobot.stageId";
-		final String value = this.getConfig().getProperty(key, "1");
-		return value;
-	}
+    public String getStageId() {
+        final String key = "GFRobot.stageId";
+        final String value = this.getConfig().getProperty(key, "1");
+        return value;
+    }
 
 }
