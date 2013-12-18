@@ -9,7 +9,7 @@ Robot.password=
 # Robot.cookie
 Robot.cookie=_gf.cookie
 # 每次发送请求间隔（单位为秒）
-Robot.requestDelay=1
+Robot.requestDelay=3
 # scheduleDelay
 Robot.scheduleDelay=60
 
@@ -18,15 +18,18 @@ Robot.scheduleDelay=60
 # GFRobot
 #
 ###########################
-GFRobot.enable=true
-
-GFRobot.upgradeEnable=true
+# 免费抽开关 （不是氪金都会抽）
 GFRobot.cupidEnable=true
+# 印花抽开关
 GFRobot.cupidStampEnable=true
+# 自动领礼品盒开关
 GFRobot.giftEnable=true
-GFRobot.questEnable=true
+# 自动强化开关
+GFRobot.upgradeEnable=true
+# 打工开关
 GFRobot.jobEnable=true
-GFRobot.battleEnable=false
+# 上学大冒险开关
+GFRobot.questEnable=true
 
 ###########################
 # 冒险
