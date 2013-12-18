@@ -21,6 +21,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
     private CommonHttpClient httpClient = null;
     private EventHandler nextHandler = null;
     private Properties config = null;
+    private boolean running = false;
 
     protected void registerHandler(final String path, final EventHandler handler) {
         this.handlerMapping.put(path, handler);
@@ -28,8 +29,9 @@ public abstract class AbstractRobot implements Robot, Runnable {
 
     @Override
     public void run() {
+        this.setRunning(true);
         this.dispatch("/");
-        while (this.nextHandler != null) {
+        while (this.isRunning() && this.nextHandler != null) {
             final EventHandler currEventHandler = this.nextHandler;
             this.nextHandler = null;
             try {
@@ -37,7 +39,6 @@ public abstract class AbstractRobot implements Robot, Runnable {
             } catch (final Exception e) {
                 final String message = e.getMessage();
                 this.log.error("发生异常: " + message, e);
-                this.dispatch("/mypage");
             } finally {
                 this.httpClient.saveCookie();
                 this.sleep();
@@ -57,6 +58,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
     @Override
     public void dispatch(final String event) {
         if (StringUtils.equals(event, "/exit")) {
+            this.setRunning(false);
             if (this.log.isInfoEnabled()) {
                 final int delay = this.getScheduleDelay();
                 this.log.info(String.format("休息%d分钟", delay));
@@ -120,5 +122,13 @@ public abstract class AbstractRobot implements Robot, Runnable {
         final String key = "Robot.password";
         final String value = this.getConfig().getProperty(key);
         return value;
+    }
+
+    public boolean isRunning() {
+        return this.running;
+    }
+
+    public void setRunning(final boolean running) {
+        this.running = running;
     }
 }
