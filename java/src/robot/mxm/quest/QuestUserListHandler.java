@@ -7,12 +7,12 @@ import java.util.regex.Pattern;
 import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class QuestUserlistHandler extends MxmEventHandler {
+public class QuestUserListHandler extends MxmEventHandler {
 
 	private static final Pattern USER_ROOM_PATTERN = Pattern
 			.compile("/user/(\\d+)/room");
 
-	public QuestUserlistHandler(final MxmRobot robot) {
+	public QuestUserListHandler(final MxmRobot robot) {
 		super(robot);
 	}
 
