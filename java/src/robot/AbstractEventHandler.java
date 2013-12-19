@@ -43,7 +43,7 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
 		final String url = this.robot.buildPath(path);
 		final String html = this.robot.getHttpClient().getForHtml(url);
 		this.robot.getHttpClient().setReferer(url);
-		return html;
+		return html.replaceAll("\\r\\n[\\t\\s]*|\\r[\\t\\s]*|\\n[\\t\\s]*", "");
 	}
 
 	protected String httpPost(final String path,
@@ -51,7 +51,7 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
 		final String url = this.robot.buildPath(path);
 		final String html = this.robot.getHttpClient().postForHtml(url, nvps);
 		this.robot.getHttpClient().setReferer(url);
-		return html;
+		return html.replaceAll("\\r\\n[\\t\\s]*|\\r[\\t\\s]*|\\n[\\t\\s]*", "");
 	}
 
 	protected JSONObject httpGetJSON(final String path) {
