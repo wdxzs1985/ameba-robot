@@ -63,6 +63,7 @@ public class MypageHandler extends MxmEventHandler {
 	private void findDailyElement(String html) {
 		final Map<String, Object> session = this.robot.getSession();
 		Matcher matcher = DAILY_ELEMENT_PATTERN.matcher(html);
+		// <span class="colorDeepOrange">[今日の召喚獣]</span>はクリア済みです！
 		if (matcher.find()) {
 			String dailyElement = matcher.group(1);
 			session.put("dailyElement", dailyElement);
