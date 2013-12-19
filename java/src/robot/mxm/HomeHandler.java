@@ -8,7 +8,7 @@ import robot.AbstractEventHandler;
 public class HomeHandler extends AbstractEventHandler<MxmRobot> {
 
 	private static final Pattern HTML_TITLE_PATTERN = Pattern
-			.compile("<title>フレンダリアと魔法の指輪</title>");
+			.compile("<title>トップ | フレンダリアと魔法の指輪</title>");
 
 	public HomeHandler(final MxmRobot robot) {
 		super(robot);

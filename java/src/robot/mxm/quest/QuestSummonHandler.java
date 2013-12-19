@@ -70,14 +70,19 @@ public class QuestSummonHandler extends MxmEventHandler {
 			}
 
 			String redirectType = data.optString("redirectType");
+			this.log.debug(redirectType);
 			if (StringUtils.equals("RAID", redirectType)) {
-				//
-				this.log.info("RAID");
+				// TODO raid
+				// return "/raid/animation";
 			} else if (StringUtils.equals("TOUCH_RESULT", redirectType)) {
-				this.log.info("TOUCH_RESULT");
+				return "/quest/result";
+			} else if (StringUtils.equals("RING_GET", redirectType)) {
+				return "/quest/getRing";
+			} else if (StringUtils.equals("STAGE_CLEAR", redirectType)) {
+				return "/quest/stageClear";
 			}
 		}
-		return "/quest/user/list";
+		return "/quest";
 	}
 
 	private JSONObject resloveQuestData(String html) {
