@@ -8,39 +8,37 @@ import robot.mxm.MxmRobot;
 
 public class RaidTargetHandler extends AbstractRaidHandler {
 
-	private static final Pattern TOKEN_PATTERN = Pattern
-			.compile("<input type=\"hidden\" name=\"token\" value=\"([a-zA-Z0-9]{6})\">");
+    private static final Pattern TOKEN_PATTERN = Pattern.compile("<input type=\"hidden\" name=\"token\" value=\"([a-zA-Z0-9]{6})\">");
 
-	public RaidTargetHandler(final MxmRobot robot) {
-		super(robot);
-	}
+    public RaidTargetHandler(final MxmRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		final Map<String, Object> session = this.robot.getSession();
-		String raidId = (String) session.get("raidId");
-		String raidPirtyId = (String) session.get("raidPirtyId");
-		String targetMonsterCategoryId = (String) session
-				.get("targetMonsterCategoryId");
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidId = (String) session.get("raidId");
+        final String raidPirtyId = (String) session.get("raidPirtyId");
+        final String targetMonsterCategoryId = (String) session.get("targetMonsterCategoryId");
 
-		String path = String.format("/raid/%s/%s/target/%s/choice", raidId,
-				raidPirtyId, targetMonsterCategoryId);
-		String html = this.httpGet(path);
+        final String path = String.format("/raid/%s/%s/target/%s/choice",
+                                          raidId,
+                                          raidPirtyId,
+                                          targetMonsterCategoryId);
+        final String html = this.httpGet(path);
 
-		this.log.debug(html);
+        this.resolveInputToken(html);
 
-		this.resolveInputToken(html);
+        return "/raid/attack";
+    }
 
-		return "/raid/attack";
-	}
-
-	private void resolveInputToken(String html) {
-		final Map<String, Object> session = this.robot.getSession();
-		Matcher matcher = TOKEN_PATTERN.matcher(html);
-		if (matcher.find()) {
-			String token = matcher.group(1);
-			session.put("token", token);
-		}
-	}
+    private void resolveInputToken(final String html) {
+        final Map<String, Object> session = this.robot.getSession();
+        final Matcher matcher = RaidTargetHandler.TOKEN_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String token = matcher.group(1);
+            session.put("token", token);
+        }
+    }
 
 }

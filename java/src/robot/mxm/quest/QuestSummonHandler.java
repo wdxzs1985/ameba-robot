@@ -15,83 +15,82 @@ import robot.mxm.MxmRobot;
 
 public class QuestSummonHandler extends MxmEventHandler {
 
-	private static final Pattern QUEST_DATA_PATTERN = Pattern
-			.compile("new mxm.Quest530\\((.*?)\\);");
+    private static final Pattern QUEST_DATA_PATTERN = Pattern.compile("new mxm.Quest530\\((.*?)\\);");
 
-	public QuestSummonHandler(final MxmRobot robot) {
-		super(robot);
-	}
+    public QuestSummonHandler(final MxmRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		final Map<String, Object> session = this.robot.getSession();
-		String userId = (String) session.get("userId");
-		String summonId = (String) session.get("summonId");
-		String token = (String) session.get("token");
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String userId = (String) session.get("userId");
+        final String summonId = (String) session.get("summonId");
+        final String token = (String) session.get("token");
 
-		String path = String.format("/touch_summon/%s/%s/update", userId,
-				summonId);
-		List<BasicNameValuePair> nvps = this.createNameValuePairs();
-		nvps.add(new BasicNameValuePair("token", token));
-		final String html = this.httpPost(path, nvps);
-		JSONObject data = this.resloveQuestData(html);
-		if (data != null) {
-			this.log.debug(data);
-			this.resolveJsonToken(data);
-			if (data.optBoolean("bpRecovered", false)) {
-				if (this.log.isInfoEnabled()) {
-					this.log.info("BP +1");
-				}
-			}
+        final String path = String.format("/touch_summon/%s/%s/update",
+                                          userId,
+                                          summonId);
+        final List<BasicNameValuePair> nvps = this.createNameValuePairs();
+        nvps.add(new BasicNameValuePair("token", token));
+        final String html = this.httpPost(path, nvps);
+        final JSONObject data = this.resloveQuestData(html);
+        if (data != null) {
+            this.resolveJsonToken(data);
+            if (data.optBoolean("bpRecovered", false)) {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("BP +1");
+                }
+            }
 
-			JSONObject experienceParam = data.optJSONObject("experienceParam");
-			if (experienceParam != null) {
-				this.log.debug(experienceParam);
-				if (experienceParam.optBoolean("levelUp", false)) {
-					int beforeLv = experienceParam.optInt("beforeLv");
-					int afterLv = experienceParam.optInt("afterLv");
-					if (this.log.isInfoEnabled()) {
-						this.log.info(String.format("Level Up: %d > %d",
-								beforeLv, afterLv));
-					}
-					if (experienceParam.optBoolean("reachMaxLevel", false)) {
-						if (this.log.isInfoEnabled()) {
-							this.log.info("Max Level");
-						}
-						return "/monster";
-					}
-				}
-			}
+            if (data.optBoolean("noFatigue", false)) {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("体力不支");
+                }
+                session.put("isQuestEnable", false);
+            }
 
-			String redirectType = data.optString("redirectType");
-			if (StringUtils.equals("RAID", redirectType)) {
-				return "/raid/animation";
-			} else if (StringUtils.equals("TOUCH_RESULT", redirectType)) {
-				return "/quest/result";
-			} else if (StringUtils.equals("RING_GET", redirectType)) {
-				return "/quest/getRing";
-			} else if (StringUtils.equals("STAGE_CLEAR", redirectType)) {
-				return "/quest/stageClear";
-			} else {
-				this.log.debug(redirectType);
-			}
+            final JSONObject experienceParam = data.optJSONObject("experienceParam");
+            if (experienceParam != null) {
+                if (experienceParam.optBoolean("levelUp", false)) {
+                    final int beforeLv = experienceParam.optInt("beforeLv");
+                    final int afterLv = experienceParam.optInt("afterLv");
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info(String.format("Level Up: %d > %d",
+                                                    beforeLv,
+                                                    afterLv));
+                    }
+                    if (experienceParam.optBoolean("reachMaxLevel", false)) {
+                        if (this.log.isInfoEnabled()) {
+                            this.log.info("Max Level");
+                        }
+                        return "/monster";
+                    }
+                }
+            }
 
-			if (data.optBoolean("noFatigue", false)) {
-				if (this.log.isInfoEnabled()) {
-					this.log.info("ti li bu zhi");
-				}
-				return "/mypage";
-			}
-		}
-		return "/quest";
-	}
+            final String redirectType = data.optString("redirectType");
+            if (StringUtils.equals("RAID", redirectType)) {
+                return "/raid/animation";
+            } else if (StringUtils.equals("TOUCH_RESULT", redirectType)) {
+                return "/quest/result";
+            } else if (StringUtils.equals("RING_GET", redirectType)) {
+                return "/quest/getRing";
+            } else if (StringUtils.equals("STAGE_CLEAR", redirectType)) {
+                return "/quest/stageClear";
+            } else {
+                this.log.debug(redirectType);
+            }
+        }
+        return "/quest";
+    }
 
-	private JSONObject resloveQuestData(String html) {
-		Matcher matcher = QUEST_DATA_PATTERN.matcher(html);
-		if (matcher.find()) {
-			String data = matcher.group(1);
-			return JSONObject.fromObject(data);
-		}
-		return null;
-	}
+    private JSONObject resloveQuestData(final String html) {
+        final Matcher matcher = QuestSummonHandler.QUEST_DATA_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String data = matcher.group(1);
+            return JSONObject.fromObject(data);
+        }
+        return null;
+    }
 }

@@ -10,71 +10,71 @@ import robot.mxm.MxmRobot;
 
 public class RaidHelpListHandler extends AbstractRaidHandler {
 
-	private static final Pattern JSON_PATTERN = Pattern
-			.compile("var _json = (.*?);");
+    private static final Pattern JSON_PATTERN = Pattern.compile("var _json = (.*?);");
 
-	public RaidHelpListHandler(final MxmRobot robot) {
-		super(robot);
-	}
+    public RaidHelpListHandler(final MxmRobot robot) {
+        super(robot);
+    }
 
-	@Override
-	public String handleIt() {
-		final Map<String, Object> session = this.robot.getSession();
-		String raidId = (String) session.get("raidId");
-		String path = String.format("/raid/%s/help/list", raidId);
-		String html = this.httpGet(path);
-		// TODO
-		this.log.debug(html);
+    @Override
+    public String handleIt() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidId = (String) session.get("raidId");
+        final String path = String.format("/raid/%s/help/list", raidId);
+        final String html = this.httpGet(path);
 
-		Matcher matcher = JSON_PATTERN.matcher(html);
-		if (matcher.find()) {
-			String jsonString = matcher.group(1);
-			JSONObject data = JSONObject.fromObject(jsonString);
-			JSONArray list = data.optJSONArray("list");
-			JSONObject raid = this.selectRaid(list);
-			String raidPirtyId = raid.optString("raidPirtyId");
-			session.put("raidPirtyId", raidPirtyId);
-			return "/raid/encount";
-		}
-		return "/mypage";
-	}
+        final Matcher matcher = RaidHelpListHandler.JSON_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String jsonString = matcher.group(1);
+            final JSONObject data = JSONObject.fromObject(jsonString);
+            final JSONArray list = data.optJSONArray("list");
+            final JSONObject raid = this.selectRaid(list);
+            final String raidPirtyId = raid.optString("raidPirtyId");
+            session.put("raidPirtyId", raidPirtyId);
+            return "/raid/encount";
+        }
+        return "/mypage";
+    }
 
-	private JSONObject selectRaid(JSONArray list) {
-		JSONObject selectedRaid = null;
-		int maxJoinedMemberCount = 0;
-		for (int i = 0; i < list.size(); i++) {
-			JSONObject raid = list.optJSONObject(i);
-			int joinedMemberCount = raid.optInt("joinedMemberCount");
-			if (joinedMemberCount > maxJoinedMemberCount) {
-				selectedRaid = raid;
-			}
-		}
+    private JSONObject selectRaid(final JSONArray list) {
+        JSONObject selectedRaid = null;
+        final int maxJoinedMemberCount = 0;
+        for (int i = 0; i < list.size(); i++) {
+            final JSONObject raid = list.optJSONObject(i);
+            final int joinedMemberCount = raid.optInt("joinedMemberCount");
+            if (joinedMemberCount > maxJoinedMemberCount) {
+                selectedRaid = raid;
+            }
+        }
 
-		if (this.log.isInfoEnabled()) {
-			JSONObject user = selectedRaid.optJSONObject("user");
-			String name = user.optString("name");
-			String raidPirtyBossName = selectedRaid
-					.optString("raidPirtyBossName");
-			int raidPirtyBossLevel = selectedRaid.optInt("raidPirtyBossLevel");
-			int raidPirtyCount = selectedRaid.optInt("raidPirtyCount");
-			int killMonsterCount = selectedRaid.optInt("killMonsterCount");
-			int maxMembers = selectedRaid.optInt("maxMembers");
-			int joinedMemberCount = selectedRaid.optInt("joinedMemberCount");
+        if (this.log.isInfoEnabled()) {
+            final JSONObject user = selectedRaid.optJSONObject("user");
+            final String name = user.optString("name");
+            final String raidPirtyBossName = selectedRaid.optString("raidPirtyBossName");
+            final int raidPirtyBossLevel = selectedRaid.optInt("raidPirtyBossLevel");
+            final int raidPirtyCount = selectedRaid.optInt("raidPirtyCount");
+            final int killMonsterCount = selectedRaid.optInt("killMonsterCount");
+            final int maxMembers = selectedRaid.optInt("maxMembers");
+            final int joinedMemberCount = selectedRaid.optInt("joinedMemberCount");
 
-			this.log.info(String.format("Help from %s.", name));
-			this.log.info(String.format("%s (%d)", raidPirtyBossName,
-					raidPirtyBossLevel));
-			this.log.info(String.format("members: %d/%d", joinedMemberCount,
-					maxMembers));
-			this.log.info(String.format("monster: %d/%d", killMonsterCount,
-					raidPirtyCount));
-			this.log.info(String.format("%s (%d)", raidPirtyBossName,
-					raidPirtyBossLevel));
+            this.log.info(String.format("Help from %s.", name));
+            this.log.info(String.format("%s (%d)",
+                                        raidPirtyBossName,
+                                        raidPirtyBossLevel));
+            this.log.info(String.format("members: %d/%d",
+                                        joinedMemberCount,
+                                        maxMembers));
+            this.log.info(String.format("monster: %d/%d",
+                                        raidPirtyCount - killMonsterCount,
+                                        raidPirtyCount));
+            this.log.info(String.format("%s (%d)",
+                                        raidPirtyBossName,
+                                        raidPirtyBossLevel));
 
-			String lastTime = selectedRaid.optString("lastTime");
-			this.log.info(String.format("last time: %s", lastTime));
-		}
+            final String lastTime = selectedRaid.optString("lastTime");
+            this.log.info(String.format("last time: %s", lastTime));
+        }
 
-		return selectedRaid;
-	}
+        return selectedRaid;
+    }
 }
