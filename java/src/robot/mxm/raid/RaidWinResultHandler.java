@@ -2,11 +2,10 @@ package robot.mxm.raid;
 
 import java.util.Map;
 
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 import robot.mxm.convert.EventPointPrinter;
 
-public class RaidWinResultHandler extends MxmEventHandler {
+public class RaidWinResultHandler extends AbstractRaidHandler {
 
 	public RaidWinResultHandler(final MxmRobot robot) {
 		super(robot);

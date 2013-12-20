@@ -14,10 +14,9 @@ import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidEncountHandler extends MxmEventHandler {
+public class RaidEncountHandler extends AbstractRaidHandler {
 
 	private static final Pattern MONSTER_PATTERN = Pattern
 			.compile("var _monsterData = (\\[.*\\]);");
@@ -37,16 +36,12 @@ public class RaidEncountHandler extends MxmEventHandler {
 		String html = this.httpGet(path);
 		this.log.debug(html);
 
-		int bpCount = this.getBPCount(html);
-		if (bpCount > 0) {
-			JSONObject monster = this.getMonsterData(html);
-			if (monster != null) {
-				String targetMonsterCategoryId = this.chooseTarget(monster);
-				if (StringUtils.isNotBlank(targetMonsterCategoryId)) {
-					session.put("targetMonsterCategoryId",
-							targetMonsterCategoryId);
-					return "/raid/target";
-				}
+		JSONObject monster = this.getMonsterData(html);
+		if (monster != null) {
+			String targetMonsterCategoryId = this.chooseTarget(monster);
+			if (StringUtils.isNotBlank(targetMonsterCategoryId)) {
+				session.put("targetMonsterCategoryId", targetMonsterCategoryId);
+				return "/raid/target";
 			}
 		}
 

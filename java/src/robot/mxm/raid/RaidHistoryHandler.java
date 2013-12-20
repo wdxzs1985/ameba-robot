@@ -4,10 +4,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidHistoryHandler extends MxmEventHandler {
+public class RaidHistoryHandler extends AbstractRaidHandler {
 
 	private static final Pattern RAID_WIN_PATTERN = Pattern
 			.compile("/raid/(\\d+)/(\\d+)/win/animation");

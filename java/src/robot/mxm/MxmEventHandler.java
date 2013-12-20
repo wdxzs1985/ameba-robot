@@ -100,12 +100,11 @@ public abstract class MxmEventHandler extends AbstractEventHandler<MxmRobot> {
 		return false;
 	}
 
-	protected int getBPCount(String html) {
+	protected boolean hasBP(String html) {
 		final Matcher matcher = MxmEventHandler.BP_PATTERN.matcher(html);
-		int bpCount = 0;
-		while (matcher.find()) {
-			bpCount++;
+		if (matcher.find()) {
+			return true;
 		}
-		return bpCount;
+		return false;
 	}
 }

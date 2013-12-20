@@ -8,7 +8,7 @@ Robot.password=wangjue
 # cookie
 Robot.cookie=_mxm.cookie
 # 每次发送请求间隔（单位为秒）
-Robot.requestDelay=5
+Robot.requestDelay=2
 # 等待回复时间(单位为分钟)
 Robot.scheduleDelay=5
 

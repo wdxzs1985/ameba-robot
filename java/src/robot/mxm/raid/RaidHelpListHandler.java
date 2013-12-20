@@ -6,10 +6,9 @@ import java.util.regex.Pattern;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidHelpListHandler extends MxmEventHandler {
+public class RaidHelpListHandler extends AbstractRaidHandler {
 
 	private static final Pattern JSON_PATTERN = Pattern
 			.compile("var _json = (.*?);");

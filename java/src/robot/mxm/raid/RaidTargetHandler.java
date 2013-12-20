@@ -4,10 +4,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidTargetHandler extends MxmEventHandler {
+public class RaidTargetHandler extends AbstractRaidHandler {
 
 	private static final Pattern TOKEN_PATTERN = Pattern
 			.compile("<input type=\"hidden\" name=\"token\" value=\"([a-zA-Z0-9]{6})\">");
@@ -27,6 +26,8 @@ public class RaidTargetHandler extends MxmEventHandler {
 		String path = String.format("/raid/%s/%s/target/%s/choice", raidId,
 				raidPirtyId, targetMonsterCategoryId);
 		String html = this.httpGet(path);
+
+		this.log.debug(html);
 
 		this.resolveInputToken(html);
 

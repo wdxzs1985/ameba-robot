@@ -4,10 +4,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidAnimationHandler extends MxmEventHandler {
+public class RaidAnimationHandler extends AbstractRaidHandler {
 
 	private static final Pattern JSON_PATTERN = Pattern
 			.compile("var _json = (.*?);?_json");

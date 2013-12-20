@@ -11,7 +11,6 @@ import robot.mxm.quest.QuestUserListHandler;
 import robot.mxm.quest.QuestUserRoomHandler;
 import robot.mxm.raid.RaidAnimationHandler;
 import robot.mxm.raid.RaidAttackHandler;
-import robot.mxm.raid.RaidAttackResultHandler;
 import robot.mxm.raid.RaidEncountHandler;
 import robot.mxm.raid.RaidHelpListHandler;
 import robot.mxm.raid.RaidHistoryHandler;
@@ -52,8 +51,6 @@ public class MxmRobot extends AbstractRobot {
 		this.registerHandler("/raid/encount", new RaidEncountHandler(this));
 		this.registerHandler("/raid/target", new RaidTargetHandler(this));
 		this.registerHandler("/raid/attack", new RaidAttackHandler(this));
-		this.registerHandler("/raid/attack/result",
-				new RaidAttackResultHandler(this));
 	}
 
 	@Override

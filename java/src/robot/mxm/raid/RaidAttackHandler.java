@@ -5,10 +5,9 @@ import java.util.Map;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidAttackHandler extends MxmEventHandler {
+public class RaidAttackHandler extends AbstractRaidHandler {
 
 	public RaidAttackHandler(final MxmRobot robot) {
 		super(robot);
@@ -28,12 +27,8 @@ public class RaidAttackHandler extends MxmEventHandler {
 		nvps.add(new BasicNameValuePair("targetMonsterCategoryId",
 				targetMonsterCategoryId));
 		nvps.add(new BasicNameValuePair("token", token));
-
-		String html = this.httpPost(path, nvps);
-
-		this.log.debug(html);
-
-		return "/raid/attack/result";
+		this.httpPost(path, nvps);
+		return "/raid/top";
 	}
 
 }

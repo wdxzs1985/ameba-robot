@@ -62,12 +62,6 @@ public class QuestSummonHandler extends MxmEventHandler {
 					}
 				}
 			}
-			if (data.optBoolean("noFatigue", false)) {
-				if (this.log.isInfoEnabled()) {
-					this.log.info("ti li bu zhi");
-				}
-				return "/mypage";
-			}
 
 			String redirectType = data.optString("redirectType");
 			if (StringUtils.equals("RAID", redirectType)) {
@@ -80,6 +74,13 @@ public class QuestSummonHandler extends MxmEventHandler {
 				return "/quest/stageClear";
 			} else {
 				this.log.debug(redirectType);
+			}
+
+			if (data.optBoolean("noFatigue", false)) {
+				if (this.log.isInfoEnabled()) {
+					this.log.info("ti li bu zhi");
+				}
+				return "/mypage";
 			}
 		}
 		return "/quest";

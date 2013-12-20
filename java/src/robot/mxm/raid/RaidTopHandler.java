@@ -14,15 +14,16 @@ import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
-import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidTopHandler extends MxmEventHandler {
+public class RaidTopHandler extends AbstractRaidHandler {
 
 	private static final Pattern MONSTER_PATTERN = Pattern
 			.compile("var _monsterData = (\\[.*\\]);");
 	private static final Pattern TARGET_PATTERN = Pattern
 			.compile("/raid/\\d+/\\d+/target/(\\d+)/choice");
+	private static final Pattern HELP_PATTERN = Pattern
+			.compile("/raid/\\d+/help/shouted");
 
 	public RaidTopHandler(final MxmRobot robot) {
 		super(robot);
@@ -35,9 +36,15 @@ public class RaidTopHandler extends MxmEventHandler {
 		String raidPirtyId = (String) session.get("raidPirtyId");
 		String path = String.format("/raid/%s/%s/top", raidId, raidPirtyId);
 		String html = this.httpGet(path);
+		this.log.debug(html);
 
-		int bpCount = this.getBPCount(html);
-		if (bpCount > 0) {
+		if (this.isRaidWin(html)) {
+			return "/raid/win/result";
+		}
+
+		this.shoutHelp(html);
+
+		if (this.hasBP(html)) {
 			JSONObject monster = this.getMonsterData(html);
 			if (monster != null) {
 				String targetMonsterCategoryId = this.chooseTarget(monster);
@@ -50,6 +57,16 @@ public class RaidTopHandler extends MxmEventHandler {
 		}
 
 		return "/mypage";
+	}
+
+	private void shoutHelp(String html) {
+		Matcher matcher = HELP_PATTERN.matcher(html);
+		if (matcher.find()) {
+			final Map<String, Object> session = this.robot.getSession();
+			String raidId = (String) session.get("raidId");
+			String path = String.format("/raid/%s/help/shout", raidId);
+			this.httpGet(path);
+		}
 	}
 
 	private JSONObject getMonsterData(String html) {
