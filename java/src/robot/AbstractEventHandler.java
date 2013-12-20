@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,10 +19,12 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
 
 	protected final Log log;
 	protected final T robot;
+	private final int requestDelay;
 
 	public AbstractEventHandler(final T robot) {
 		this.robot = robot;
 		this.log = LogFactory.getLog(this.getClass());
+		this.requestDelay = robot.getRequestDelay();
 	}
 
 	@Override
@@ -37,6 +40,7 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
 	protected abstract String handleIt();
 
 	protected void after() {
+		this.sleep();
 	}
 
 	protected String httpGet(final String path) {
@@ -75,5 +79,14 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
 		final Map<String, Object> session = this.robot.getSession();
 		final boolean enable = (Boolean) session.get(funcName);
 		return enable;
+	}
+
+	protected void sleep() {
+		final int sleepTime = this.requestDelay
+				+ RandomUtils.nextInt(this.requestDelay);
+		try {
+			Thread.sleep(sleepTime * 1000);
+		} catch (final InterruptedException e) {
+		}
 	}
 }
