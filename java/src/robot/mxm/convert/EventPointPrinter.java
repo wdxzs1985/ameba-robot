@@ -1,22 +1,22 @@
-package robot.mxm;
+package robot.mxm.convert;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 
-public class PointPrinter {
+public class EventPointPrinter {
 
 	private static final Pattern POINT_PATTERN = Pattern
-			.compile("<div><span class=\"colorDeepOrange\">お宝pt：</span>([\\d,]+pt)（.*?）</div>");
+			.compile("<div><span class=\"colorDeepOrange.*?\">お宝pt：</span>([\\d,]+pt)（.*?）</div>");
 
 	private static final Pattern RANKING_PATTERN = Pattern
-			.compile("<div><span class=\"colorDeepOrange\">ランキング：</span>(\\d+位)</div>");
+			.compile("<div><span class=\"colorDeepOrange.*?\">ランキング：</span>(\\d+位)</div>");
 
 	private static final Pattern TREATURE_PATTERN = Pattern
-			.compile("<div><span class=\"colorDeepOrange\">お宝発見数：</span>(\\d+/\\d+)</div>");
+			.compile("<div><span class=\"colorDeepOrange.*?\">お宝発見数：</span>(\\d+/\\d+)</div>");
 
-	public void printPoint(Log log, String html) {
+	public static void printPoint(Log log, String html) {
 		Matcher matcher = POINT_PATTERN.matcher(html);
 		if (matcher.find()) {
 			String point = matcher.group(1);
@@ -24,7 +24,7 @@ public class PointPrinter {
 		}
 	}
 
-	public void printRanking(Log log, String html) {
+	public static void printRanking(Log log, String html) {
 		Matcher matcher = RANKING_PATTERN.matcher(html);
 		if (matcher.find()) {
 			String ranking = matcher.group(1);
@@ -32,7 +32,7 @@ public class PointPrinter {
 		}
 	}
 
-	public void printTreature(Log log, String html) {
+	public static void printTreature(Log log, String html) {
 		Matcher matcher = TREATURE_PATTERN.matcher(html);
 		if (matcher.find()) {
 			String treature = matcher.group(1);

@@ -11,11 +11,11 @@ public class MypageHandler extends MxmEventHandler {
 	private static final Pattern HTML_USER_NAME_PATTERN = Pattern
 			.compile("<div class=\"fsLarge marginRight10\">(.*?)</div>");
 
-	private final boolean isQuestEnable;
+	private final boolean questEnable;
 
 	public MypageHandler(final MxmRobot robot) {
 		super(robot);
-		this.isQuestEnable = robot.isQuestEnable();
+		this.questEnable = robot.isQuestEnable();
 		this.reset();
 	}
 
@@ -63,6 +63,6 @@ public class MypageHandler extends MxmEventHandler {
 		session.put("isMypage", false);
 		session.put("isRaidHistoryEnable", true);
 
-		session.put("isQuestEnable", this.isQuestEnable);
+		session.put("isQuestEnable", this.questEnable);
 	}
 }

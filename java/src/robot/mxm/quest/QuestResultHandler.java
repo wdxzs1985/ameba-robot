@@ -1,17 +1,10 @@
 package robot.mxm.quest;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.http.message.BasicNameValuePair;
-
 import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
-import robot.mxm.PointPrinter;
+import robot.mxm.convert.EventPointPrinter;
 
 public class QuestResultHandler extends MxmEventHandler {
-
-	private final PointPrinter printer = new PointPrinter();
 
 	public QuestResultHandler(final MxmRobot robot) {
 		super(robot);
@@ -19,19 +12,12 @@ public class QuestResultHandler extends MxmEventHandler {
 
 	@Override
 	public String handleIt() {
-		final Map<String, Object> session = this.robot.getSession();
-		String userId = (String) session.get("userId");
-		String token = (String) session.get("token");
-		String path = String.format("/touch/%s/result", userId);
-		List<BasicNameValuePair> nvps = this.createNameValuePairs();
-		nvps.add(new BasicNameValuePair("commentFlg", "false"));
-		nvps.add(new BasicNameValuePair("redirectType", "TOUCH_RESULT"));
-		nvps.add(new BasicNameValuePair("token", token));
-		final String html = this.httpPost(path, nvps);
+		String path = "/touch/after_animation/result";
+		final String html = this.httpGet(path);
 		if (this.log.isInfoEnabled()) {
-			this.printer.printPoint(this.log, html);
-			this.printer.printRanking(this.log, html);
-			this.printer.printTreature(this.log, html);
+			EventPointPrinter.printPoint(this.log, html);
+			EventPointPrinter.printRanking(this.log, html);
+			EventPointPrinter.printTreature(this.log, html);
 		}
 		return "/quest";
 	}

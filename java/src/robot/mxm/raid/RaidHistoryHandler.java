@@ -22,10 +22,10 @@ public class RaidHistoryHandler extends MxmEventHandler {
 		final String html = this.httpGet("/raid/join_histories");
 		Matcher matcher = RAID_WIN_PATTERN.matcher(html);
 		if (matcher.find()) {
-			String eventId = matcher.group(1);
-			String raidId = matcher.group(2);
-			session.put("eventId", eventId);
+			String raidId = matcher.group(1);
+			String raidPirtyId = matcher.group(2);
 			session.put("raidId", raidId);
+			session.put("raidPirtyId", raidPirtyId);
 			return "/raid/win/animation";
 		}
 		return "/mypage";

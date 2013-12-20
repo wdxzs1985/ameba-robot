@@ -44,23 +44,23 @@ public class QuestSummonHandler extends MxmEventHandler {
 				}
 			}
 
-			// TODO result type
-
 			JSONObject experienceParam = data.optJSONObject("experienceParam");
-			if (experienceParam.optBoolean("levelUp", false)) {
-				int beforeLv = experienceParam.optInt("beforeLv");
-				int afterLv = experienceParam.optInt("afterLv");
-				if (this.log.isInfoEnabled()) {
-					this.log.info(String.format("Level Up: %d > %d", beforeLv,
-							afterLv));
+			if (experienceParam != null) {
+				this.log.debug(experienceParam);
+				if (experienceParam.optBoolean("levelUp", false)) {
+					int beforeLv = experienceParam.optInt("beforeLv");
+					int afterLv = experienceParam.optInt("afterLv");
+					if (this.log.isInfoEnabled()) {
+						this.log.info(String.format("Level Up: %d > %d",
+								beforeLv, afterLv));
+					}
+					if (experienceParam.optBoolean("reachMaxLevel", false)) {
+						if (this.log.isInfoEnabled()) {
+							this.log.info("Max Level");
+						}
+						return "/monster";
+					}
 				}
-				// return "/partern/change";
-			}
-			if (experienceParam.optBoolean("reachMaxLevel", false)) {
-				if (this.log.isInfoEnabled()) {
-					this.log.info("Max Level");
-				}
-				// return "/partern/change";
 			}
 			if (data.optBoolean("noFatigue", false)) {
 				if (this.log.isInfoEnabled()) {
@@ -70,16 +70,16 @@ public class QuestSummonHandler extends MxmEventHandler {
 			}
 
 			String redirectType = data.optString("redirectType");
-			this.log.debug(redirectType);
 			if (StringUtils.equals("RAID", redirectType)) {
-				// TODO raid
-				// return "/raid/animation";
+				return "/raid/animation";
 			} else if (StringUtils.equals("TOUCH_RESULT", redirectType)) {
 				return "/quest/result";
 			} else if (StringUtils.equals("RING_GET", redirectType)) {
 				return "/quest/getRing";
 			} else if (StringUtils.equals("STAGE_CLEAR", redirectType)) {
 				return "/quest/stageClear";
+			} else {
+				this.log.debug(redirectType);
 			}
 		}
 		return "/quest";

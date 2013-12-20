@@ -24,13 +24,11 @@ public class RaidWinAnimationHandler extends MxmEventHandler {
 	@Override
 	public String handleIt() {
 		final Map<String, Object> session = this.robot.getSession();
-		String eventId = (String) session.get("eventId");
 		String raidId = (String) session.get("raidId");
-		String path = String.format("/raid/%s/%s/win/animation", eventId,
-				raidId);
+		String raidPirtyId = (String) session.get("raidPirtyId");
+		String path = String.format("/raid/%s/%s/win/animation", raidId,
+				raidPirtyId);
 		final String html = this.httpGet(path);
-
-		this.log.debug(html);
 
 		if (this.log.isInfoEnabled()) {
 			this.printRaidPrizes(html);

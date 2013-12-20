@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
+import robot.mxm.convert.MonsterConvert;
 
 public class QuestUserRoomHandler extends MxmEventHandler {
 
@@ -63,6 +64,15 @@ public class QuestUserRoomHandler extends MxmEventHandler {
 			if (monster != null) {
 				String elementId = monster.optString("elementId");
 				String rarityId = monster.optString("rarityId");
+				if (this.log.isInfoEnabled()) {
+					String name = monster.optString("name");
+					String elementName = MonsterConvert
+							.convertElement(elementId);
+					String rarityName = MonsterConvert.convertRarity(rarityId);
+					this.log.info(String.format("%s, %s, %s", name,
+							elementName, rarityName));
+				}
+
 				if (StringUtils.equals(element, "")) {
 					if (StringUtils.equals(rarityId, "1")) {
 						// 精霊の場合

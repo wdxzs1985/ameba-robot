@@ -9,7 +9,7 @@ import robot.mxm.MxmRobot;
 
 public class RaidAnimationHandler extends MxmEventHandler {
 
-	private static final Pattern RESULT_PATTERN = Pattern
+	private static final Pattern JSON_PATTERN = Pattern
 			.compile("var _json = (.*?);?_json");
 
 	private static final Pattern NEXT_URL_PATTERN = Pattern
@@ -35,13 +35,13 @@ public class RaidAnimationHandler extends MxmEventHandler {
 	}
 
 	private void printBossInfo(String html) {
-		Matcher matcher = RESULT_PATTERN.matcher(html);
+		Matcher matcher = JSON_PATTERN.matcher(html);
 		if (matcher.find()) {
 			String jsonString = matcher.group(1);
 			JSONObject data = JSONObject.fromObject(jsonString);
-			String bossName = data.optString("bossName");
 			int bossLevel = data.optInt("bossLevel");
-			this.log.info(String.format("LV%d BOSS %s", bossName, bossLevel));
+			String bossName = data.optString("bossName");
+			this.log.info(String.format("LV%d BOSS %s", bossLevel, bossName));
 		}
 	}
 }

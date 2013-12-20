@@ -1,12 +1,9 @@
-package robot.mxm.quest;
+package robot.mxm;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import robot.mxm.MxmEventHandler;
-import robot.mxm.MxmRobot;
-
-public class QuestGetRingHandler extends MxmEventHandler {
+public class GetRingHandler extends MxmEventHandler {
 
 	private static final Pattern RING_NAME_PATTERN = Pattern
 			.compile("<div class=\"fsLarge\">(.*?)</div>");
@@ -15,7 +12,7 @@ public class QuestGetRingHandler extends MxmEventHandler {
 	private static final Pattern NEXT_URL_PATTERN = Pattern
 			.compile("<form id=\"getRingForm\" action=\"(.*?)\" method=\"GET\">");
 
-	public QuestGetRingHandler(final MxmRobot robot) {
+	public GetRingHandler(final MxmRobot robot) {
 		super(robot);
 	}
 

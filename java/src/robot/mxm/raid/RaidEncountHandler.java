@@ -17,14 +17,14 @@ import org.apache.commons.lang.StringUtils;
 import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
 
-public class RaidTopHandler extends MxmEventHandler {
+public class RaidEncountHandler extends MxmEventHandler {
 
 	private static final Pattern MONSTER_PATTERN = Pattern
 			.compile("var _monsterData = (\\[.*\\]);");
 	private static final Pattern TARGET_PATTERN = Pattern
 			.compile("/raid/\\d+/\\d+/target/(\\d+)/choice");
 
-	public RaidTopHandler(final MxmRobot robot) {
+	public RaidEncountHandler(final MxmRobot robot) {
 		super(robot);
 	}
 
@@ -33,8 +33,9 @@ public class RaidTopHandler extends MxmEventHandler {
 		final Map<String, Object> session = this.robot.getSession();
 		String raidId = (String) session.get("raidId");
 		String raidPirtyId = (String) session.get("raidPirtyId");
-		String path = String.format("/raid/%s/%s/top", raidId, raidPirtyId);
+		String path = String.format("/raid/%s/%s/encount", raidId, raidPirtyId);
 		String html = this.httpGet(path);
+		this.log.debug(html);
 
 		int bpCount = this.getBPCount(html);
 		if (bpCount > 0) {
@@ -104,5 +105,4 @@ public class RaidTopHandler extends MxmEventHandler {
 		}
 		return null;
 	}
-
 }
