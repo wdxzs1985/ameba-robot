@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing
+Robot.username=bushing2
 # 密码
-Robot.password=wangjue
+Robot.password=
 # cookie
 Robot.cookie=_mxm.cookie
 # 每次发送请求间隔（单位为秒）

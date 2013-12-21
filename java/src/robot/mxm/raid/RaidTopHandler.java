@@ -42,15 +42,12 @@ public class RaidTopHandler extends AbstractRaidHandler {
 
         this.shoutHelp(html);
 
-        if (this.getBpCount(html) > 0) {
-            final JSONObject monster = this.getMonsterData(html);
-            if (monster != null) {
-                final String targetMonsterCategoryId = this.chooseTarget(monster);
-                if (StringUtils.isNotBlank(targetMonsterCategoryId)) {
-                    session.put("targetMonsterCategoryId",
-                                targetMonsterCategoryId);
-                    return "/raid/target";
-                }
+        final JSONObject monster = this.getMonsterData(html);
+        if (monster != null && this.getBpCount(html) > 0) {
+            final String targetMonsterCategoryId = this.chooseTarget(monster);
+            if (StringUtils.isNotBlank(targetMonsterCategoryId)) {
+                session.put("targetMonsterCategoryId", targetMonsterCategoryId);
+                return "/raid/target";
             }
         }
 
@@ -64,6 +61,9 @@ public class RaidTopHandler extends AbstractRaidHandler {
             final String raidId = (String) session.get("raidId");
             final String path = String.format("/raid/%s/help/shouted", raidId);
             this.httpGet(path);
+            if (this.log.isInfoEnabled()) {
+                this.log.info("给小伙伴们发了情报。");
+            }
         }
     }
 
@@ -83,13 +83,13 @@ public class RaidTopHandler extends AbstractRaidHandler {
                     monsterList.add(monster);
                     if (this.log.isInfoEnabled()) {
                         if (monster.optBoolean("boss")) {
-                            this.log.info(String.format("[Boss] %s(Lv%d) %d/%d",
+                            this.log.info(String.format("[带头大哥] %s(Lv%d) %d/%d",
                                                         name,
                                                         lv,
                                                         HP,
                                                         maxHP));
                         } else {
-                            this.log.info(String.format("%s(Lv%d) %d/%d",
+                            this.log.info(String.format("[跟班小弟] %s(Lv%d) %d/%d",
                                                         name,
                                                         lv,
                                                         HP,

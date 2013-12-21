@@ -55,12 +55,13 @@ public class QuestSummonHandler extends MxmEventHandler {
                 if (experienceParam.optBoolean("levelUp", false)) {
                     final int beforeLv = experienceParam.optInt("beforeLv");
                     final int afterLv = experienceParam.optInt("afterLv");
+                    final int maxLevel = experienceParam.optInt("maxLevel");
                     if (this.log.isInfoEnabled()) {
                         this.log.info(String.format("Level Up: %d > %d",
                                                     beforeLv,
                                                     afterLv));
                     }
-                    if (experienceParam.optBoolean("reachMaxLevel", false)) {
+                    if (afterLv == maxLevel) {
                         if (this.log.isInfoEnabled()) {
                             this.log.info("Max Level");
                         }

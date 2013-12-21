@@ -77,14 +77,16 @@ public class MypageHandler extends MxmEventHandler {
             return "/raid/history";
         }
 
-        if (this.raidEnable && this.getBpCount(html) > 0) {
-            if (this.isHelpComing(html)) {
+        if (this.raidEnable) {
+            if (this.isRaiding(html)) {
+                if (this.getBpCount(html) > 0) {
+                    return "/raid/top";
+                }
+            } else if (this.isHelpComing(html)) {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("救援依頼が届いています!");
                 }
                 return "/raid/help/list";
-            } else if (this.isRaid(html)) {
-                return "/raid/top";
             }
         }
 
@@ -273,7 +275,7 @@ public class MypageHandler extends MxmEventHandler {
         return elementId;
     }
 
-    private boolean isRaid(final String html) {
+    private boolean isRaiding(final String html) {
         final Map<String, Object> session = this.robot.getSession();
         final Matcher matcher = MypageHandler.RAID_PATTERN.matcher(html);
         if (matcher.find()) {
