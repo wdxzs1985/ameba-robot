@@ -82,7 +82,7 @@ public class QuestSummonHandler extends MxmEventHandler {
                 this.log.debug(redirectType);
             }
         }
-        return "/quest";
+        return "/mypage";
     }
 
     private JSONObject resloveQuestData(final String html) {

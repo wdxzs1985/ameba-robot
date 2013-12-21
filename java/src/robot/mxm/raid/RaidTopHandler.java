@@ -54,7 +54,7 @@ public class RaidTopHandler extends AbstractRaidHandler {
             }
         }
 
-        return "/quest";
+        return "/mypage";
     }
 
     private void shoutHelp(final String html) {
