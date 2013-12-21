@@ -1,15 +1,15 @@
-package robot.gf;
+package robot.fs;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import robot.AbstractEventHandler;
 
-public class HomeHandler extends AbstractEventHandler<GFRobot> {
+public class HomeHandler extends AbstractEventHandler<FSRobot> {
 
-    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>ガールフレンド（仮）</title>");
+    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>天空のクリスタリア</title>");
 
-    public HomeHandler(final GFRobot robot) {
+    public HomeHandler(final FSRobot robot) {
         super(robot);
     }
 

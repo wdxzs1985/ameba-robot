@@ -1,4 +1,4 @@
-package robot.gf;
+package robot.fs;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import robot.Launcher;
 
-public class GFLauncher extends Launcher {
+public class FSLauncher extends Launcher {
 
 	private final ScheduledExecutorService executor = Executors
 			.newScheduledThreadPool(1);
@@ -17,16 +17,16 @@ public class GFLauncher extends Launcher {
 
 	public static void main(final String[] args) {
 		final String setup = args.length > 0 ? args[0] : "setup.txt";
-		final GFLauncher launcher = new GFLauncher();
+		final FSLauncher launcher = new FSLauncher();
 		launcher.init(setup);
 		launcher.launch();
 	}
 
 	public void launch() {
 		if (this.log.isInfoEnabled()) {
-			this.log.info(GFRobot.VERSION);
+			this.log.info(FSRobot.VERSION);
 		}
-		final GFRobot robot = new GFRobot();
+		final FSRobot robot = new FSRobot();
 		robot.setConfig(this.config);
 		robot.setHttpClient(this.httpClient);
 		robot.init();

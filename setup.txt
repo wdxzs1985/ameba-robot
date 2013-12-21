@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=
+Robot.username=bushing
 # 密码
-Robot.password=
+Robot.password=wangjue
 # Robot.cookie
 Robot.cookie=_gf.cookie
 # 每次发送请求间隔（单位为秒）
@@ -14,28 +14,18 @@ Robot.scheduleDelay=60
 
 ###########################
 #
-# GFRobot
+# FSRobot
 #
 ###########################
-# 免费抽开关 （不是氪金都会抽）
-GFRobot.cupidEnable=true
-# 印花抽开关
-GFRobot.cupidStampEnable=true
-# 自动领礼品盒开关
-GFRobot.giftEnable=true
-# 自动强化开关
-GFRobot.upgradeEnable=true
-# 打工开关
-GFRobot.jobEnable=true
-# 上学大冒险开关
-GFRobot.questEnable=true
+# 冒险开关
+FSRobot.questEnable=true
 
 ###########################
 # 冒险
 ###########################
 # 自动选关开关
 # true=自动选关/false=手动选关
-GFRobot.autoSelectStage=true
+FSRobot.autoSelectStage=true
 # 指定关（手动选关时有效）
-GFRobot.questId=1
-GFRobot.stageId=1
+FSRobot.questId=1
+FSRobot.stageId=1
