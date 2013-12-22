@@ -71,6 +71,7 @@ public class QuestSummonHandler extends MxmEventHandler {
             }
 
             final String redirectType = data.optString("redirectType");
+            this.log.debug(redirectType);
             if (StringUtils.equals("RAID", redirectType)) {
                 return "/raid/animation";
             } else if (StringUtils.equals("TOUCH_RESULT", redirectType)) {
@@ -80,7 +81,6 @@ public class QuestSummonHandler extends MxmEventHandler {
             } else if (StringUtils.equals("STAGE_CLEAR", redirectType)) {
                 return "/quest/stageClear";
             } else {
-                this.log.debug(redirectType);
             }
         }
         return "/mypage";
