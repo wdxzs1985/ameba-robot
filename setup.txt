@@ -2,7 +2,7 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=
+Robot.username=bushing2
 # 密码
 Robot.password=
 # Robot.cookie
