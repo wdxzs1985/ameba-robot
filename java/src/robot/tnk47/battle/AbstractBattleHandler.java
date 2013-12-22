@@ -9,7 +9,7 @@ import robot.tnk47.Tnk47Robot;
 
 public abstract class AbstractBattleHandler extends Tnk47EventHandler {
 
-    private static final Pattern BATTLE_RESULT_PATTERN = Pattern.compile("nextUrl: \"/battle/prefecture-battle-result\\?prefectureBattleId=(.*)\"");
+    private static final Pattern BATTLE_RESULT_PATTERN = Pattern.compile("nextUrl: \"/battle/prefecture-battle-result\\?prefectureBattleId=(.*?)\"");
 
     public AbstractBattleHandler(final Tnk47Robot robot) {
         super(robot);

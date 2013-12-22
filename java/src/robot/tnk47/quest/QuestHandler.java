@@ -10,7 +10,7 @@ import robot.tnk47.Tnk47Robot;
 public class QuestHandler extends Tnk47EventHandler {
 
     private static final Pattern STAGE_INTRODUCTION_PATTERN = Pattern.compile("<a href=\"/quest\\?introductionFinish=true\">");
-    private static final Pattern STAGE_DETAIL_PATTERN = Pattern.compile("<a href=\"/quest/stage-detail\\?questId=(\\d+)&areaId=(\\d+)&stageId=(\\d+)\">(.*)</a>");
+    private static final Pattern STAGE_DETAIL_PATTERN = Pattern.compile("<a href=\"/quest/stage-detail\\?questId=(\\d+)&areaId=(\\d+)&stageId=(\\d+)\">(.*?)</a>");
     private static final Pattern BOSS_PATTERN = Pattern.compile("<section class=\"questInfo infoBox boss\">");
 
     private final boolean autoSelectStage;

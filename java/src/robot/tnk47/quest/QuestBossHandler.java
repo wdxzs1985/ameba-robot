@@ -14,7 +14,7 @@ import robot.tnk47.Tnk47Robot;
 
 public class QuestBossHandler extends AbstractEventHandler<Tnk47Robot> {
 
-    private static final Pattern BOSS_RESULT_PATTERN = Pattern.compile("var bossResult = '(.*)';");
+    private static final Pattern BOSS_RESULT_PATTERN = Pattern.compile("var bossResult = '(.*?)';");
 
     public QuestBossHandler(final Tnk47Robot robot) {
         super(robot);

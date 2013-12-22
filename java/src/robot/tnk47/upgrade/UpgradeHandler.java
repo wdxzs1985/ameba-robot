@@ -11,7 +11,7 @@ import robot.tnk47.Tnk47Robot;
 
 public class UpgradeHandler extends Tnk47EventHandler {
 
-    private static final Pattern BASE_CARD_ID_PATTERN = Pattern.compile("<img src=\"http://stat100.ameba.jp/tnk47/ratio10/illustrations/card/thumb/.*?\" data-card-id=\"(.*?)\" data-image=\"/illustrations/card/thumb/.*?\" data-rarity=\".*\" >");
+    private static final Pattern BASE_CARD_ID_PATTERN = Pattern.compile("<img src=\"http://stat100.ameba.jp/tnk47/ratio10/illustrations/card/thumb/.*?\" data-card-id=\"(.*?)\" data-image=\"/illustrations/card/thumb/.*?\" data-rarity=\".*?\" >");
 
     public UpgradeHandler(final Tnk47Robot robot) {
         super(robot);

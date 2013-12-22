@@ -8,7 +8,7 @@ Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
-Robot.requestDelay=2
+Robot.requestDelay=3
 # 等待回复时间(单位为分钟)
 Robot.scheduleDelay=5
 
@@ -44,9 +44,9 @@ Tnk47Robot.selectedStageId=1
 # 允许使用当日冒险药
 Tnk47Robot.useStaminaToday=true
 # 允许使用小冒险药
-Tnk47Robot.useStamina50=true
+Tnk47Robot.useStamina50=false
 # 允许使用大冒险药
-Tnk47Robot.useStamina100=true
+Tnk47Robot.useStamina100=false
 # 使用冒险药的经验比例
 # 如果剩余升级经验小于总体力 x N% 的时候不会吃药
 Tnk47Robot.useStaminaRatio=75
@@ -56,10 +56,10 @@ Tnk47Robot.useStaminaRatio=75
 ###########################
 # 体力加点限制
 # 升级时体力小于设定值时自动加点
-Tnk47Robot.staminaUpLimit=500
+Tnk47Robot.staminaUpLimit=0
 # 攻防加点限制
 # 升级时攻防小于设定值时自动加点
-Tnk47Robot.powerUpLimit=500
+Tnk47Robot.powerUpLimit=0
 
 ###########################
 # 合战

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class MypageHandler extends Tnk47EventHandler {
 
-    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>(.*)?</title>");
+    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>(.*?)</title>");
     private static final Pattern HTML_USER_STATUS_PATTERN = Pattern.compile("<div class=\"userStatusParams\">(.*?)</div>");
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<p class=\"userName\">(.*?)</p>");
     private static final Pattern HTML_USER_LEVEL_PATTERN = Pattern.compile("<dl class=\"userLevel\"><dt>Lv</dt><dd>(.*?)</dd></dl>");
