@@ -8,7 +8,7 @@ public class MonsterConvert {
     public static final String[] ELEMENTS_NAME = { "???",
                                                   "火",
                                                   "水",
-                                                  "水",
+                                                  "木",
                                                   "雷",
                                                   "風",
                                                   "土" };
