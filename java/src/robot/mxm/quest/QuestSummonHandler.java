@@ -65,7 +65,7 @@ public class QuestSummonHandler extends MxmEventHandler {
                         if (this.log.isInfoEnabled()) {
                             this.log.info("Max Level");
                         }
-                        return "/monster";
+                        return "/monster/change";
                     }
                 }
             }

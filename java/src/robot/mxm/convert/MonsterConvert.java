@@ -4,33 +4,33 @@ import org.apache.commons.lang.StringUtils;
 
 public class MonsterConvert {
 
-	public static String convertElement(String elementId) {
-		if (StringUtils.equals(elementId, "1")) {
-			return ("火");
-		} else if (StringUtils.equals(elementId, "2")) {
-			return ("水");
-		} else if (StringUtils.equals(elementId, "3")) {
-			return ("木");
-		} else if (StringUtils.equals(elementId, "4")) {
-			return ("雷");
-		} else if (StringUtils.equals(elementId, "5")) {
-			return ("風");
-		} else if (StringUtils.equals(elementId, "6")) {
-			return ("土");
-		}
-		return "???";
-	}
+    public static final String[] ELEMENTS = { "0", "1", "2", "3", "4", "5", "6" };
+    public static final String[] ELEMENTS_NAME = { "???",
+                                                  "火",
+                                                  "水",
+                                                  "水",
+                                                  "雷",
+                                                  "風",
+                                                  "土" };
 
-	public static String convertRarity(String rarityId) {
-		if (StringUtils.equals(rarityId, "1")) {
-			return ("精霊");
-		} else if (StringUtils.equals(rarityId, "2")) {
-			// 幻獣の場合
-			return ("幻獣");
-		} else if (StringUtils.equals(rarityId, "3")) {
-			// 神獣の場合
-			return ("神獣");
-		}
-		return "???";
-	}
+    public static final String[] RARITIES = { "0", "1", "2", "3" };
+    public static final String[] RARITIES_NAME = { "???", "精霊", "幻獣", "神獣" };
+
+    public static String convertElement(final String elementId) {
+        for (int i = 1; i < MonsterConvert.ELEMENTS.length; i++) {
+            if (StringUtils.equals(elementId, MonsterConvert.ELEMENTS[i])) {
+                return MonsterConvert.ELEMENTS_NAME[i];
+            }
+        }
+        return MonsterConvert.ELEMENTS_NAME[0];
+    }
+
+    public static String convertRarity(final String rarityId) {
+        for (int i = 1; i < MonsterConvert.RARITIES.length; i++) {
+            if (StringUtils.equals(rarityId, MonsterConvert.RARITIES[i])) {
+                return MonsterConvert.RARITIES_NAME[i];
+            }
+        }
+        return MonsterConvert.RARITIES_NAME[0];
+    }
 }

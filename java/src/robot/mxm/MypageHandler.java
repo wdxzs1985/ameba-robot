@@ -27,6 +27,7 @@ public class MypageHandler extends MxmEventHandler {
     private static final Pattern RAID_PATTERN = Pattern.compile("/raid/(\\d+)/(\\d+)/top");
 
     private static final Pattern DAILY_ELEMENT_PATTERN = Pattern.compile("http://stat100.ameba.jp/mxm/ver01/page/img/orgn/daily_mission/icon_daily_element([\\d]).png");
+    private static final Pattern DAILY_RARE_PATTERN = Pattern.compile("http://stat100.ameba.jp/mxm/ver01/page/img/orgn/daily_mission/icon_daily_rare([\\d]).png");
     private static final Pattern DAILY_CLEAR_PATTERN = Pattern.compile("クリアまであと<span class=\"colorDeepOrange\">([1-5])回！</span>");
     private static final Pattern TABLE_DATA_PATTERN = Pattern.compile("mxm.tableData\\[\"(\\d)\"\\] = (\\{.*?\\})");
     private static final Pattern SUMMON_PATTERN = Pattern.compile("<li data-btn=\"push\" data-summon-point=\"(\\d)\" data-max-sumon-point=\"\\d\" data-iusermonster-id=\"\\d+\" data-index=\"\\d\" data-recipe-id=\"(\\d+)\" data-mst-name=\"(.*?)\" data-mst-path=\".*?\" data-rarity-id=\"(\\d)\" data-element-id=\"(\\d)\">");
@@ -263,16 +264,25 @@ public class MypageHandler extends MxmEventHandler {
     }
 
     private String findDailyElement(final String html) {
-        String elementId = null;
-        final Matcher matcher = MypageHandler.DAILY_ELEMENT_PATTERN.matcher(html);
-        if (matcher.find()) {
-            elementId = matcher.group(1);
+        String element = null;
+        final Matcher elementMatcher = MypageHandler.DAILY_ELEMENT_PATTERN.matcher(html);
+        if (elementMatcher.find()) {
+            element = elementMatcher.group(1);
             if (this.log.isInfoEnabled()) {
-                final String elementName = MonsterConvert.convertElement(elementId);
+                final String elementName = MonsterConvert.convertElement(element);
                 this.log.info(String.format("今日の召喚獣は%sです。", elementName));
             }
         }
-        return elementId;
+        final Matcher rareMatcher = MypageHandler.DAILY_RARE_PATTERN.matcher(html);
+        if (rareMatcher.find()) {
+            element = "0";
+            final String rareId = rareMatcher.group(1);
+            if (this.log.isInfoEnabled()) {
+                final String elementName = MonsterConvert.convertRarity(rareId);
+                this.log.info(String.format("今日の召喚獣は%sです。", elementName));
+            }
+        }
+        return element;
     }
 
     private boolean isRaiding(final String html) {

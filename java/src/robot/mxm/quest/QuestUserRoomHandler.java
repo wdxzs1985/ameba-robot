@@ -74,16 +74,10 @@ public class QuestUserRoomHandler extends MxmEventHandler {
                                                 rarityName));
                 }
 
-                if (StringUtils.equals(element, "")) {
+                if (StringUtils.equals(element, "0")) {
                     if (StringUtils.equals(rarityId, "1")) {
                         // 精霊の場合
                         summonList.addFirst(monster);
-                    } else if (StringUtils.equals(rarityId, "3")) {
-                        // 神獣の場合
-                        summonList.addLast(monster);
-                    } else if (StringUtils.equals(rarityId, "2")) {
-                        // 幻獣の場合
-                        summonList.addLast(monster);
                     }
                 } else {
                     if (StringUtils.equals(elementId, element)) {

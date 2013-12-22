@@ -2,6 +2,7 @@ package robot.mxm;
 
 import robot.AbstractRobot;
 import robot.LoginHandler;
+import robot.mxm.monster.MonsterChangeHandler;
 import robot.mxm.monster.MonsterHandler;
 import robot.mxm.quest.QuestResultHandler;
 import robot.mxm.quest.QuestStageClearHandler;
@@ -30,7 +31,9 @@ public class MxmRobot extends AbstractRobot {
         this.registerHandler("/login", new LoginHandler(this));
         this.registerHandler("/mypage", new MypageHandler(this));
         this.registerHandler("/getRing", new GetRingHandler(this));
+        // monster
         this.registerHandler("/monster", new MonsterHandler(this));
+        this.registerHandler("/monster/change", new MonsterChangeHandler(this));
         // quest
         this.registerHandler("/quest", new QuestUserListHandler(this));
         this.registerHandler("/quest/user/room", new QuestUserRoomHandler(this));
