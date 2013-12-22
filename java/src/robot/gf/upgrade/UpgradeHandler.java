@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.gf.GFEventHandler;
@@ -13,9 +15,7 @@ import robot.gf.GFRobot;
 
 public class UpgradeHandler extends GFEventHandler {
 
-    private static final Pattern STEP_PATTERN = Pattern.compile("var step = '(.*?)';");
-    private static final Pattern BASE_CARD_ID_PATTERN = Pattern.compile("var userCardId = \"(.*?)\";");
-    private static final Pattern USER_CARD_ID_PATTERN = Pattern.compile("<li class=\"listbox noteBg listId0 .*?\" rel=\"([0-9\\._]+)\">");
+    private static final Pattern MAX_PAGE_PATTERN = Pattern.compile("var maxPage = (\\d+);");
 
     public UpgradeHandler(final GFRobot robot) {
         super(robot);
@@ -24,39 +24,59 @@ public class UpgradeHandler extends GFEventHandler {
     @Override
     public String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
-        final String html = this.httpGet("/upgrade");
-        final Matcher matcher = UpgradeHandler.STEP_PATTERN.matcher(html);
-        if (matcher.find()) {
-            final String step = matcher.group(1);
-            if (StringUtils.equals(step, "base")) {
-                final Matcher userCardIdMatcher = UpgradeHandler.USER_CARD_ID_PATTERN.matcher(html);
-                if (userCardIdMatcher.find()) {
-                    final String userCardId = userCardIdMatcher.group(1);
-
-                    final String path = "/upgrade/ajax/upgrade-card-search";
-                    final List<BasicNameValuePair> nvps = this.createNameValuePairs();
-                    nvps.add(new BasicNameValuePair("cond", "material"));
-                    nvps.add(new BasicNameValuePair("sphere", "ALL"));
-                    nvps.add(new BasicNameValuePair("sortType", "capability"));
-                    nvps.add(new BasicNameValuePair("sort", "desc"));
-                    nvps.add(new BasicNameValuePair("page", "1"));
-                    nvps.add(new BasicNameValuePair("userCardId", userCardId));
-                    nvps.add(new BasicNameValuePair("rarity", "0"));
-                    nvps.add(new BasicNameValuePair("skill", "0"));
-                    nvps.add(new BasicNameValuePair("status", "0"));
-
-                    this.httpPostJSON(path, nvps);
-                    return "/upgrade";
-                }
-            } else if (StringUtils.equals(step, "material")) {
-                final Matcher baseUserCardIdMatcher = UpgradeHandler.BASE_CARD_ID_PATTERN.matcher(html);
-                if (baseUserCardIdMatcher.find()) {
-                    final String baseUserCardId = baseUserCardIdMatcher.group(1);
-                    session.put("baseUserCardId", baseUserCardId);
-                    return "/upgrade/confirm";
-                }
-            }
+        final int maxPage = this.getMaxPage();
+        final JSONObject baseCard = this.searchBase(maxPage);
+        if (baseCard != null) {
+            final String baseUserCardId = baseCard.optString("userCardId");
+            session.put("baseUserCardId", baseUserCardId);
+            return "/upgrade/confirm";
         }
         return "/mypage";
+    }
+
+    private int getMaxPage() {
+        final String html = this.httpGet("/upgrade");
+        final Matcher matcher = UpgradeHandler.MAX_PAGE_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String maxPage = matcher.group(1);
+            return Integer.valueOf(maxPage);
+        }
+        return 0;
+    }
+
+    private JSONObject searchBase(final int maxPage) {
+        int page = 1;
+        while (page <= maxPage) {
+            final String path = "/upgrade/ajax/upgrade-card-search";
+            final List<BasicNameValuePair> nvps = this.createNameValuePairs();
+            nvps.add(new BasicNameValuePair("cond", "base"));
+            nvps.add(new BasicNameValuePair("sphere", "ALL"));
+            nvps.add(new BasicNameValuePair("sortType", "rarity_power"));
+            nvps.add(new BasicNameValuePair("sort", "desc"));
+            nvps.add(new BasicNameValuePair("page", String.valueOf(page)));
+            nvps.add(new BasicNameValuePair("rarity", "0"));
+            nvps.add(new BasicNameValuePair("skill", "0"));
+            nvps.add(new BasicNameValuePair("status", "0"));
+
+            final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
+            final JSONObject data = jsonResponse.optJSONObject("data");
+            final JSONArray searchList = data.optJSONArray("searchList");
+            if (searchList != null) {
+                for (int i = 0; i < searchList.size(); i++) {
+                    final JSONObject card = searchList.optJSONObject(i);
+                    final int level = card.optInt("level");
+                    final int maxLevel = card.optInt("maxLevel");
+                    if (level < maxLevel) {
+                        if (this.log.isInfoEnabled()) {
+                            final String cardName = card.optString("cardName");
+                            this.log.info(String.format("升级 %s", cardName));
+                        }
+                        return card;
+                    }
+                }
+            }
+            page++;
+        }
+        return null;
     }
 }
