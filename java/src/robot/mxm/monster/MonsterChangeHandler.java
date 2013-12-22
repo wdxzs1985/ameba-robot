@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import robot.mxm.MxmEventHandler;
 import robot.mxm.MxmRobot;
+import robot.mxm.convert.MonsterConvert;
 
 public class MonsterChangeHandler extends MxmEventHandler {
 
@@ -44,6 +45,10 @@ public class MonsterChangeHandler extends MxmEventHandler {
             final String elementId = matcher.group(1);
             final Map<String, Object> session = this.robot.getSession();
             session.put("leaderType", elementId);
+            if (this.log.isInfoEnabled()) {
+                final String elementName = MonsterConvert.convertElement(elementId);
+                this.log.info(String.format("召喚獣は%sです。", elementName));
+            }
         }
     }
 }
