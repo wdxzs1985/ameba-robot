@@ -8,7 +8,6 @@ import robot.mxm.quest.QuestResultHandler;
 import robot.mxm.quest.QuestStageClearHandler;
 import robot.mxm.quest.QuestSummonHandler;
 import robot.mxm.quest.QuestUserListHandler;
-import robot.mxm.quest.QuestUserRoomHandler;
 import robot.mxm.raid.RaidAnimationHandler;
 import robot.mxm.raid.RaidAttackHandler;
 import robot.mxm.raid.RaidEncountHandler;
@@ -36,7 +35,6 @@ public class MxmRobot extends AbstractRobot {
         this.registerHandler("/monster/change", new MonsterChangeHandler(this));
         // quest
         this.registerHandler("/quest", new QuestUserListHandler(this));
-        this.registerHandler("/quest/user/room", new QuestUserRoomHandler(this));
         this.registerHandler("/quest/summon", new QuestSummonHandler(this));
         this.registerHandler("/quest/result", new QuestResultHandler(this));
         this.registerHandler("/quest/stageClear",
