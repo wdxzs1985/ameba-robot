@@ -17,6 +17,11 @@ import robot.gf.quest.QuestBossHandler;
 import robot.gf.quest.QuestDetailHandler;
 import robot.gf.quest.QuestHandler;
 import robot.gf.quest.QuestRunHandler;
+import robot.gf.raidwar.RaidwarBossHandler;
+import robot.gf.raidwar.RaidwarHandler;
+import robot.gf.raidwar.RaidwarQuestDetailHandler;
+import robot.gf.raidwar.RaidwarQuestRunHandler;
+import robot.gf.raidwar.RaidwarQuestTouchHandler;
 import robot.gf.upgrade.UpgradeAnimationHandler;
 import robot.gf.upgrade.UpgradeConfirmHandler;
 import robot.gf.upgrade.UpgradeHandler;
@@ -62,6 +67,17 @@ public class GFRobot extends AbstractRobot {
         this.registerHandler("/job/setting", new JobSettingHandler(this));
         this.registerHandler("/job/start", new JobStartHandler(this));
         this.registerHandler("/job/payment", new JobPaymentHandler(this));
+
+        // raidwar
+        this.registerHandler("/raidwar", new RaidwarHandler(this));
+        this.registerHandler("/raidwar/quest/detail",
+                             new RaidwarQuestDetailHandler(this));
+        this.registerHandler("/raidwar/quest/run",
+                             new RaidwarQuestRunHandler(this));
+        this.registerHandler("/raidwar/quest/touch",
+                             new RaidwarQuestTouchHandler(this));
+        this.registerHandler("/raidwar/boss", new RaidwarBossHandler(this));
+
     }
 
     @Override
@@ -89,12 +105,6 @@ public class GFRobot extends AbstractRobot {
 
     public boolean isQuestEnable() {
         final String key = "GFRobot.questEnable";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
-    }
-
-    public boolean isBattleEnable() {
-        final String key = "GFRobot.battleEnable";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }
@@ -127,6 +137,12 @@ public class GFRobot extends AbstractRobot {
         final String key = "GFRobot.stageId";
         final String value = this.getConfig().getProperty(key, "1");
         return value;
+    }
+
+    public boolean isRaidwarEnable() {
+        final String key = "GFRobot.raidwarEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
     }
 
 }

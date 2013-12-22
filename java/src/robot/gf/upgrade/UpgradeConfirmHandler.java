@@ -31,7 +31,7 @@ public class UpgradeConfirmHandler extends GFEventHandler {
             return "/upgrade/animation";
         } else {
             if (this.log.isInfoEnabled()) {
-                this.log.info("没有升级素材");
+                this.log.info("没有可以用来升级的素材");
             }
         }
         return "/mypage";

@@ -29,6 +29,8 @@ GFRobot.upgradeEnable=true
 GFRobot.jobEnable=true
 # 上学大冒险开关
 GFRobot.questEnable=true
+# 讨伐活动开关
+GFRobot.raidwarEnable=true
 
 ###########################
 # 冒险

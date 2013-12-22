@@ -1,25 +1,30 @@
-package robot.gf.quest;
+package robot.gf.raidwar;
 
 import java.util.Map;
 
 import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+
 import robot.gf.GFEventHandler;
 import robot.gf.GFRobot;
 
-public class QuestRunHandler extends GFEventHandler {
+public class RaidwarQuestRunHandler extends GFEventHandler {
 
-    public QuestRunHandler(final GFRobot robot) {
+    public RaidwarQuestRunHandler(final GFRobot robot) {
         super(robot);
     }
 
     @Override
     public String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
+        final String eventId = (String) session.get("eventId");
         final String questId = (String) session.get("questId");
         final String stageId = (String) session.get("stageId");
         final String token = (String) session.get("token");
 
-        final String path = String.format("/quest/ajax/quest-run?questId=%s&stageId=%s&token=%s",
+        final String path = String.format("/raidwar/quest/ajax/run?eventId=%s&questId=%s&stageId=%s&token=%s",
+                                          eventId,
                                           questId,
                                           stageId,
                                           token);
@@ -36,16 +41,21 @@ public class QuestRunHandler extends GFEventHandler {
         }
 
         if (this.log.isInfoEnabled()) {
+            final String seasonName = data.optString("seasonName");
             final String questName = data.optString("questName");
             final String stageName = data.optString("stageName");
             final String afterProgress = data.optString("afterProgress");
-            this.log.info(String.format("%s / %s (%s%%)",
+            this.log.info(String.format("%s / %s / %s (%s%%)",
+                                        seasonName,
                                         questName,
                                         stageName,
                                         afterProgress));
         }
 
-        if (data.containsKey("rewardCardName")) {
+        final String questResultType = data.optString("questResultType");
+        if (StringUtils.equals(questResultType, "TOUCH_BONUS")) {
+            return "/raidwar/quest/touch";
+        } else if (StringUtils.equals(questResultType, "GET_REWARD")) {
             final String rewardCardName = data.optString("rewardCardName");
             if (this.log.isInfoEnabled()) {
                 this.log.info(String.format("发现新妹纸: %s", rewardCardName));
@@ -55,19 +65,25 @@ public class QuestRunHandler extends GFEventHandler {
                     this.log.info("后宫里的妹子满出来了");
                 }
             }
-        }
-
-        if (data.containsKey("treasureSetName")) {
-            final String treasureSetName = data.optString("treasureSetName");
-            final String treasureName = data.optString("treasureName");
+        } else if (StringUtils.equals(questResultType, "RAIDWAR")) {
+            final String raidwarId = data.optString("raidwarId");
+            session.put("raidwarId", raidwarId);
+            // return "/raidwar/boss";
+        } else if (StringUtils.equals(questResultType, "STAGE_CLEAR")) {
             if (this.log.isInfoEnabled()) {
-                this.log.info(String.format("发现: %s (%s)",
-                                            treasureSetName,
-                                            treasureName));
+                this.log.info("Stage Clear");
             }
-        }
-
-        if (data.optBoolean("dearUpFlg")) {
+        } else if (StringUtils.equals(questResultType, "STEALTH")) {
+            if (this.log.isInfoEnabled()) {
+                if (data.optBoolean("raidwarPointBounusFlg")) {
+                    final int raidwarPointGain = data.optInt("raidwarPointGain");
+                    final int raidwarPointGainMinuts = data.optInt("raidwarPointGainMinuts");
+                    this.log.info(String.format("Point Up %d%% (%d 分钟)",
+                                                raidwarPointGain,
+                                                raidwarPointGainMinuts));
+                }
+            }
+        } else if (StringUtils.equals(questResultType, "DEAR_UP")) {
             if (this.log.isInfoEnabled()) {
                 final String dearCardName = data.optString("dearCardName");
                 final int beforeDearLevel = data.optInt("beforeDearLevel");
@@ -87,17 +103,9 @@ public class QuestRunHandler extends GFEventHandler {
             if (this.log.isInfoEnabled()) {
                 this.log.info("Quest Clear");
             }
-            return "/quest";
+            return "/raidwar";
         }
-
-        if (data.optBoolean("stageClear", false)) {
-            if (this.log.isInfoEnabled()) {
-                this.log.info("Stage Clear");
-            }
-            return "/quest";
-        }
-
-        return "/quest/run";
+        return "/raidwar/quest/run";
     }
 
     private boolean isCardFull(final JSONObject data) {
