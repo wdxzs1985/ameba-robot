@@ -9,7 +9,7 @@ import robot.gf.GFRobot;
 
 public class QuestHandler extends GFEventHandler {
 
-    private static final Pattern BOSS_PATTERN = Pattern.compile("/quest/quest-boss?questId=([\\d]+)");
+    private static final Pattern BOSS_PATTERN = Pattern.compile("/quest/quest-boss\\?questId=([\\d]+)");
 
     public QuestHandler(final GFRobot robot) {
         super(robot);
