@@ -10,7 +10,7 @@ public class MypageHandler extends GFEventHandler {
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<h1><a href=\"/profile\">(.*?)</a></h1>");
     private static final Pattern HTML_JOB_CARD_SETTING_PATTERN = Pattern.compile("/job/job-card-setting");
     private static final Pattern HTML_JOB_FINISH_PATTERN = Pattern.compile("<a id=\"finishJobBtn\" class=\"btnPink\">受け取る</a>");
-    private static final Pattern HTML_RAID_WAR_PATTERN = Pattern.compile("/raidwar?eventId=2");
+    private static final Pattern HTML_RAID_WAR_PATTERN = Pattern.compile("/raidwar\\?eventId=(\\d+)");
 
     private final boolean upgradeEnable;
     private final boolean cupidEnable;
@@ -79,14 +79,14 @@ public class MypageHandler extends GFEventHandler {
             return "/cupid/stamp";
         }
 
-        if (this.is("isUpgradeEnable")) {
-            session.put("isUpgradeEnable", false);
-            return "/upgrade";
-        }
-
         if (this.is("isGiftEnable")) {
             session.put("isGiftEnable", false);
             return "/gift";
+        }
+
+        if (this.is("isUpgradeEnable")) {
+            session.put("isUpgradeEnable", false);
+            return "/upgrade";
         }
 
         if (this.is("isJobEnable")) {
