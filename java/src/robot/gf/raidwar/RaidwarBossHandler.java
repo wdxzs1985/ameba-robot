@@ -12,7 +12,8 @@ public class RaidwarBossHandler extends GFEventHandler {
     private final static Pattern DECK_ID_PATTERN = Pattern.compile("<input id='deckId' value='([0-9_]+)' type='hidden'>");
     private final static Pattern NUM_PATTERN = Pattern.compile("var num = \"(\\d)\";");
     private final static Pattern CTN_PATTERN = Pattern.compile("var ctn = '(\\d)';");
-    private final static Pattern IS_WIN_PATTERN = Pattern.compile("var IS_WIN = \"true\";");
+    private final static Pattern BOSS_DATA_PATTERN = Pattern.compile("<p class=\"bossName\">(.*?)</p><p class=\"bossLevel\">(.*?)</p>");
+    private final static Pattern IS_WIN_PATTERN = Pattern.compile("var IS_WIN = true;");
 
     public RaidwarBossHandler(final GFRobot robot) {
         super(robot);
@@ -21,15 +22,13 @@ public class RaidwarBossHandler extends GFEventHandler {
     @Override
     public String handleIt() {
         this.bossDiscoverAnimation();
-        final boolean fight = this.bossDetail();
-        if (fight) {
+        this.sleep();
+        while (this.bossDetail()) {
+            this.sleep();
             final boolean win = this.bossBattleAnimation();
             if (win) {
                 this.bossWin();
-            }
-        } else {
-            if (this.log.isInfoEnabled()) {
-                this.log.info("元气不足");
+                break;
             }
         }
         return "/raidwar";
@@ -57,13 +56,28 @@ public class RaidwarBossHandler extends GFEventHandler {
                                           raidwarId);
         final String html = this.httpGet(path);
         this.resolveJavascriptToken(html);
-
+        this.printBossInfo(html);
         if (this.getCtn(html) > 0) {
             this.getDeckId(html);
             this.getNum(html);
             return true;
+        } else {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("元气不足");
+            }
         }
         return false;
+    }
+
+    private void printBossInfo(final String html) {
+        if (this.log.isInfoEnabled()) {
+            final Matcher matcher = RaidwarBossHandler.BOSS_DATA_PATTERN.matcher(html);
+            if (matcher.find()) {
+                final String bossName = matcher.group(1);
+                final String bossLevel = matcher.group(2);
+                this.log.info(String.format("%s(%s) 出现了", bossName, bossLevel));
+            }
+        }
     }
 
     private int getCtn(final String html) {
