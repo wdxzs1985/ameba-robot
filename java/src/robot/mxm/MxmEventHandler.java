@@ -18,6 +18,7 @@ public abstract class MxmEventHandler extends AbstractEventHandler<MxmRobot> {
     private static final Pattern MXM_TOKEN_PATTERN = Pattern.compile("mxm.token = \"([a-zA-Z0-9]{6})\";");
     private static final Pattern RAID_TOP_PATTERN = Pattern.compile("/raid/(\\d+)/(\\d+)/top");
     private static final Pattern RAID_WIN_RESULT_PATTERN = Pattern.compile("/raid/(\\d+)/(\\d+)/win/result");
+    private static final Pattern RAID_LOSE_RESULT_PATTERN = Pattern.compile("/raid/(\\d+)/(\\d+)/lose/result");
     private static final Pattern BP_PATTERN = Pattern.compile("<ul class=\"battlePointAreaS bp(\\d)\">(<li></li>){3}</ul>");
 
     public MxmEventHandler(final MxmRobot robot) {
@@ -42,6 +43,8 @@ public abstract class MxmEventHandler extends AbstractEventHandler<MxmRobot> {
             return "/raid/top";
         } else if (this.isRaidWinResult(url)) {
             return "/raid/win/result";
+        } else if (this.isRaidLoseResult(url)) {
+            return "/raid/lose/result";
         } else if (this.isTouchResult(url)) {
             return "/quest/result";
         } else {
@@ -84,6 +87,19 @@ public abstract class MxmEventHandler extends AbstractEventHandler<MxmRobot> {
     protected boolean isRaidWinResult(final String url) {
         final Map<String, Object> session = this.robot.getSession();
         final Matcher matcher = MxmEventHandler.RAID_WIN_RESULT_PATTERN.matcher(url);
+        if (matcher.find()) {
+            final String raidId = matcher.group(1);
+            final String raidPirtyId = matcher.group(2);
+            session.put("raidId", raidId);
+            session.put("raidPirtyId", raidPirtyId);
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isRaidLoseResult(final String url) {
+        final Map<String, Object> session = this.robot.getSession();
+        final Matcher matcher = MxmEventHandler.RAID_LOSE_RESULT_PATTERN.matcher(url);
         if (matcher.find()) {
             final String raidId = matcher.group(1);
             final String raidPirtyId = matcher.group(2);

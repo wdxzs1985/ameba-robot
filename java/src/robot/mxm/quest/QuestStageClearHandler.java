@@ -32,7 +32,7 @@ public class QuestStageClearHandler extends MxmEventHandler {
             final Matcher matcher = QuestStageClearHandler.NEW_STAGE_PATTERN.matcher(html);
             if (matcher.find()) {
                 final String stageName = matcher.group(1);
-                this.log.info(String.format("%sに進みました！", stageName));
+                this.log.info(String.format("进入地图：%s", stageName));
             }
         }
     }

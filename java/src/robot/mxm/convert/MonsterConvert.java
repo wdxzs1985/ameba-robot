@@ -10,11 +10,11 @@ public class MonsterConvert {
                                                   "水",
                                                   "木",
                                                   "雷",
-                                                  "風",
+                                                  "风",
                                                   "土" };
 
     public static final String[] RARITIES = { "0", "1", "2", "3" };
-    public static final String[] RARITIES_NAME = { "???", "精霊", "幻獣", "神獣" };
+    public static final String[] RARITIES_NAME = { "???", "精灵", "幻兽", "神兽" };
 
     public static String convertElement(final String elementId) {
         for (int i = 1; i < MonsterConvert.ELEMENTS.length; i++) {

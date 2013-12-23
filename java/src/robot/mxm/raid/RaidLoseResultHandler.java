@@ -3,11 +3,10 @@ package robot.mxm.raid;
 import java.util.Map;
 
 import robot.mxm.MxmRobot;
-import robot.mxm.convert.EventPointPrinter;
 
-public class RaidWinResultHandler extends AbstractRaidHandler {
+public class RaidLoseResultHandler extends AbstractRaidHandler {
 
-    public RaidWinResultHandler(final MxmRobot robot) {
+    public RaidLoseResultHandler(final MxmRobot robot) {
         super(robot);
     }
 
@@ -16,15 +15,13 @@ public class RaidWinResultHandler extends AbstractRaidHandler {
         final Map<String, Object> session = this.robot.getSession();
         final String raidId = (String) session.get("raidId");
         final String raidPirtyId = (String) session.get("raidPirtyId");
-        final String path = String.format("/raid/%s/%s/win/result",
+        final String path = String.format("/raid/%s/%s/lose/result",
                                           raidId,
                                           raidPirtyId);
-        final String html = this.httpGet(path);
+        this.httpGet(path);
         if (this.log.isInfoEnabled()) {
-            EventPointPrinter.printPoint(this.log, html);
-            EventPointPrinter.printRanking(this.log, html);
-            EventPointPrinter.printTreature(this.log, html);
+            this.log.info("魔兽逃跑了，小伙伴还要继续努力。");
         }
-        return "/mypage";
+        return "/raid/history";
     }
 }

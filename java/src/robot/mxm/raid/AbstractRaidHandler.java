@@ -17,7 +17,11 @@ import robot.mxm.MxmRobot;
 
 public abstract class AbstractRaidHandler extends MxmEventHandler {
 
-    private static final Pattern TITLE_PATTERN = Pattern.compile("<title>レイド 勝利シーン \\| フレンダリアと魔法の指輪</title>");
+    private static final Pattern WIN_PATTERN = Pattern.compile("<title>レイド 勝利シーン \\| フレンダリアと魔法の指輪</title>");
+    private static final Pattern LOSTPATTERN = Pattern.compile("<title>レイド 敗北シーン \\| フレンダリアと魔法の指輪</title>");
+
+    // レイド 敗北シーン | フレンダリアと魔法の指輪
+
     private static final Pattern MONSTER_DATA_PATTERN = Pattern.compile("var _monsterData = (\\[.*\\]);");
     private static final Pattern TARGET_PATTERN = Pattern.compile("/raid/\\d+/\\d+/target/(\\d+)/choice");
 
@@ -28,10 +32,21 @@ public abstract class AbstractRaidHandler extends MxmEventHandler {
     }
 
     public boolean isRaidWin(final String html) {
-        final Matcher matcher = AbstractRaidHandler.TITLE_PATTERN.matcher(html);
+        final Matcher matcher = AbstractRaidHandler.WIN_PATTERN.matcher(html);
         if (matcher.find()) {
             if (this.log.isInfoEnabled()) {
                 this.printRaidPrizes(html);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isRaidLose(final String html) {
+        final Matcher matcher = AbstractRaidHandler.LOSTPATTERN.matcher(html);
+        if (matcher.find()) {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("讨伐失败");
             }
             return true;
         }
@@ -60,7 +75,7 @@ public abstract class AbstractRaidHandler extends MxmEventHandler {
     private void printPrizeInfo(final JSONObject prize) {
         final String name = prize.optString("name");
         final int amount = prize.optInt("amount");
-        this.log.info(String.format("GET %s %d 個", name, amount));
+        this.log.info(String.format("获得 %s %d 个", name, amount));
     }
 
     protected JSONObject findAttackMonster(final String html) {

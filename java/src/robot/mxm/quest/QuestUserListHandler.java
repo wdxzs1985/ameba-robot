@@ -31,6 +31,7 @@ public class QuestUserListHandler extends MxmEventHandler {
         final String element = (String) session.get("element");
         final List<String> userIdList = this.findUserRoom();
         for (final String userId : userIdList) {
+            this.sleep();
             final String path = String.format("/user/%s/room", userId);
             final String html = this.httpGet(path);
             this.resolveMxmToken(html);
@@ -43,7 +44,7 @@ public class QuestUserListHandler extends MxmEventHandler {
                     session.put("summonId", summonId);
                     if (this.log.isInfoEnabled()) {
                         final String name = monster.optString("name");
-                        this.log.info(String.format("take %s", name));
+                        this.log.info(String.format("带走 %s", name));
                     }
                     return "/quest/summon";
                 }
@@ -84,10 +85,10 @@ public class QuestUserListHandler extends MxmEventHandler {
                     final String name = monster.optString("name");
                     final String elementName = MonsterConvert.convertElement(elementId);
                     final String rarityName = MonsterConvert.convertRarity(rarityId);
-                    this.log.info(String.format("%s (%s %s)",
-                                                name,
+                    this.log.info(String.format("(%s系%s) %s",
                                                 elementName,
-                                                rarityName));
+                                                rarityName,
+                                                name));
                 }
 
                 if (StringUtils.equals(element, "0")) {

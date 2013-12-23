@@ -85,7 +85,7 @@ public class MypageHandler extends MxmEventHandler {
                 }
             } else if (this.isHelpComing(html)) {
                 if (this.log.isInfoEnabled()) {
-                    this.log.info("救援依頼が届いています!");
+                    this.log.info("收到小伙伴的救援请求！");
                 }
                 return "/raid/help/list";
             }
@@ -168,7 +168,7 @@ public class MypageHandler extends MxmEventHandler {
             final String mstName = matcher.group(3);
             final String rarity = matcher.group(4);
             final String element = matcher.group(5);
-            for (int i = 0; i < summonPoint; i++) {
+            for (int i = 1; i < summonPoint; i++) {
                 final JSONObject monster = new JSONObject();
                 monster.put("recipeId", recipeId);
                 monster.put("name", mstName);
@@ -202,7 +202,7 @@ public class MypageHandler extends MxmEventHandler {
             if (crystalParameter != null) {
                 final int beforeCrystal = crystalParameter.optInt("beforeCrystal");
                 final int afterCrystal = crystalParameter.optInt("afterCrystal");
-                this.log.info(String.format("get crystal: %d > %d",
+                this.log.info(String.format("收获水晶: %d > %d",
                                             beforeCrystal,
                                             afterCrystal));
             }
@@ -211,19 +211,19 @@ public class MypageHandler extends MxmEventHandler {
                 final JSONObject treasureDto = getTreasureDto.optJSONObject("treasureDto");
                 if (treasureDto != null) {
                     final String name = treasureDto.optString("name");
-                    this.log.info(String.format("get: %s", name));
+                    this.log.info(String.format("获得: %s", name));
                 }
                 final JSONObject userExplorerDto = getTreasureDto.optJSONObject("userExplorerDto");
                 if (userExplorerDto != null) {
                     final int beforePoint = userExplorerDto.optInt("beforePoint");
                     final int currentPoint = userExplorerDto.optInt("currentPoint");
-                    this.log.info(String.format("point: %d > %d",
+                    this.log.info(String.format("积分: %d > %d",
                                                 beforePoint,
                                                 currentPoint));
 
                     final int beforeRank = userExplorerDto.optInt("beforeRank");
                     final int currentRank = userExplorerDto.optInt("currentRank");
-                    this.log.info(String.format("rank: %d > %d",
+                    this.log.info(String.format("排名: %d > %d",
                                                 beforeRank,
                                                 currentRank));
                 }
@@ -252,12 +252,12 @@ public class MypageHandler extends MxmEventHandler {
         if (matcher.find()) {
             final String times = matcher.group(1);
             if (this.log.isInfoEnabled()) {
-                this.log.info(String.format("今日の召喚獣をクリアまであと%s回！", times));
+                this.log.info(String.format("离今天的召唤兽完成还剩%s回！", times));
             }
             return false;
         } else {
             if (this.log.isInfoEnabled()) {
-                this.log.info("今日の召喚獣はクリア済みです！");
+                this.log.info("今天的召唤兽已经完成了！");
             }
             return true;
         }
@@ -270,7 +270,7 @@ public class MypageHandler extends MxmEventHandler {
             element = elementMatcher.group(1);
             if (this.log.isInfoEnabled()) {
                 final String elementName = MonsterConvert.convertElement(element);
-                this.log.info(String.format("今日の召喚獣は%sです。", elementName));
+                this.log.info(String.format("今天的召唤兽是%s系。", elementName));
             }
         }
         final Matcher rareMatcher = MypageHandler.DAILY_RARE_PATTERN.matcher(html);
@@ -278,8 +278,8 @@ public class MypageHandler extends MxmEventHandler {
             element = "0";
             final String rareId = rareMatcher.group(1);
             if (this.log.isInfoEnabled()) {
-                final String elementName = MonsterConvert.convertRarity(rareId);
-                this.log.info(String.format("今日の召喚獣は%sです。", elementName));
+                final String rarityName = MonsterConvert.convertRarity(rareId);
+                this.log.info(String.format("今天的召唤兽是%s。", rarityName));
             }
         }
         return element;
@@ -313,7 +313,6 @@ public class MypageHandler extends MxmEventHandler {
         final Map<String, Object> session = this.robot.getSession();
         session.put("isMypage", false);
         session.put("isRaidHistoryEnable", true);
-
         session.put("isQuestEnable", this.questEnable);
     }
 }

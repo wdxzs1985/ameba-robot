@@ -57,20 +57,16 @@ public class RaidHelpListHandler extends AbstractRaidHandler {
             final int maxMembers = selectedRaid.optInt("maxMembers");
             final int joinedMemberCount = selectedRaid.optInt("joinedMemberCount");
 
-            this.log.info(String.format("Help from %s.", name));
+            this.log.info(String.format("来自 %s 的救援", name));
             this.log.info(String.format("%s (%d)",
                                         raidPirtyBossName,
                                         raidPirtyBossLevel));
-            this.log.info(String.format("members: %d/%d",
+            this.log.info(String.format("战斗人员: %d/%d",
                                         joinedMemberCount,
                                         maxMembers));
-            this.log.info(String.format("monster: %d/%d",
+            this.log.info(String.format("怪物: %d/%d",
                                         raidPirtyCount - killMonsterCount,
                                         raidPirtyCount));
-            this.log.info(String.format("%s (%d)",
-                                        raidPirtyBossName,
-                                        raidPirtyBossLevel));
-
             final String lastTime = selectedRaid.optString("lastTime");
             this.log.info(String.format("last time: %s", lastTime));
         }

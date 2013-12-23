@@ -30,6 +30,8 @@ public class RaidTopHandler extends AbstractRaidHandler {
 
         if (this.isRaidWin(html)) {
             return "/raid/win/result";
+        } else if (this.isRaidLose(html)) {
+            return "/raid/lose/result";
         }
 
         this.shoutHelp(html);

@@ -26,7 +26,7 @@ public class MonsterHandler extends MxmEventHandler {
             session.put("leaderType", elementId);
             if (this.log.isInfoEnabled()) {
                 final String elementName = MonsterConvert.convertElement(elementId);
-                this.log.info(String.format("召喚獣は%sです。", elementName));
+                this.log.info(String.format("正在使用的召唤兽是%s系。", elementName));
             }
         }
         return "/mypage";
