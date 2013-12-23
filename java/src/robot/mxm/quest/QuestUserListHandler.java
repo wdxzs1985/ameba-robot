@@ -40,6 +40,7 @@ public class QuestUserListHandler extends MxmEventHandler {
                 final JSONObject tableData = userRoom.optJSONObject("tableData");
                 final JSONObject monster = this.findSummon(tableData, element);
                 if (monster != null) {
+                    session.put("userId", userId);
                     final String summonId = monster.optString("summonId");
                     session.put("summonId", summonId);
                     if (this.log.isInfoEnabled()) {
