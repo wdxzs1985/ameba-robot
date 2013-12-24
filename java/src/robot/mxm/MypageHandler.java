@@ -147,8 +147,8 @@ public class MypageHandler extends MxmEventHandler {
             final String position = matcher.group(1);
             final String tableDataString = matcher.group(2);
             final JSONObject monster = JSONObject.fromObject(tableDataString);
-            final String treasurePath = monster.optString("treasurePath");
-            if (StringUtils.isBlank(treasurePath)) {
+            final String stateId = monster.optString("stateId");
+            if (StringUtils.equals(stateId, "1")) {
                 positionMap.remove(position);
             } else {
                 final String summonId = monster.optString("summonId");
