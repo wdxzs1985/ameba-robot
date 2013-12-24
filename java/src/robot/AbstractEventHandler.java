@@ -6,6 +6,8 @@ package robot;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
@@ -14,8 +16,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.message.BasicNameValuePair;
 
-public abstract class AbstractEventHandler<T extends AbstractRobot> implements
-        EventHandler {
+public abstract class AbstractEventHandler<T extends AbstractRobot> implements EventHandler {
+
+    private static final Pattern TITLE_PATTERN = Pattern.compile("<title>(.*)</title>");
 
     protected final Log log;
     protected final T robot;
@@ -56,8 +59,7 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
         return html.replaceAll("\\r\\n[\\t\\s]*|\\r[\\t\\s]*|\\n[\\t\\s]*", "");
     }
 
-    protected String httpPost(final String path,
-                              final List<BasicNameValuePair> nvps) {
+    protected String httpPost(final String path, final List<BasicNameValuePair> nvps) {
         final String url = this.robot.buildPath(path);
         final String html = this.robot.getHttpClient().postForHtml(url, nvps);
         this.robot.getHttpClient().setReferer(url);
@@ -70,8 +72,7 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
         return JSONObject.fromObject(html);
     }
 
-    protected JSONObject httpPostJSON(final String path,
-                                      final List<BasicNameValuePair> nvps) {
+    protected JSONObject httpPostJSON(final String path, final List<BasicNameValuePair> nvps) {
         final String url = this.robot.buildPath(path);
         final String html = this.robot.getHttpClient().postForHtml(url, nvps);
         return JSONObject.fromObject(html);
@@ -93,5 +94,13 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements
             Thread.sleep(sleepTime * 1000);
         } catch (final InterruptedException e) {
         }
+    }
+
+    protected String getHtmlTitle(String html) {
+        Matcher matcher = TITLE_PATTERN.matcher(html);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }
