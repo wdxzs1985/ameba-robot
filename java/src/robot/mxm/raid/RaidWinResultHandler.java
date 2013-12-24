@@ -25,6 +25,6 @@ public class RaidWinResultHandler extends AbstractRaidHandler {
             EventPointPrinter.printRanking(this.log, html);
             EventPointPrinter.printTreature(this.log, html);
         }
-        return "/mypage";
+        return "/raid/history";
     }
 }
