@@ -185,12 +185,14 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
         if (this.log.isInfoEnabled()) {
             final JSONObject data = jsonResponse.optJSONObject("data");
-            final JSONObject feverUpDetailDto = data.optJSONObject("feverUpDetailDto");
-            final int rate = feverUpDetailDto.optInt("rate");
-            final String displayUpRate = feverUpDetailDto.optString("displayUpRate");
-            this.log.info(String.format("3分間全員の攻撃力が%d%%(%s)アップ",
-                                        rate,
-                                        displayUpRate));
+            if (data != null) {
+                final JSONObject feverUpDetailDto = data.optJSONObject("feverUpDetailDto");
+                final int rate = feverUpDetailDto.optInt("rate");
+                final String displayUpRate = feverUpDetailDto.optString("displayUpRate");
+                this.log.info(String.format("3分間全員の攻撃力が%d%%(%s)アップ",
+                                            rate,
+                                            displayUpRate));
+            }
         }
     }
 
