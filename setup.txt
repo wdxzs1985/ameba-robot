@@ -10,7 +10,7 @@ Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
 Robot.requestDelay=3
 # 等待回复时间(单位为分钟)
-Robot.scheduleDelay=5
+Robot.scheduleDelay=3
 
 ###########################
 #
@@ -18,11 +18,11 @@ Robot.scheduleDelay=5
 #
 ###########################
 # 签到开关
-Tnk47Robot.stampGachaEnable=true
+Tnk47Robot.stampGachaEnable=false
 # 活动开关
 Tnk47Robot.eventEnable=true
 # 领取礼物开关（只领药那一排）
-Tnk47Robot.giftEnable=true
+Tnk47Robot.giftEnable=false
 # 冒险开关
 Tnk47Robot.questEnable=true
 # 合战开关

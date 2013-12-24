@@ -25,6 +25,11 @@ import robot.tnk47.quest.QuestHandler;
 import robot.tnk47.quest.QuestStageDetailHandler;
 import robot.tnk47.quest.QuestStageForwardHandler;
 import robot.tnk47.quest.QuestStatusUpHandler;
+import robot.tnk47.raid.RaidBattleHandler;
+import robot.tnk47.raid.RaidBattleListHandler;
+import robot.tnk47.raid.RaidBattleResultHandler;
+import robot.tnk47.raid.RaidDamageMap;
+import robot.tnk47.raid.RaidHandler;
 import robot.tnk47.upgrade.UpgradeAnimationHandler;
 import robot.tnk47.upgrade.UpgradeAutoConfirmHandler;
 import robot.tnk47.upgrade.UpgradeHandler;
@@ -34,7 +39,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.6.0";
+    public static final String VERSION = "天下自动脚本  0.7.0";
 
     @Override
     public void init() {
@@ -42,7 +47,7 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/login", new LoginHandler(this));
         this.registerHandler("/mypage", new MypageHandler(this));
         this.registerHandler("/event-infomation",
-                             new EvnetInfomationHandler(this));
+                             new EventInfomationHandler(this));
         this.registerHandler("/gacha/stamp-gacha", new StampGachaHandler(this));
         this.registerHandler("/gacha/battle-gacha",
                              new BattleGachaHandler(this));
@@ -98,6 +103,17 @@ public class Tnk47Robot extends AbstractRobot {
                              new UpgradeAutoConfirmHandler(this));
         this.registerHandler("/upgrade/upgrade-animation",
                              new UpgradeAnimationHandler(this));
+
+        // 控制器：RAID
+        RaidDamageMap raidDamageMap = new RaidDamageMap();
+        this.registerHandler("/raid", new RaidHandler(this));
+        this.registerHandler("/raid/battle-list",
+                             new RaidBattleListHandler(this, raidDamageMap));
+        this.registerHandler("/raid/battle",
+                             new RaidBattleHandler(this, raidDamageMap));
+        this.registerHandler("/raid/battle-result",
+                             new RaidBattleResultHandler(this));
+
     }
 
     @Override
@@ -253,6 +269,11 @@ public class Tnk47Robot extends AbstractRobot {
         final String key = "Tnk47Robot.useStaminaRatio";
         final String value = this.getConfig().getProperty(key, "false");
         return Integer.valueOf(value);
+    }
+
+    public boolean getUseSpecialAttack() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
