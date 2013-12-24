@@ -23,9 +23,9 @@ public class RaidBattleResultHandler extends Tnk47EventHandler {
 
     @Override
     public String handleIt() {
-        Map<String, Object> session = this.robot.getSession();
-        String raidBattleId = (String) session.get("raidBattleId");
-        String token = (String) session.get("token");
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidBattleId = (String) session.get("raidBattleId");
+        final String token = (String) session.get("token");
         final String path = String.format("/raid/raid-battle-result?raidBattleId=%s&token=%s",
                                           raidBattleId,
                                           token);
@@ -37,23 +37,23 @@ public class RaidBattleResultHandler extends Tnk47EventHandler {
         return "/raid";
     }
 
-    private void printBossName(String html) {
+    private void printBossName(final String html) {
         if (this.log.isInfoEnabled()) {
-            Matcher matcher = BOSS_PATTERN.matcher(html);
+            final Matcher matcher = RaidBattleResultHandler.BOSS_PATTERN.matcher(html);
             if (matcher.find()) {
-                String bossName = matcher.group(1);
-                String bossLevel = matcher.group(2);
-                this.log.info(String.format("%s (%s)", bossName, bossLevel));
+                final String bossName = matcher.group(1);
+                final String bossLevel = matcher.group(2);
+                this.log.info(String.format("%s (%s) 讨伐成功", bossName, bossLevel));
             }
         }
     }
 
-    private void printPoint(String html) {
+    private void printPoint(final String html) {
         if (this.log.isInfoEnabled()) {
-            Matcher matcher = POINT_PATTERN.matcher(html);
+            final Matcher matcher = RaidBattleResultHandler.POINT_PATTERN.matcher(html);
             while (matcher.find()) {
-                String contributionPointLiner = matcher.group(1);
-                String contributionPointNum = matcher.group(2);
+                final String contributionPointLiner = matcher.group(1);
+                final String contributionPointNum = matcher.group(2);
                 this.log.info(String.format("%s %s",
                                             contributionPointLiner,
                                             StringEscapeUtils.unescapeHtml(contributionPointNum)));
@@ -61,13 +61,13 @@ public class RaidBattleResultHandler extends Tnk47EventHandler {
         }
     }
 
-    private void printTotalPoint(String html) {
+    private void printTotalPoint(final String html) {
         if (this.log.isInfoEnabled()) {
-            Matcher matcher = TOTAL_POINT_PATTERN.matcher(html);
+            final Matcher matcher = RaidBattleResultHandler.TOTAL_POINT_PATTERN.matcher(html);
             if (matcher.find()) {
                 String text = matcher.group(1);
-                text = StringUtils.remove(text, "<span>");
-                text = StringUtils.remove(text, "</span>");
+                text = StringUtils.replace(text, "<span>", " ");
+                text = StringUtils.replace(text, "</span>", " ");
                 this.log.info(text);
             }
         }

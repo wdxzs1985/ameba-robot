@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
 import robot.tnk47.Tnk47EventHandler;
@@ -13,8 +14,8 @@ import robot.tnk47.Tnk47Robot;
 
 public class RaidBattleEncountHandler extends Tnk47EventHandler {
 
-    private static final Pattern RAID_BATTLE_ID_PATTERN = Pattern.compile("/raid/raid-battle?raidBattleId=([0-9]+_[0-9]+)");
-    private static final Pattern BOSS_DATA_PATTERN = Pattern.compile("bossData = JSON.parse\\('\\{(.*)\\}'\\);");
+    private static final Pattern RAID_BATTLE_ID_PATTERN = Pattern.compile("/raid/raid-battle\\?raidBattleId=([0-9]+_[0-9]+)");
+    private static final Pattern BOSS_DATA_PATTERN = Pattern.compile("bossData = JSON.parse\\('(\\{.*\\})'\\);");
 
     public RaidBattleEncountHandler(final Tnk47Robot robot) {
         super(robot);
@@ -56,41 +57,38 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
         if (this.log.isInfoEnabled()) {
             final Matcher matcher = RaidBattleEncountHandler.BOSS_DATA_PATTERN.matcher(html);
             if (matcher.find()) {
-                final String text = matcher.group(1);
+                String text = matcher.group(1);
+                text = StringEscapeUtils.unescapeJava(text);
                 final JSONObject bossData = JSONObject.fromObject(text);
                 final String name = bossData.optString("name");
                 final int raidBossType = bossData.optInt("raidBossType");
                 final int bossRank = bossData.optInt("bossRank");
                 final int level = bossData.optInt("level");
-                final int currentHitPoint = bossData.optInt("currentHitPoint");
-                final int maxHitPoint = bossData.optInt("maxHitPoint");
                 switch (raidBossType) {
                 case 2:
-                    this.log.info(String.format("【%s】 %s (Lv%d %d/%d)",
+                    this.log.info(String.format("【%s】 %s (Lv%d) %s",
                                                 "大",
                                                 name,
                                                 level,
-                                                currentHitPoint,
-                                                maxHitPoint));
+                                                StringUtils.repeat("★",
+                                                                   bossRank)));
                     break;
                 case 1:
-                    this.log.info(String.format("【%s】 %s (Lv%d %d/%d)",
+                    this.log.info(String.format("【%s】 %s (Lv%d) %s",
                                                 "疾风",
                                                 name,
                                                 level,
-                                                currentHitPoint,
-                                                maxHitPoint));
-                    this.log.info(StringUtils.repeat("★", bossRank));
+                                                StringUtils.repeat("★",
+                                                                   bossRank)));
                     break;
                 default:
-                    this.log.info(String.format("%s (Lv%d %d/%d)",
+                    this.log.info(String.format("%s (Lv%d) %s",
                                                 name,
                                                 level,
-                                                currentHitPoint,
-                                                maxHitPoint));
+                                                StringUtils.repeat("★",
+                                                                   bossRank)));
                     break;
                 }
-                this.log.info(StringUtils.repeat("★", bossRank));
 
             }
         }

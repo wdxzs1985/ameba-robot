@@ -208,8 +208,10 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         this.resolveJsonToken(jsonResponse);
         if (this.log.isInfoEnabled()) {
             final JSONObject data = jsonResponse.optJSONObject("data");
-            final String resultMessage = data.optString("resultMessage");
-            this.log.info(resultMessage);
+            if (data != null) {
+                final String resultMessage = data.optString("resultMessage");
+                this.log.info(resultMessage);
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -64,11 +65,33 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                         final String name = encountCardData.optString("name");
                         this.log.info(String.format("隊士発見: %s", name));
                     }
+                } else if (StringUtils.equals(areaEncountType, "RECOVERY_AP")) {
+                    if (this.log.isInfoEnabled()) {
+                        final String encountMessage = data.optString("encountMessage");
+                        this.log.info(encountMessage);
+                    }
+                    return "/raid";
                 } else {
                     if (this.log.isInfoEnabled()) {
                         final String encountMessage = data.optString("encountMessage");
                         this.log.info(encountMessage);
                     }
+                }
+            }
+            // 通关
+            if (data.optBoolean("clearStage")) {
+                return "/raid/stage";
+            }
+            //
+            final String questMessage = data.optString("questMessage");
+            if (!StringUtils.equals(questMessage, "null")) {
+                if (StringUtils.equals("行動Ptが足りません", questMessage)) {
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info("体力不支");
+                    }
+                    return this.onStaminaOut(data);
+                } else if (StringUtils.equals("隊士発見!!", questMessage)) {
+                    // do nothing
                 }
             }
             return "/raid/stage-forward";
@@ -97,8 +120,56 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
             session.put("areaId", areaId);
             session.put("stageId", stageId);
             session.put("token", token);
-            return "/raid/boss-encount";
+            return "/raid/battle-encount";
         }
         return "/mypage";
+    }
+
+    private String onStaminaOut(final JSONObject data) {
+        if (this.isUseItem(data)) {
+            return "/use-item";
+        } else {
+            return "/mypage";
+        }
+    }
+
+    private boolean isUseItem(final JSONObject data) {
+        final JSONArray regenStaminaItems = data.optJSONArray("regenStaminaItems");
+        if (regenStaminaItems != null) {
+            final Map<String, Object> session = this.robot.getSession();
+            final JSONObject userData = data.optJSONObject("userData");
+            final int maxStamina = userData.optInt("maxStamina");
+            final int needExpForNextLevel = (Integer) session.get("needExpForNextLevel");
+            for (int i = 0; i < regenStaminaItems.size(); i++) {
+                final JSONObject regenStamina = (JSONObject) regenStaminaItems.get(i);
+                final String code = regenStamina.optString("code");
+                final String name = regenStamina.optString("name");
+                final String itemId = regenStamina.optString("itemId");
+                if (this.robot.isUseStaminaToday() && StringUtils.contains(name,
+                                                                           "当日")) {
+                    session.put("itemId", itemId);
+                    session.put("name", name);
+                    session.put("callback", "/marathon");
+                    return true;
+                }
+                if (this.robot.isUseStamina50() && StringUtils.contains(code,
+                                                                        "stamina50")
+                    && needExpForNextLevel > maxStamina / 2) {
+                    session.put("itemId", itemId);
+                    session.put("name", name);
+                    session.put("callback", "/marathon");
+                    return true;
+                }
+                if (this.robot.isUseStamina100() && StringUtils.contains(code,
+                                                                         "stamina100")
+                    && needExpForNextLevel > maxStamina) {
+                    session.put("itemId", itemId);
+                    session.put("name", name);
+                    session.put("callback", "/marathon");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

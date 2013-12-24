@@ -6,6 +6,7 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import robot.tnk47.Tnk47EventHandler;
@@ -22,6 +23,7 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         final Map<String, Object> session = this.robot.getSession();
         final String raidId = (String) session.get("raidId");
         final String token = (String) session.get("token");
+        final int apNow = (Integer) session.get("apNow");
 
         final String path = "/raid/ajax/get-raid-battle-list";
         final List<BasicNameValuePair> nvps = this.createNameValuePairs();
@@ -33,7 +35,7 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         if (data != null) {
             final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
             JSONObject raidDto = this.findRaid(raidBossTileDtos);
-            if (raidDto != null) {
+            if (raidDto != null && false) {
                 this.printRaidDto(raidDto);
                 final String raidBattleId = raidDto.optString("raidBattleId");
                 final boolean endBattle = raidDto.optBoolean("endBattle");
@@ -47,15 +49,18 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
                 }
             }
 
-            final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
-            if (raidBossEncountTileDtos.size() > 0) {
-                raidDto = raidBossEncountTileDtos.optJSONObject(0);
-                final String raidBattleId = raidDto.optString("raidBattleId");
-                final int currentHp = raidDto.optInt("currentHp");
-                session.put("raidBattleId", raidBattleId);
-                session.put("currentHp", currentHp);
-                session.put("invite", false);
-                return "/raid/battle";
+            if (apNow > 0) {
+                final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
+                if (raidBossEncountTileDtos.size() > 0) {
+                    raidDto = raidBossEncountTileDtos.optJSONObject(0);
+                    this.printRaidDto(raidDto);
+                    final String raidBattleId = raidDto.optString("raidBattleId");
+                    final int currentHp = raidDto.optInt("currentHp");
+                    session.put("raidBattleId", raidBattleId);
+                    session.put("currentHp", currentHp);
+                    session.put("invite", false);
+                    return "/raid/battle";
+                }
             }
             return "/raid/stage";
         }
@@ -138,13 +143,9 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         final String raidBossName = bossDto.optString("raidBossName");
         final int raidBossLevel = bossDto.optInt("raidBossLevel");
         final int raidBossRank = bossDto.optInt("raidBossRank");
-        final int attackPointRate = bossDto.optInt("attackPointRate");
-        final int raidBasePoint = bossDto.optInt("raidBasePoint");
-        this.log.info(String.format("%s:(Lv:%2d/強さ:%2d)",
+        this.log.info(String.format("%s:(Lv:%2d) %s",
                                     raidBossName,
                                     raidBossLevel,
-                                    raidBossRank));
-        this.log.info(String.format("%s:%d", "attackPointRate", attackPointRate));
-        this.log.info(String.format("%s:%d", "raidBasePoint", raidBasePoint));
+                                    StringUtils.repeat("★", raidBossRank)));
     }
 }
