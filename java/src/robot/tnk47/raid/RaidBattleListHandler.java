@@ -35,7 +35,7 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         if (data != null) {
             final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
             JSONObject raidDto = this.findRaid(raidBossTileDtos);
-            if (raidDto != null && false) {
+            if (raidDto != null) {
                 this.printRaidDto(raidDto);
                 final String raidBattleId = raidDto.optString("raidBattleId");
                 final boolean endBattle = raidDto.optBoolean("endBattle");
