@@ -22,21 +22,23 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     private static final Pattern HELP_PATTERN = Pattern.compile("助けを呼ぶ");
 
     private static final Pattern RAID_RESULT_DATA_PATTERN = Pattern.compile("raidResultData = '(\\{.*\\})';");
+    private static final Pattern TOTAL_POINT_PATTERN = Pattern.compile("<span class=\"totalPoint\">(\\d+)</span>");
+    private static final Pattern FEVER_RATE_PATTERN = Pattern.compile("<span class=\"feverRateNum\">(\\d+)</span>");
 
-    private final RaidDamageMap raidDamageMap;
     private final boolean useSpecialAttack;
+    private final boolean useFullAttack;
 
-    public RaidBattleHandler(final Tnk47Robot robot, RaidDamageMap raidDamageMap) {
+    public RaidBattleHandler(final Tnk47Robot robot) {
         super(robot);
-        this.raidDamageMap = raidDamageMap;
         this.useSpecialAttack = robot.getUseSpecialAttack();
+        this.useFullAttack = robot.getUseFullAttack();
     }
 
     @Override
     public String handleIt() {
-        Map<String, Object> session = this.robot.getSession();
-        String raidBattleId = (String) session.get("raidBattleId");
-        String token = (String) session.get("token");
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidBattleId = (String) session.get("raidBattleId");
+        final String token = (String) session.get("token");
         final String path = String.format("/raid/raid-battle?raidBattleId=%s&token=%s",
                                           raidBattleId,
                                           token);
@@ -44,39 +46,49 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         this.resolveInputToken(html);
 
         if (this.isRaid(html)) {
-            if (HELP_PATTERN.matcher(html).find()) {
+            if (RaidBattleHandler.HELP_PATTERN.matcher(html).find()) {
                 this.sleep();
                 this.raidInvite();
             }
-            if (FEVER_PATTERN.matcher(html).find()) {
+            if (RaidBattleHandler.FEVER_PATTERN.matcher(html).find()) {
                 this.sleep();
                 this.raidBattleFever();
             }
             this.sleep();
 
-            JSONObject pageParams = this.resolvePageParams(html);
-            String deckId = pageParams.optString("selectedDeckId");
-            int apCost = pageParams.optInt("apCost");
-            int apNow = pageParams.optInt("apNow");
-            boolean isFirst = apCost == 0;
+            int totalPoint = this.getTotalPoint(html);
+            final int feverRate = this.getFeverRate(html);
+            totalPoint += totalPoint * feverRate / 100;
 
+            final JSONObject pageParams = this.resolvePageParams(html);
+            final String deckId = pageParams.optString("selectedDeckId");
+            final int apCost = pageParams.optInt("apCost");
+            final int apNow = pageParams.optInt("apNow");
+            final int maxAp = pageParams.optInt("maxAp");
             boolean isFullPower = false;
-            boolean isSpecialAttack = false;
-            RaidDamageBean raidDamageBean = this.raidDamageMap.get(raidBattleId);
-            int fisrtDamage = raidDamageBean.getFirstDamage();
-            int minDamage = raidDamageBean.getMinDamage();
-            int totalDamage = raidDamageBean.getTotalDamage();
-            int delta = minDamage - totalDamage;
-            this.log.info(String.format("minDamage: %d/totalDamage: %d",
-                                        minDamage,
-                                        totalDamage));
+            final boolean isSpecialAttack = false;
+            final boolean invite = (Boolean) session.get("invite");
+            boolean canAttack = false;
+            if (apCost == 0) {
+                canAttack = true;
+                isFullPower = false;
+            } else if (invite) {
+                canAttack = false;
+            } else {
+                canAttack = apNow >= apCost;
+                final int currentHp = (Integer) session.get("currentHp");
+                if (currentHp > totalPoint * 5) {
+                    if (apNow == maxAp) {
+                        isFullPower = true;
+                    }
+                }
+            }
 
-            boolean canAttack = delta > 0;
             if (canAttack) {
-                int useApSmall = 0;
-                int useApFull = 0;
-                int usePowerHalf = 0;
-                int usePowerFull = 0;
+                final int useApSmall = 0;
+                final int useApFull = 0;
+                final int usePowerHalf = 0;
+                final int usePowerFull = 0;
                 session.put("deckId", deckId);
                 session.put("isFullPower", String.valueOf(isFullPower));
                 session.put("isSpecialAttack", String.valueOf(isSpecialAttack));
@@ -84,7 +96,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                 session.put("useApFull", String.valueOf(useApFull));
                 session.put("usePowerHalf", String.valueOf(usePowerHalf));
                 session.put("usePowerFull", String.valueOf(usePowerFull));
-                this.raidAnimation(isFirst);
+                this.raidAnimation();
                 return "/raid/battle";
             }
         } else if (this.isRaidResult(html)) {
@@ -93,27 +105,48 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         return "/raid";
     }
 
-    private boolean isRaid(String html) {
-        String title = this.getHtmlTitle(html);
+    private int getTotalPoint(final String html) {
+        int totalPoint = 0;
+        final Matcher matcher = RaidBattleHandler.TOTAL_POINT_PATTERN.matcher(html);
+        while (matcher.find()) {
+            final int point = Integer.valueOf(matcher.group(1));
+            if (totalPoint < point) {
+                totalPoint = point;
+            }
+        }
+        return totalPoint;
+    }
+
+    private int getFeverRate(final String html) {
+        int feverRate = 0;
+        final Matcher matcher = RaidBattleHandler.FEVER_RATE_PATTERN.matcher(html);
+        while (matcher.find()) {
+            feverRate = Integer.valueOf(matcher.group(1));
+        }
+        return feverRate;
+    }
+
+    private boolean isRaid(final String html) {
+        final String title = this.getHtmlTitle(html);
         return StringUtils.equals(title, "天クロ｜大乱闘 | ボス対戦");
     }
 
-    private boolean isRaidResult(String html) {
-        String title = this.getHtmlTitle(html);
+    private boolean isRaidResult(final String html) {
+        final String title = this.getHtmlTitle(html);
         return StringUtils.equals(title, "天クロ｜大乱闘 | 討伐結果");
     }
 
-    private void raidAnimation(boolean isFirst) {
-        Map<String, Object> session = this.robot.getSession();
-        String deckId = (String) session.get("deckId");
-        String raidBattleId = (String) session.get("raidBattleId");
-        String isFullPower = (String) session.get("isFullPower");
-        String isSpecialAttack = (String) session.get("isSpecialAttack");
-        String useApSmall = (String) session.get("useApSmall");
-        String useApFull = (String) session.get("useApFull");
-        String usePowerHalf = (String) session.get("usePowerHalf");
-        String usePowerFull = (String) session.get("usePowerFull");
-        String token = (String) session.get("token");
+    private void raidAnimation() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String deckId = (String) session.get("deckId");
+        final String raidBattleId = (String) session.get("raidBattleId");
+        final String isFullPower = (String) session.get("isFullPower");
+        final String isSpecialAttack = (String) session.get("isSpecialAttack");
+        final String useApSmall = (String) session.get("useApSmall");
+        final String useApFull = (String) session.get("useApFull");
+        final String usePowerHalf = (String) session.get("usePowerHalf");
+        final String usePowerFull = (String) session.get("usePowerFull");
+        final String token = (String) session.get("token");
 
         final String path = String.format("/raid/raid-battle-animation?deckId=%s&isFullPower=%s&isSpecialAttack=%s&raidBattleId=%s&useApSmall=%s&useApFull=%s&usePowerHalf=%s&usePowerFull=%s&token=%s",
                                           deckId,
@@ -128,37 +161,33 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        JSONObject raidResultData = this.resolveRaidResultData(html);
-        if (raidResultData != null) {
-            JSONObject animation = raidResultData.optJSONObject("animation");
-            int damagePoint = animation.optInt("damagePoint");
-            RaidDamageBean raidDamageBean = this.raidDamageMap.get(raidBattleId);
-            if (isFirst) {
-                raidDamageBean.setFirstDamage(damagePoint);
+        if (this.log.isInfoEnabled()) {
+            final JSONObject raidResultData = this.resolveRaidResultData(html);
+            if (raidResultData != null) {
+                final JSONObject animation = raidResultData.optJSONObject("animation");
+                final int damagePoint = animation.optInt("damagePoint");
+                this.log.info(String.format("对BOSS造成 %d 的伤害。", damagePoint));
             }
-            int totalDamage = raidDamageBean.getTotalDamage();
-            totalDamage += damagePoint;
-            raidDamageBean.setTotalDamage(totalDamage);
         }
     }
 
     private void raidBattleFever() {
-        Map<String, Object> session = this.robot.getSession();
-        String raidBattleId = (String) session.get("raidBattleId");
-        String token = (String) session.get("token");
-        String path = "/raid/ajax/put-raid-battle-fever";
-        List<BasicNameValuePair> nvps = this.createNameValuePairs();
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidBattleId = (String) session.get("raidBattleId");
+        final String token = (String) session.get("token");
+        final String path = "/raid/ajax/put-raid-battle-fever";
+        final List<BasicNameValuePair> nvps = this.createNameValuePairs();
         nvps.add(new BasicNameValuePair("raidBattleId", raidBattleId));
         nvps.add(new BasicNameValuePair("token", token));
 
-        JSONObject jsonResponse = this.httpPostJSON(path, nvps);
+        final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
         this.resolveJsonToken(jsonResponse);
 
         if (this.log.isInfoEnabled()) {
-            JSONObject data = jsonResponse.optJSONObject("data");
-            JSONObject feverUpDetailDto = data.optJSONObject("feverUpDetailDto");
-            int rate = feverUpDetailDto.optInt("rate");
-            String displayUpRate = feverUpDetailDto.optString("displayUpRate");
+            final JSONObject data = jsonResponse.optJSONObject("data");
+            final JSONObject feverUpDetailDto = data.optJSONObject("feverUpDetailDto");
+            final int rate = feverUpDetailDto.optInt("rate");
+            final String displayUpRate = feverUpDetailDto.optString("displayUpRate");
             this.log.info(String.format("3分間全員の攻撃力が%d%%(%s)アップ",
                                         rate,
                                         displayUpRate));
@@ -166,39 +195,38 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     }
 
     private void raidInvite() {
-        Map<String, Object> session = this.robot.getSession();
-        String raidBattleId = (String) session.get("raidBattleId");
-        String token = (String) session.get("token");
-        String path = "/raid/ajax/put-raid-battle-invite";
-        List<BasicNameValuePair> nvps = this.createNameValuePairs();
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidBattleId = (String) session.get("raidBattleId");
+        final String token = (String) session.get("token");
+        final String path = "/raid/ajax/put-raid-battle-invite";
+        final List<BasicNameValuePair> nvps = this.createNameValuePairs();
         nvps.add(new BasicNameValuePair("raidBattleId", raidBattleId));
         nvps.add(new BasicNameValuePair("isToNation", String.valueOf(true)));
         nvps.add(new BasicNameValuePair("token", token));
 
-        JSONObject jsonResponse = this.httpPostJSON(path, nvps);
+        final JSONObject jsonResponse = this.httpPostJSON(path, nvps);
         this.resolveJsonToken(jsonResponse);
         if (this.log.isInfoEnabled()) {
-            JSONObject data = jsonResponse.optJSONObject("data");
-            int sendCount = data.optInt("sendCount");
-            String resultMessage = data.optString("resultMessage");
-            this.log.info(String.format("%d名の%s", sendCount, resultMessage));
+            final JSONObject data = jsonResponse.optJSONObject("data");
+            final String resultMessage = data.optString("resultMessage");
+            this.log.info(resultMessage);
         }
     }
 
     @Override
-    protected JSONObject resolvePageParams(String html) {
-        JSONObject pageParams = super.resolvePageParams(html);
-        JSONArray itemList = pageParams.optJSONArray("itemList");
-        Matcher matcher = ITEM_PATTERN.matcher(html);
+    protected JSONObject resolvePageParams(final String html) {
+        final JSONObject pageParams = super.resolvePageParams(html);
+        final JSONArray itemList = pageParams.optJSONArray("itemList");
+        final Matcher matcher = RaidBattleHandler.ITEM_PATTERN.matcher(html);
         while (matcher.find()) {
-            String itemData = matcher.group(1);
+            final String itemData = matcher.group(1);
             itemList.add(JSONObject.fromObject(itemData));
         }
         return pageParams;
     }
 
-    private JSONObject resolveRaidResultData(String html) {
-        final Matcher matcher = RAID_RESULT_DATA_PATTERN.matcher(html);
+    private JSONObject resolveRaidResultData(final String html) {
+        final Matcher matcher = RaidBattleHandler.RAID_RESULT_DATA_PATTERN.matcher(html);
         if (matcher.find()) {
             String text = matcher.group(1);
             text = StringEscapeUtils.unescapeJava(text);

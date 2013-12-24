@@ -25,11 +25,13 @@ import robot.tnk47.quest.QuestHandler;
 import robot.tnk47.quest.QuestStageDetailHandler;
 import robot.tnk47.quest.QuestStageForwardHandler;
 import robot.tnk47.quest.QuestStatusUpHandler;
+import robot.tnk47.raid.RaidBattleEncountHandler;
 import robot.tnk47.raid.RaidBattleHandler;
 import robot.tnk47.raid.RaidBattleListHandler;
 import robot.tnk47.raid.RaidBattleResultHandler;
-import robot.tnk47.raid.RaidDamageMap;
 import robot.tnk47.raid.RaidHandler;
+import robot.tnk47.raid.RaidStageForwardHandler;
+import robot.tnk47.raid.RaidStageHandler;
 import robot.tnk47.upgrade.UpgradeAnimationHandler;
 import robot.tnk47.upgrade.UpgradeAutoConfirmHandler;
 import robot.tnk47.upgrade.UpgradeHandler;
@@ -105,14 +107,17 @@ public class Tnk47Robot extends AbstractRobot {
                              new UpgradeAnimationHandler(this));
 
         // 控制器：RAID
-        RaidDamageMap raidDamageMap = new RaidDamageMap();
         this.registerHandler("/raid", new RaidHandler(this));
         this.registerHandler("/raid/battle-list",
-                             new RaidBattleListHandler(this, raidDamageMap));
-        this.registerHandler("/raid/battle",
-                             new RaidBattleHandler(this, raidDamageMap));
+                             new RaidBattleListHandler(this));
+        this.registerHandler("/raid/battle", new RaidBattleHandler(this));
         this.registerHandler("/raid/battle-result",
                              new RaidBattleResultHandler(this));
+        this.registerHandler("/raid/battle-encount",
+                             new RaidBattleEncountHandler(this));
+        this.registerHandler("/raid/stage", new RaidStageHandler(this));
+        this.registerHandler("/raid/stage-forward",
+                             new RaidStageForwardHandler(this));
 
     }
 
@@ -267,13 +272,20 @@ public class Tnk47Robot extends AbstractRobot {
 
     public int getUseStaminaRatio() {
         final String key = "Tnk47Robot.useStaminaRatio";
-        final String value = this.getConfig().getProperty(key, "false");
+        final String value = this.getConfig().getProperty(key, "75");
         return Integer.valueOf(value);
     }
 
     public boolean getUseSpecialAttack() {
-        // TODO Auto-generated method stub
-        return false;
+        final String key = "Tnk47Robot.useStaminaRatio";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean getUseFullAttack() {
+        final String key = "Tnk47Robot.useStaminaRatio";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
     }
 
 }
