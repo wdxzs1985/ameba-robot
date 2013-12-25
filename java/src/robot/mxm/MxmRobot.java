@@ -2,6 +2,7 @@ package robot.mxm;
 
 import robot.AbstractRobot;
 import robot.LoginHandler;
+import robot.mxm.item.ItemPotionHandler;
 import robot.mxm.monster.MonsterChangeHandler;
 import robot.mxm.monster.MonsterHandler;
 import robot.mxm.quest.QuestResultHandler;
@@ -50,6 +51,8 @@ public class MxmRobot extends AbstractRobot {
         this.registerHandler("/raid/encount", new RaidEncountHandler(this));
         this.registerHandler("/raid/target", new RaidTargetHandler(this));
         this.registerHandler("/raid/attack", new RaidAttackHandler(this));
+        // item
+        this.registerHandler("/item/potion", new ItemPotionHandler(this));
     }
 
     @Override

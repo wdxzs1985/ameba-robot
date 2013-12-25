@@ -23,7 +23,7 @@ MxmRobot.questEnable=true
 
 MxmRobot.raidEnable=true
 
-MxmRobot.userRoom=
+MxmRobot.userRoom=86277
 
 MxmRobot.usePotion=true
 
