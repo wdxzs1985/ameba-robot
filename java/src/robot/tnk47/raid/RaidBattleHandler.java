@@ -138,30 +138,26 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                             isFullPower = true;
                         } else {
                             while (apSmall > 0 && apNow < maxAp) {
-                                canAttack = true;
                                 apNow++;
                                 useApSmall++;
                                 apSmall--;
                             }
                             while (apFull > 0 && apNow == 0) {
-                                canAttack = true;
                                 apNow = maxAp;
                                 useApFull++;
                                 apFull--;
                             }
                             while (powerHalf > 0 && apNow < maxAp - 2) {
-                                canAttack = true;
                                 apNow += 2;
                                 usePowerHalf++;
                                 powerHalf--;
                             }
                             while (powerFull > 0 && apNow == 0) {
-                                canAttack = true;
                                 apNow = maxAp;
                                 usePowerFull++;
                                 powerFull--;
                             }
-
+                            canAttack = apNow >= apCost;
                             isFullPower = apNow == maxAp;
                         }
                     }
@@ -170,6 +166,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                 }
             } else if (feverRate > 50) {
                 canAttack = apNow >= apCost;
+                isFullPower = apNow == maxAp;
             }
 
             if (canAttack) {
