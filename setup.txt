@@ -2,7 +2,7 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=
+Robot.username=bushing
 # 密码
 Robot.password=
 # cookie
@@ -91,3 +91,13 @@ Tnk47Robot.useGiveItemToday=true
 Tnk47Robot.useGiveItem=false
 # 一次只给一个道具（小号发情报专用）
 Tnk47Robot.onlyGiveOne=false
+
+###########################
+# RAID
+###########################
+
+Tnk47Robot.raidLimitOpen=true
+
+Tnk47Robot.useRaidRegenItem=true
+
+Tnk47Robot.useRaidSpecialAttack=true

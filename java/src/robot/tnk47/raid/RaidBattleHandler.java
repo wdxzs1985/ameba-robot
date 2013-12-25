@@ -24,9 +24,16 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     private static final Pattern RAID_RESULT_DATA_PATTERN = Pattern.compile("raidResultData = '(\\{.*\\})';");
     private static final Pattern TOTAL_POINT_PATTERN = Pattern.compile("<span class=\"totalPoint\">(\\d+)</span>");
     private static final Pattern FEVER_RATE_PATTERN = Pattern.compile("<span class=\"feverRateNum\">(\\d+)</span>");
+    private static final Pattern SPECIAL_ATTACK_PATTERN = Pattern.compile("超全力秘薬を1/(\\d+)消費");
+    private static final Pattern BOSS_HP_MATER_PATTERN = Pattern.compile("<span>HP</span><span class=\"mater\"><em style=\"width: (\\d{1,3})%;\">");
+
+    private final boolean useRaidRegenItem;
+    private final boolean useRaidSpecialAttack;
 
     public RaidBattleHandler(final Tnk47Robot robot) {
         super(robot);
+        this.useRaidRegenItem = robot.isUseRaidRegenItem();
+        this.useRaidSpecialAttack = robot.isUseRaidSpecialAttack();
     }
 
     @Override
@@ -55,27 +62,129 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             final int feverRate = this.getFeverRate(html);
             totalPoint += totalPoint * feverRate / 100;
 
+            final int specialAttack = this.getSpecialAttack(html);
+            final int currentHp = this.getBossCurrentHp(html);
+
+            final boolean isMine = (Boolean) session.get("isMine");
+
+            this.log.info(String.format("currentHp: %s, Damage: %d(+%d%%)",
+                                        currentHp,
+                                        totalPoint,
+                                        feverRate));
             final JSONObject pageParams = this.resolvePageParams(html);
             // boss data
             final String deckId = pageParams.optString("selectedDeckId");
             final int apCost = pageParams.optInt("apCost");
-            // final int apNow = pageParams.optInt("apNow");
-            // final int maxAp = pageParams.optInt("maxAp");
-            final boolean invite = (Boolean) session.get("invite");
-            final boolean isFullPower = false;
-            final boolean isSpecialAttack = false;
-            final int useApSmall = 0;
-            final int useApFull = 0;
-            final int usePowerHalf = 0;
-            final int usePowerFull = 0;
+            final int maxAp = pageParams.optInt("maxAp");
+            int apNow = pageParams.optInt("apNow");
+
+            int apSmall = 0;
+            int apFull = 0;
+            int powerHalf = 0;
+            int powerFull = 0;
+            if (this.useRaidRegenItem) {
+                JSONArray itemList = pageParams.optJSONArray("itemList");
+                if (itemList != null) {
+                    for (int i = 0; i < itemList.size(); i++) {
+                        JSONObject item = itemList.optJSONObject(i);
+                        String imgPath = item.optString("imgPath");
+                        boolean isOneDay = StringUtils.contains(imgPath,
+                                                                "oneday");
+                        int itemCount = item.optInt("itemCount");
+                        switch (i) {
+                        case 0:
+                            apSmall = itemCount;
+                            break;
+                        case 1:
+                            apFull = itemCount;
+                            break;
+                        case 2:
+                            powerHalf = isOneDay ? itemCount : 0;
+                            break;
+                        case 3:
+                            powerFull = isOneDay ? itemCount : 0;
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+                this.log.info(String.format("apSmall: %d本", apSmall));
+                this.log.info(String.format("apFull: %d本", apFull));
+                this.log.info(String.format("powerHalf: %d本", powerHalf));
+                this.log.info(String.format("powerFull: %d本", powerFull));
+                this.log.info(String.format("SP: %d本", specialAttack));
+            }
+
+            int useApSmall = 0;
+            int useApFull = 0;
+            int usePowerHalf = 0;
+            int usePowerFull = 0;
+            boolean isFullPower = false;
+            boolean isSpecialAttack = false;
             boolean canAttack = false;
             if (apCost == 0) {
                 canAttack = true;
-            } else if (invite) {
-                canAttack = false;
+            } else if (isMine) {
+                final int raidBossType = (int) session.get("raidBossType");
+                if (raidBossType == 2) {
+                    // 大boss
+                    if (currentHp > totalPoint * 13 && specialAttack > 0) {
+                        isSpecialAttack = this.useRaidSpecialAttack;
+                    } else if (currentHp > totalPoint * 4) {
+                        if (apNow == maxAp) {
+                            canAttack = true;
+                            isFullPower = true;
+                        } else {
+                            while (apSmall > 0 && apNow < maxAp) {
+                                canAttack = true;
+                                apNow++;
+                                useApSmall++;
+                                apSmall--;
+                            }
+                            while (apFull > 0 && apNow == 0) {
+                                canAttack = true;
+                                apNow = maxAp;
+                                useApFull++;
+                                apFull--;
+                            }
+                            while (powerHalf > 0 && apNow < maxAp - 2) {
+                                canAttack = true;
+                                apNow += 2;
+                                usePowerHalf++;
+                                powerHalf--;
+                            }
+                            while (powerFull > 0 && apNow == 0) {
+                                canAttack = true;
+                                apNow = maxAp;
+                                usePowerFull++;
+                                powerFull--;
+                            }
+                        }
+                    }
+                } else {
+                    canAttack = apNow >= apCost;
+                }
+            } else if (feverRate > 50) {
+                canAttack = apNow >= apCost;
             }
 
             if (canAttack) {
+                if (this.log.isInfoEnabled()) {
+                    int useAp = apCost;
+                    if (isFullPower) {
+                        useAp = 5;
+                        this.log.info("全力攻撃");
+                    } else if (isSpecialAttack) {
+                        useAp = 0;
+                        this.log.info("超全力攻撃");
+                    }
+                    this.log.info(String.format("AP: %d/%d USE: %d",
+                                                apNow,
+                                                maxAp,
+                                                useAp));
+                }
+
                 session.put("deckId", deckId);
                 session.put("isFullPower", String.valueOf(isFullPower));
                 session.put("isSpecialAttack", String.valueOf(isSpecialAttack));
@@ -90,6 +199,26 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             return "/raid/battle-result";
         }
         return "/raid";
+    }
+
+    private int getSpecialAttack(String html) {
+        final Matcher matcher = SPECIAL_ATTACK_PATTERN.matcher(html);
+        while (matcher.find()) {
+            final int specialAttack = Integer.valueOf(matcher.group(1));
+            return specialAttack;
+        }
+        return 0;
+    }
+
+    private int getBossCurrentHp(String html) {
+        final Map<String, Object> session = this.robot.getSession();
+        int maxHp = (int) session.get("maxHp");
+        final Matcher matcher = BOSS_HP_MATER_PATTERN.matcher(html);
+        while (matcher.find()) {
+            final int bossHpPercent = Integer.valueOf(matcher.group(1));
+            return bossHpPercent * maxHp / 100;
+        }
+        return 0;
     }
 
     private int getTotalPoint(final String html) {
@@ -148,13 +277,11 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        if (this.log.isInfoEnabled()) {
-            final JSONObject raidResultData = this.resolveRaidResultData(html);
-            if (raidResultData != null) {
-                final JSONObject animation = raidResultData.optJSONObject("animation");
-                final int damagePoint = animation.optInt("damagePoint");
-                this.log.info(String.format("对BOSS造成 %d 的伤害。", damagePoint));
-            }
+        final JSONObject raidResultData = this.resolveRaidResultData(html);
+        if (raidResultData != null) {
+            final JSONObject animation = raidResultData.optJSONObject("animation");
+            final int damagePoint = animation.optInt("damagePoint");
+            this.log.info(String.format("对BOSS造成 %d 的伤害。", damagePoint));
         }
     }
 

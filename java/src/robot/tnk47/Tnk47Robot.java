@@ -276,4 +276,21 @@ public class Tnk47Robot extends AbstractRobot {
         return Integer.valueOf(value);
     }
 
+    public boolean isRaidLimitOpen() {
+        final String key = "Tnk47Robot.raidLimitOpen";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isUseRaidRegenItem() {
+        final String key = "Tnk47Robot.useRaidRegenItem";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isUseRaidSpecialAttack() {
+        final String key = "Tnk47Robot.useRaidSpecialAttack";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
 }

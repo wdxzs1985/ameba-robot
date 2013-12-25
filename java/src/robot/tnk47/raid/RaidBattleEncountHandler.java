@@ -58,6 +58,7 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
     }
 
     private void findBossData(final String html) {
+        final Map<String, Object> session = this.robot.getSession();
         final Matcher matcher = RaidBattleEncountHandler.BOSS_DATA_PATTERN.matcher(html);
         if (matcher.find()) {
             String text = matcher.group(1);
@@ -67,6 +68,10 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
             final int raidBossType = bossData.optInt("raidBossType");
             final int bossRank = bossData.optInt("bossRank");
             final int level = bossData.optInt("level");
+            final int maxHp = bossData.optInt("maxHitPoint");
+
+            session.put("raidBossType", raidBossType);
+            session.put("maxHp", maxHp);
 
             if (this.log.isInfoEnabled()) {
                 switch (raidBossType) {

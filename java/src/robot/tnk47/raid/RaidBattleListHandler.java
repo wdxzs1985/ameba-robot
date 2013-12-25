@@ -23,7 +23,6 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         final Map<String, Object> session = this.robot.getSession();
         final String raidId = (String) session.get("raidId");
         final String token = (String) session.get("token");
-        final int apNow = (Integer) session.get("apNow");
 
         final String path = "/raid/ajax/get-raid-battle-list";
         final List<BasicNameValuePair> nvps = this.createNameValuePairs();
@@ -36,32 +35,39 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
             final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
             JSONObject raidDto = this.findRaid(raidBossTileDtos);
             if (raidDto != null) {
-                this.printRaidDto(raidDto);
-                final String raidBattleId = raidDto.optString("raidBattleId");
-                final boolean endBattle = raidDto.optBoolean("endBattle");
-                session.put("raidBattleId", raidBattleId);
-                session.put("invite", true);
-                if (endBattle) {
-                    return "/raid/battle-result";
-                } else {
-                    return "/raid/battle";
-                }
+                return this.raidBattle(raidDto, false);
             }
 
+            final int apNow = (Integer) session.get("apNow");
             if (apNow > 0) {
                 final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
                 if (raidBossEncountTileDtos.size() > 0) {
                     raidDto = raidBossEncountTileDtos.optJSONObject(0);
-                    this.printRaidDto(raidDto);
-                    final String raidBattleId = raidDto.optString("raidBattleId");
-                    session.put("raidBattleId", raidBattleId);
-                    session.put("invite", false);
-                    return "/raid/battle";
+                    return this.raidBattle(raidDto, true);
                 }
             }
             return "/raid/stage";
         }
         return "/mypage";
+    }
+
+    private String raidBattle(JSONObject raidDto, boolean isMine) {
+        final Map<String, Object> session = this.robot.getSession();
+        this.printRaidDto(raidDto);
+        final String raidBattleId = raidDto.optString("raidBattleId");
+        final int maxHp = raidDto.optInt("maxHp");
+        final boolean endBattle = raidDto.optBoolean("endBattle");
+        final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
+        final int raidBossType = bossDto.optInt("raidBossType");
+        session.put("raidBattleId", raidBattleId);
+        session.put("raidBossType", raidBossType);
+        session.put("maxHp", maxHp);
+        session.put("isMine", isMine);
+        if (endBattle) {
+            return "/raid/battle-result";
+        } else {
+            return "/raid/battle";
+        }
     }
 
     private JSONObject findRaid(final JSONArray raidBossTileDtos) {

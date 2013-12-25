@@ -12,8 +12,11 @@ public class RaidStageHandler extends Tnk47EventHandler {
     private static final Pattern STAGE_PATTERN = Pattern.compile("/raid/raid-stage-detail\\?raidId=(\\d+)&questId=(\\d+)&areaId=(\\d+)&stageId=(\\d+)");
     private static final Pattern LIMIT_OPEN_PATTERN = Pattern.compile("/raid/raid-limited-area-open\\?raidId=(\\d+)&questId=(\\d+)?&areaId=(\\d+)?&stageId=(\\d+)?");
 
+    private final boolean raidLimitOpen;
+
     public RaidStageHandler(final Tnk47Robot robot) {
         super(robot);
+        this.raidLimitOpen = robot.isRaidLimitOpen();
     }
 
     @Override
@@ -61,8 +64,24 @@ public class RaidStageHandler extends Tnk47EventHandler {
 
         final Matcher matcher = RaidStageHandler.LIMIT_OPEN_PATTERN.matcher(html);
         if (matcher.find()) {
-            this.log.info("【大BOSS】封印解除");
+            if (this.raidLimitOpen) {
+                this.log.info("【大BOSS】封印解除");
+                this.limitOpen();
+                return "/raid/stage";
+            } else {
+                this.log.info("【大BOSS】封印解除可能");
+            }
         }
         return "/raid/stage-forward";
+    }
+
+    private void limitOpen() {
+        final Map<String, Object> session = this.robot.getSession();
+        final String raidId = (String) session.get("raidId");
+        final String path = String.format("/raid/raid-limited-area-open?raidId=%s&questId=&areaId=&stageId=",
+                                          raidId);
+        final String html = this.httpGet(path);
+        this.resolveInputToken(html);
+        this.log.debug(html);
     }
 }
