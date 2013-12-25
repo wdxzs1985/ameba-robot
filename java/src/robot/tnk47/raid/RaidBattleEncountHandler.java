@@ -64,7 +64,7 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
         if (matcher.find()) {
             final String raidBattleId = matcher.group(1);
             session.put("raidBattleId", raidBattleId);
-            session.put("invite", false);
+            session.put("isMine", true);
         }
     }
 
