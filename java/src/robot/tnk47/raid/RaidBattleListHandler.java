@@ -35,13 +35,18 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
             final int apNow = (Integer) session.get("apNow");
             if (apNow > 0) {
                 final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
-                if (raidBossEncountTileDtos.size() > 0) {
-                    JSONObject raidDto = raidBossEncountTileDtos.optJSONObject(0);
-                    return this.raidBattle(raidDto, true);
+                for (int i = 0; i < raidBossEncountTileDtos.size(); i++) {
+                    final JSONObject raidDto = raidBossEncountTileDtos.optJSONObject(i);
+                    final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
+                    final int raidBossRank = bossDto.optInt("raidBossRank");
+                    final boolean endBattle = raidDto.optBoolean("endBattle");
+                    if (raidBossRank <= 5 || endBattle) {
+                        return this.raidBattle(raidDto, true);
+                    }
                 }
             }
             final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
-            JSONObject raidDto = this.findRaid(raidBossTileDtos);
+            final JSONObject raidDto = this.findRaid(raidBossTileDtos);
             if (raidDto != null) {
                 return this.raidBattle(raidDto, false);
             }
@@ -50,7 +55,7 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         return "/mypage";
     }
 
-    private String raidBattle(JSONObject raidDto, boolean isMine) {
+    private String raidBattle(final JSONObject raidDto, final boolean isMine) {
         final Map<String, Object> session = this.robot.getSession();
         this.printRaidDto(raidDto);
         final String raidBattleId = raidDto.optString("raidBattleId");

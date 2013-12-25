@@ -63,12 +63,16 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             totalPoint += totalPoint * feverRate / 100;
 
             final int specialAttack = this.getSpecialAttack(html);
-            final int currentHp = this.getBossCurrentHp(html);
+
+            final int maxHp = (Integer) session.get("maxHp");
+            final int bossHpPercent = this.getBossHpPercent(html);
+            final int currentHp = maxHp * bossHpPercent / 100;
 
             final boolean isMine = (Boolean) session.get("isMine");
 
-            this.log.info(String.format("currentHp: %s, Damage: %d(+%d%%)",
+            this.log.info(String.format("Hp: %d/%d, Damage: %d(+%d%%)",
                                         currentHp,
+                                        maxHp,
                                         totalPoint,
                                         feverRate));
             final JSONObject pageParams = this.resolvePageParams(html);
@@ -83,14 +87,14 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             int powerHalf = 0;
             int powerFull = 0;
             if (this.useRaidRegenItem) {
-                JSONArray itemList = pageParams.optJSONArray("itemList");
+                final JSONArray itemList = pageParams.optJSONArray("itemList");
                 if (itemList != null) {
                     for (int i = 0; i < itemList.size(); i++) {
-                        JSONObject item = itemList.optJSONObject(i);
-                        String imgPath = item.optString("imgPath");
-                        boolean isOneDay = StringUtils.contains(imgPath,
-                                                                "oneday");
-                        int itemCount = item.optInt("itemCount");
+                        final JSONObject item = itemList.optJSONObject(i);
+                        final String imgPath = item.optString("imgPath");
+                        final boolean isOneDay = StringUtils.contains(imgPath,
+                                                                      "oneday");
+                        final int itemCount = item.optInt("itemCount");
                         switch (i) {
                         case 0:
                             apSmall = itemCount;
@@ -126,7 +130,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             if (apCost == 0) {
                 canAttack = true;
             } else if (isMine) {
-                final int raidBossType = (int) session.get("raidBossType");
+                final int raidBossType = (Integer) session.get("raidBossType");
                 if (raidBossType == 2) {
                     // 大boss
                     if (currentHp > totalPoint * 13 && specialAttack > 0) {
@@ -201,8 +205,8 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         return "/raid";
     }
 
-    private int getSpecialAttack(String html) {
-        final Matcher matcher = SPECIAL_ATTACK_PATTERN.matcher(html);
+    private int getSpecialAttack(final String html) {
+        final Matcher matcher = RaidBattleHandler.SPECIAL_ATTACK_PATTERN.matcher(html);
         while (matcher.find()) {
             final int specialAttack = Integer.valueOf(matcher.group(1));
             return specialAttack;
@@ -210,13 +214,11 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         return 0;
     }
 
-    private int getBossCurrentHp(String html) {
-        final Map<String, Object> session = this.robot.getSession();
-        int maxHp = (int) session.get("maxHp");
-        final Matcher matcher = BOSS_HP_MATER_PATTERN.matcher(html);
+    private int getBossHpPercent(final String html) {
+        final Matcher matcher = RaidBattleHandler.BOSS_HP_MATER_PATTERN.matcher(html);
         while (matcher.find()) {
             final int bossHpPercent = Integer.valueOf(matcher.group(1));
-            return bossHpPercent * maxHp / 100;
+            return bossHpPercent;
         }
         return 0;
     }
