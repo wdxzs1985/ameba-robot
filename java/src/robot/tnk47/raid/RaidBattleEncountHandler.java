@@ -42,28 +42,33 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        this.printBossData(html);
+        this.findRaidBattleId(html);
+        this.findBossData(html);
+        return "/raid/battle";
+    }
 
+    private void findRaidBattleId(String html) {
+        final Map<String, Object> session = this.robot.getSession();
         final Matcher matcher = RaidBattleEncountHandler.RAID_BATTLE_ID_PATTERN.matcher(html);
         if (matcher.find()) {
             final String raidBattleId = matcher.group(1);
             session.put("raidBattleId", raidBattleId);
-            return "/raid/battle";
+            session.put("invite", false);
         }
-        return "/raid";
     }
 
-    private void printBossData(final String html) {
-        if (this.log.isInfoEnabled()) {
-            final Matcher matcher = RaidBattleEncountHandler.BOSS_DATA_PATTERN.matcher(html);
-            if (matcher.find()) {
-                String text = matcher.group(1);
-                text = StringEscapeUtils.unescapeJava(text);
-                final JSONObject bossData = JSONObject.fromObject(text);
-                final String name = bossData.optString("name");
-                final int raidBossType = bossData.optInt("raidBossType");
-                final int bossRank = bossData.optInt("bossRank");
-                final int level = bossData.optInt("level");
+    private void findBossData(final String html) {
+        final Matcher matcher = RaidBattleEncountHandler.BOSS_DATA_PATTERN.matcher(html);
+        if (matcher.find()) {
+            String text = matcher.group(1);
+            text = StringEscapeUtils.unescapeJava(text);
+            final JSONObject bossData = JSONObject.fromObject(text);
+            final String name = bossData.optString("name");
+            final int raidBossType = bossData.optInt("raidBossType");
+            final int bossRank = bossData.optInt("bossRank");
+            final int level = bossData.optInt("level");
+
+            if (this.log.isInfoEnabled()) {
                 switch (raidBossType) {
                 case 2:
                     this.log.info(String.format("【%s】 %s (Lv%d) %s",
@@ -89,7 +94,6 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
                                                                    bossRank)));
                     break;
                 }
-
             }
         }
     }

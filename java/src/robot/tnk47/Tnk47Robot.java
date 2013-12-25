@@ -276,16 +276,4 @@ public class Tnk47Robot extends AbstractRobot {
         return Integer.valueOf(value);
     }
 
-    public boolean getUseSpecialAttack() {
-        final String key = "Tnk47Robot.useStaminaRatio";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
-    }
-
-    public boolean getUseFullAttack() {
-        final String key = "Tnk47Robot.useStaminaRatio";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
-    }
-
 }

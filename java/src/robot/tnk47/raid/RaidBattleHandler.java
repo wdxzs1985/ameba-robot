@@ -25,13 +25,8 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     private static final Pattern TOTAL_POINT_PATTERN = Pattern.compile("<span class=\"totalPoint\">(\\d+)</span>");
     private static final Pattern FEVER_RATE_PATTERN = Pattern.compile("<span class=\"feverRateNum\">(\\d+)</span>");
 
-    private final boolean useSpecialAttack;
-    private final boolean useFullAttack;
-
     public RaidBattleHandler(final Tnk47Robot robot) {
         super(robot);
-        this.useSpecialAttack = robot.getUseSpecialAttack();
-        this.useFullAttack = robot.getUseFullAttack();
     }
 
     @Override
@@ -61,34 +56,26 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             totalPoint += totalPoint * feverRate / 100;
 
             final JSONObject pageParams = this.resolvePageParams(html);
+            // boss data
             final String deckId = pageParams.optString("selectedDeckId");
             final int apCost = pageParams.optInt("apCost");
-            final int apNow = pageParams.optInt("apNow");
-            final int maxAp = pageParams.optInt("maxAp");
-            boolean isFullPower = false;
-            final boolean isSpecialAttack = false;
+            // final int apNow = pageParams.optInt("apNow");
+            // final int maxAp = pageParams.optInt("maxAp");
             final boolean invite = (Boolean) session.get("invite");
+            final boolean isFullPower = false;
+            final boolean isSpecialAttack = false;
+            final int useApSmall = 0;
+            final int useApFull = 0;
+            final int usePowerHalf = 0;
+            final int usePowerFull = 0;
             boolean canAttack = false;
             if (apCost == 0) {
                 canAttack = true;
-                isFullPower = false;
             } else if (invite) {
                 canAttack = false;
-            } else {
-                canAttack = apNow >= apCost;
-                final int currentHp = (Integer) session.get("currentHp");
-                if (currentHp > totalPoint * 5) {
-                    if (apNow == maxAp) {
-                        isFullPower = true;
-                    }
-                }
             }
 
             if (canAttack) {
-                final int useApSmall = 0;
-                final int useApFull = 0;
-                final int usePowerHalf = 0;
-                final int usePowerFull = 0;
                 session.put("deckId", deckId);
                 session.put("isFullPower", String.valueOf(isFullPower));
                 session.put("isSpecialAttack", String.valueOf(isSpecialAttack));
