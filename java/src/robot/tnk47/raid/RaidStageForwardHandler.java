@@ -20,6 +20,9 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
 
     public RaidStageForwardHandler(final Tnk47Robot robot) {
         super(robot);
+        final Map<String, Object> session = robot.getSession();
+        session.put("needExpForNextLevel", 0);
+        session.put("limited", false);
     }
 
     @Override
@@ -57,9 +60,21 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                 }
             }
 
+            final JSONObject limitedData = data.optJSONObject("limited");
+            if (limitedData != null) {
+                final int progress = limitedData.optInt("progress");
+                final boolean limited = progress > 0;
+                session.put("limited", limited);
+                if (limited) {
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info("大BOSS出现中");
+                    }
+                }
+            }
+
             final String areaEncountType = data.optString("areaEncountType");
-            boolean isNONE = StringUtils.equals(areaEncountType, "NONE");
-            boolean isNull = StringUtils.equals(areaEncountType, "null");
+            final boolean isNONE = StringUtils.equals(areaEncountType, "NONE");
+            final boolean isNull = StringUtils.equals(areaEncountType, "null");
             if (!isNONE && !isNull) {
                 if (StringUtils.equals(areaEncountType, "ITEM")) {
                     if (this.log.isInfoEnabled()) {
@@ -156,7 +171,7 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.robot.isUseStamina50() && StringUtils.contains(code,
                                                                         "stamina50")
-                        && needExpForNextLevel > maxStamina / 2) {
+                    && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/raid/stage");
@@ -164,7 +179,7 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.robot.isUseStamina100() && StringUtils.contains(code,
                                                                          "stamina100")
-                        && needExpForNextLevel > maxStamina) {
+                    && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/raid/stage");

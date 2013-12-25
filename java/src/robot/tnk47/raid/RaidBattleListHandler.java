@@ -45,10 +45,12 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
                     }
                 }
             }
-            final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
-            final JSONObject raidDto = this.findRaid(raidBossTileDtos);
-            if (raidDto != null) {
-                return this.raidBattle(raidDto, false);
+            if (!this.is("limited")) {
+                final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
+                final JSONObject raidDto = this.findRaid(raidBossTileDtos);
+                if (raidDto != null) {
+                    return this.raidBattle(raidDto, false);
+                }
             }
             return "/raid/stage";
         }

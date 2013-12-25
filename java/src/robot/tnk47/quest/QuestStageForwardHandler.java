@@ -26,6 +26,8 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
         this.useStamina50 = robot.isUseStamina50();
         this.useStamina100 = robot.isUseStamina100();
         this.useStaminaRatio = robot.getUseStaminaRatio();
+        final Map<String, Object> session = robot.getSession();
+        session.put("needExpForNextLevel", 0);
     }
 
     @Override

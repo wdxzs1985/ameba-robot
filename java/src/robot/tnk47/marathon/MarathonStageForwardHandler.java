@@ -17,6 +17,8 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
 
     public MarathonStageForwardHandler(final Tnk47Robot robot) {
         super(robot);
+        final Map<String, Object> session = robot.getSession();
+        session.put("needExpForNextLevel", 0);
     }
 
     @Override

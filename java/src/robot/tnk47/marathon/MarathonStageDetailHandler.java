@@ -13,8 +13,6 @@ public class MarathonStageDetailHandler extends Tnk47EventHandler {
 
     public MarathonStageDetailHandler(final Tnk47Robot robot) {
         super(robot);
-        final Map<String, Object> session = this.robot.getSession();
-        session.put("needExpForNextLevel", 0);
     }
 
     @Override
