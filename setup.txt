@@ -8,9 +8,9 @@ Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
-Robot.requestDelay=3
+Robot.requestDelay=6
 # 等待回复时间(单位为分钟)
-Robot.scheduleDelay=3
+Robot.scheduleDelay=6
 
 ###########################
 #

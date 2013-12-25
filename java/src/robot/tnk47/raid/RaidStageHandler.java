@@ -17,6 +17,8 @@ public class RaidStageHandler extends Tnk47EventHandler {
     public RaidStageHandler(final Tnk47Robot robot) {
         super(robot);
         this.raidLimitOpen = robot.isRaidLimitOpen();
+        final Map<String, Object> session = this.robot.getSession();
+        session.put("needExpForNextLevel", 0);
     }
 
     @Override

@@ -32,19 +32,18 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         this.resolveJsonToken(jsonResponse);
         final JSONObject data = jsonResponse.optJSONObject("data");
         if (data != null) {
-            final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
-            JSONObject raidDto = this.findRaid(raidBossTileDtos);
-            if (raidDto != null) {
-                return this.raidBattle(raidDto, false);
-            }
-
             final int apNow = (Integer) session.get("apNow");
             if (apNow > 0) {
                 final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
                 if (raidBossEncountTileDtos.size() > 0) {
-                    raidDto = raidBossEncountTileDtos.optJSONObject(0);
+                    JSONObject raidDto = raidBossEncountTileDtos.optJSONObject(0);
                     return this.raidBattle(raidDto, true);
                 }
+            }
+            final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
+            JSONObject raidDto = this.findRaid(raidBossTileDtos);
+            if (raidDto != null) {
+                return this.raidBattle(raidDto, false);
             }
             return "/raid/stage";
         }
@@ -105,7 +104,6 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
     }
 
     private void printRaidDto(final JSONObject raidDto) {
-        this.log.debug(raidDto);
         final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
         this.printBossDto(bossDto);
         // -----------------------
@@ -113,7 +111,7 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         final int maxHp = raidDto.optInt("maxHp");
         final int raidBossHpPercent = raidDto.optInt("raidBossHpPercent");
 
-        this.log.info(String.format("HP:%3d/%3d (%2d%%)",
+        this.log.info(String.format("HP:%d/%d (%d%%)",
                                     currentHp,
                                     maxHp,
                                     raidBossHpPercent));
@@ -122,7 +120,7 @@ public class RaidBattleListHandler extends Tnk47EventHandler {
         final int maxMemberCount = raidDto.optInt("maxMemberCount");
         final int playerHpPercent = raidDto.optInt("playerHpPercent");
 
-        this.log.info(String.format("MEMBER:%2d/%2d TIME:%2d%%",
+        this.log.info(String.format("MEMBER:%d/%d TIME:%d%%",
                                     memberCount,
                                     maxMemberCount,
                                     playerHpPercent));

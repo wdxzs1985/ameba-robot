@@ -131,6 +131,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                     // 大boss
                     if (currentHp > totalPoint * 13 && specialAttack > 0) {
                         isSpecialAttack = this.useRaidSpecialAttack;
+                        canAttack = true;
                     } else if (currentHp > totalPoint * 4) {
                         if (apNow == maxAp) {
                             canAttack = true;
@@ -160,6 +161,8 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                                 usePowerFull++;
                                 powerFull--;
                             }
+
+                            isFullPower = apNow == maxAp;
                         }
                     }
                 } else {

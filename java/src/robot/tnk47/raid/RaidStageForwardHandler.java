@@ -58,7 +58,9 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
             }
 
             final String areaEncountType = data.optString("areaEncountType");
-            if (!StringUtils.equals(areaEncountType, "NONE")) {
+            boolean isNONE = StringUtils.equals(areaEncountType, "NONE");
+            boolean isNull = StringUtils.equals(areaEncountType, "null");
+            if (!isNONE && !isNull) {
                 if (StringUtils.equals(areaEncountType, "ITEM")) {
                     if (this.log.isInfoEnabled()) {
                         final JSONObject encountCardData = data.optJSONObject("encountCardData");

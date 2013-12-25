@@ -43,7 +43,7 @@ public class RaidBattleResultHandler extends Tnk47EventHandler {
             if (matcher.find()) {
                 final String bossName = matcher.group(1);
                 final String bossLevel = matcher.group(2);
-                this.log.info(String.format("%s (%s) 讨伐成功", bossName, bossLevel));
+                this.log.info(String.format("%s (%s) 討伐結果", bossName, bossLevel));
             }
         }
     }

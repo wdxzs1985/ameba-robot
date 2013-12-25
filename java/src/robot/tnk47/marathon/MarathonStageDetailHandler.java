@@ -13,6 +13,8 @@ public class MarathonStageDetailHandler extends Tnk47EventHandler {
 
     public MarathonStageDetailHandler(final Tnk47Robot robot) {
         super(robot);
+        final Map<String, Object> session = this.robot.getSession();
+        session.put("needExpForNextLevel", 0);
     }
 
     @Override
@@ -34,9 +36,6 @@ public class MarathonStageDetailHandler extends Tnk47EventHandler {
             session.put("missionId", missionId);
             session.put("missionKeyId", missionKeyId);
             return "/marathon/mission/animation";
-        }
-        if (!session.containsKey("needExpForNextLevel")) {
-            session.put("needExpForNextLevel", 0);
         }
         session.put("isQuestCardFull", false);
         session.put("isQuestFindAll", false);

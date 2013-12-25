@@ -13,6 +13,8 @@ public class QuestStageDetailHandler extends Tnk47EventHandler {
 
     public QuestStageDetailHandler(final Tnk47Robot robot) {
         super(robot);
+        final Map<String, Object> session = this.robot.getSession();
+        session.put("needExpForNextLevel", 0);
     }
 
     @Override
@@ -39,9 +41,6 @@ public class QuestStageDetailHandler extends Tnk47EventHandler {
                                             charpter,
                                             section,
                                             region));
-                if (!session.containsKey("needExpForNextLevel")) {
-                    session.put("needExpForNextLevel", 0);
-                }
                 session.put("isQuestCardFull", false);
                 session.put("isQuestFindAll", false);
             }
