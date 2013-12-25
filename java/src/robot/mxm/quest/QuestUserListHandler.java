@@ -42,18 +42,17 @@ public class QuestUserListHandler extends MxmEventHandler {
             for (final String userId : userIdList) {
                 this.sleep();
                 summonMonster = this.findSummon(userId);
-                session.put("userId", userId);
-                break;
+                if (summonMonster != null) {
+                    session.put("userId", userId);
+                    final String summonId = summonMonster.optString("summonId");
+                    session.put("summonId", summonId);
+                    if (this.log.isInfoEnabled()) {
+                        final String name = summonMonster.optString("name");
+                        this.log.info(String.format("带走 %s", name));
+                    }
+                    return "/quest/summon";
+                }
             }
-        }
-        if (summonMonster != null) {
-            final String summonId = summonMonster.optString("summonId");
-            session.put("summonId", summonId);
-            if (this.log.isInfoEnabled()) {
-                final String name = summonMonster.optString("name");
-                this.log.info(String.format("带走 %s", name));
-            }
-            return "/quest/summon";
         }
         return "/mypage";
     }
@@ -69,7 +68,7 @@ public class QuestUserListHandler extends MxmEventHandler {
         return userIdList;
     }
 
-    private JSONObject findSummon(String userId) {
+    private JSONObject findSummon(final String userId) {
         final Map<String, Object> session = this.robot.getSession();
         final String element = (String) session.get("element");
         final String path = String.format("/user/%s/room", userId);
@@ -92,7 +91,8 @@ public class QuestUserListHandler extends MxmEventHandler {
         return null;
     }
 
-    private JSONObject findSummon(final JSONObject tableData, final String element) {
+    private JSONObject findSummon(final JSONObject tableData,
+                                  final String element) {
         final LinkedList<JSONObject> summonList = new LinkedList<JSONObject>();
         for (int i = 1; i <= 5; i++) {
             final JSONObject monster = tableData.optJSONObject(String.valueOf(i));
