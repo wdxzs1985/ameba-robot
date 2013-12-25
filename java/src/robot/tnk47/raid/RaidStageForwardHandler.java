@@ -63,7 +63,7 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
             final JSONObject limitedData = data.optJSONObject("limited");
             if (limitedData != null) {
                 final int progress = limitedData.optInt("progress");
-                final boolean limited = progress > 0;
+                final boolean limited = progress == 100;
                 session.put("limited", limited);
                 if (limited) {
                     if (this.log.isInfoEnabled()) {
