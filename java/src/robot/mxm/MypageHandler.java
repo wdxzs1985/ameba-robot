@@ -31,14 +31,17 @@ public class MypageHandler extends MxmEventHandler {
     private static final Pattern DAILY_CLEAR_PATTERN = Pattern.compile("クリアまであと<span class=\"colorDeepOrange\">([1-5])回！</span>");
     private static final Pattern TABLE_DATA_PATTERN = Pattern.compile("mxm.tableData\\[\"(\\d)\"\\] = (\\{.*?\\})");
     private static final Pattern SUMMON_PATTERN = Pattern.compile("<li data-btn=\"push\" data-summon-point=\"(\\d)\" data-max-sumon-point=\"\\d\" data-iusermonster-id=\"\\d+\" data-index=\"\\d\" data-recipe-id=\"(\\d+)\" data-mst-name=\"(.*?)\" data-mst-path=\".*?\" data-rarity-id=\"(\\d)\" data-element-id=\"(\\d)\">");
+    private static final Pattern STAMINA_PATTERN = Pattern.compile("<li>元気: <span class=\"colorWhite\">(\\d{1,2})</span>/(\\d{1,2})</li>");
 
     private final boolean questEnable;
     private final boolean raidEnable;
+    private final boolean usePotion;
 
     public MypageHandler(final MxmRobot robot) {
         super(robot);
         this.questEnable = robot.isQuestEnable();
         this.raidEnable = robot.isRaidEnable();
+        this.usePotion = robot.isUsePotion();
         this.reset();
     }
 
@@ -92,11 +95,27 @@ public class MypageHandler extends MxmEventHandler {
         }
 
         if (this.is("isQuestEnable")) {
-            return "/quest";
+            if (this.isStaminaOut(html)) {
+                if (this.usePotion) {
+                    session.put("potionId", "1");
+                    return "/item/potion";
+                }
+            } else {
+                return "/quest";
+            }
         }
 
         this.reset();
         return "/exit";
+    }
+
+    private boolean isStaminaOut(String html) {
+        final Matcher matcher = MypageHandler.STAMINA_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final int stamina = Integer.valueOf(matcher.group(1));
+            return stamina == 0;
+        }
+        return false;
     }
 
     private void summon(final String html) {

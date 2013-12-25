@@ -21,35 +21,39 @@ public class QuestUserListHandler extends MxmEventHandler {
     private static final Pattern USER_ROOM_PATTERN = Pattern.compile("/user/(\\d+)/room");
     private static final Pattern USER_ROOM_DATA_PATTERN = Pattern.compile("new mxm.UserRoom\\((.*?)\\);");
 
+    private final String userRoom;
+
     public QuestUserListHandler(final MxmRobot robot) {
         super(robot);
+        this.userRoom = robot.getUserRoom();
     }
 
     @Override
     public String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
-        final String element = (String) session.get("element");
-        final List<String> userIdList = this.findUserRoom();
-        for (final String userId : userIdList) {
+        JSONObject summonMonster = null;
+        if (StringUtils.isNotBlank(this.userRoom)) {
+            summonMonster = this.findSummon(this.userRoom);
+            session.put("userId", this.userRoom);
             this.sleep();
-            final String path = String.format("/user/%s/room", userId);
-            final String html = this.httpGet(path);
-            this.resolveMxmToken(html);
-            final JSONObject userRoom = this.resloveUserRoomData(html);
-            if (userRoom != null && userRoom.optBoolean("hasTableMonster")) {
-                final JSONObject tableData = userRoom.optJSONObject("tableData");
-                final JSONObject monster = this.findSummon(tableData, element);
-                if (monster != null) {
-                    session.put("userId", userId);
-                    final String summonId = monster.optString("summonId");
-                    session.put("summonId", summonId);
-                    if (this.log.isInfoEnabled()) {
-                        final String name = monster.optString("name");
-                        this.log.info(String.format("带走 %s", name));
-                    }
-                    return "/quest/summon";
-                }
+        }
+        if (summonMonster == null) {
+            final List<String> userIdList = this.findUserRoom();
+            for (final String userId : userIdList) {
+                this.sleep();
+                summonMonster = this.findSummon(userId);
+                session.put("userId", userId);
+                break;
             }
+        }
+        if (summonMonster != null) {
+            final String summonId = summonMonster.optString("summonId");
+            session.put("summonId", summonId);
+            if (this.log.isInfoEnabled()) {
+                final String name = summonMonster.optString("name");
+                this.log.info(String.format("带走 %s", name));
+            }
+            return "/quest/summon";
         }
         return "/mypage";
     }
@@ -65,6 +69,20 @@ public class QuestUserListHandler extends MxmEventHandler {
         return userIdList;
     }
 
+    private JSONObject findSummon(String userId) {
+        final Map<String, Object> session = this.robot.getSession();
+        final String element = (String) session.get("element");
+        final String path = String.format("/user/%s/room", userId);
+        final String html = this.httpGet(path);
+        this.resolveMxmToken(html);
+        final JSONObject userRoom = this.resloveUserRoomData(html);
+        if (userRoom != null && userRoom.optBoolean("hasTableMonster")) {
+            final JSONObject tableData = userRoom.optJSONObject("tableData");
+            return this.findSummon(tableData, element);
+        }
+        return null;
+    }
+
     private JSONObject resloveUserRoomData(final String html) {
         final Matcher matcher = QuestUserListHandler.USER_ROOM_DATA_PATTERN.matcher(html);
         if (matcher.find()) {
@@ -74,8 +92,7 @@ public class QuestUserListHandler extends MxmEventHandler {
         return null;
     }
 
-    private JSONObject findSummon(final JSONObject tableData,
-                                  final String element) {
+    private JSONObject findSummon(final JSONObject tableData, final String element) {
         final LinkedList<JSONObject> summonList = new LinkedList<JSONObject>();
         for (int i = 1; i <= 5; i++) {
             final JSONObject monster = tableData.optJSONObject(String.valueOf(i));

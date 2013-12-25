@@ -20,4 +20,10 @@ Robot.scheduleDelay=6
 MxmRobot.enable=true
 
 MxmRobot.questEnable=true
+
 MxmRobot.raidEnable=true
+
+MxmRobot.userRoom=
+
+MxmRobot.usePotion=true
+

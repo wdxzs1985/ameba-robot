@@ -15,6 +15,7 @@ import robot.AbstractEventHandler;
 
 public abstract class MxmEventHandler extends AbstractEventHandler<MxmRobot> {
 
+    private static final Pattern INPUT_TOKEN_PATTERN = Pattern.compile("<input type=\"hidden\" name=\"token\" value=\"([a-zA-Z0-9]{6})\">");
     private static final Pattern MXM_TOKEN_PATTERN = Pattern.compile("mxm.token = \"([a-zA-Z0-9]{6})\";");
     private static final Pattern RAID_TOP_PATTERN = Pattern.compile("/raid/(\\d+)/(\\d+)/top");
     private static final Pattern RAID_WIN_RESULT_PATTERN = Pattern.compile("/raid/(\\d+)/(\\d+)/win/result");
@@ -57,6 +58,15 @@ public abstract class MxmEventHandler extends AbstractEventHandler<MxmRobot> {
         final Map<String, Object> session = this.robot.getSession();
         final String newToken = jsonResponse.getString("token");
         session.put("token", newToken);
+    }
+
+    protected void resolveInputToken(final String html) {
+        final Map<String, Object> session = this.robot.getSession();
+        final Matcher matcher = INPUT_TOKEN_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String token = matcher.group(1);
+            session.put("token", token);
+        }
     }
 
     protected boolean isStageClear(final String url) {
