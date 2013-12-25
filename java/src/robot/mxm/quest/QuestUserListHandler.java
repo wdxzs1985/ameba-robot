@@ -31,11 +31,14 @@ public class QuestUserListHandler extends MxmEventHandler {
     @Override
     public String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
+        String selectedUserId = null;
         JSONObject summonMonster = null;
         if (StringUtils.isNotBlank(this.userRoom)) {
             summonMonster = this.findSummon(this.userRoom);
-            session.put("userId", this.userRoom);
             this.sleep();
+            if (summonMonster != null) {
+                selectedUserId = this.userRoom;
+            }
         }
         if (summonMonster == null) {
             final List<String> userIdList = this.findUserRoom();
@@ -43,16 +46,20 @@ public class QuestUserListHandler extends MxmEventHandler {
                 this.sleep();
                 summonMonster = this.findSummon(userId);
                 if (summonMonster != null) {
-                    session.put("userId", userId);
-                    final String summonId = summonMonster.optString("summonId");
-                    session.put("summonId", summonId);
-                    if (this.log.isInfoEnabled()) {
-                        final String name = summonMonster.optString("name");
-                        this.log.info(String.format("带走 %s", name));
-                    }
-                    return "/quest/summon";
+                    selectedUserId = userId;
+                    break;
                 }
             }
+        }
+        if (summonMonster != null) {
+            session.put("userId", selectedUserId);
+            final String summonId = summonMonster.optString("summonId");
+            session.put("summonId", summonId);
+            if (this.log.isInfoEnabled()) {
+                final String name = summonMonster.optString("name");
+                this.log.info(String.format("带走 %s", name));
+            }
+            return "/quest/summon";
         }
         return "/mypage";
     }

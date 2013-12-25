@@ -23,7 +23,7 @@ public class MxmRobot extends AbstractRobot {
 
     public static final String HOST = "http://mxm.ameba.jp";
 
-    public static final String VERSION = "指轮印花脚本 0.1.3";
+    public static final String VERSION = "指轮印花脚本 0.1.4";
 
     @Override
     public void init() {
