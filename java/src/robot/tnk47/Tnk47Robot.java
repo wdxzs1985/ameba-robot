@@ -25,6 +25,7 @@ import robot.tnk47.quest.QuestHandler;
 import robot.tnk47.quest.QuestStageDetailHandler;
 import robot.tnk47.quest.QuestStageForwardHandler;
 import robot.tnk47.quest.QuestStatusUpHandler;
+import robot.tnk47.raid.RaidBattleAnimationHandler;
 import robot.tnk47.raid.RaidBattleEncountHandler;
 import robot.tnk47.raid.RaidBattleHandler;
 import robot.tnk47.raid.RaidBattleListHandler;
@@ -111,6 +112,8 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/raid/battle-list",
                              new RaidBattleListHandler(this));
         this.registerHandler("/raid/battle", new RaidBattleHandler(this));
+        this.registerHandler("/raid/battle-animation",
+                             new RaidBattleAnimationHandler(this));
         this.registerHandler("/raid/battle-result",
                              new RaidBattleResultHandler(this));
         this.registerHandler("/raid/battle-encount",

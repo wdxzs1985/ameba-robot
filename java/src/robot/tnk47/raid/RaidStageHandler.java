@@ -65,11 +65,15 @@ public class RaidStageHandler extends Tnk47EventHandler {
         final Matcher matcher = RaidStageHandler.LIMIT_OPEN_PATTERN.matcher(html);
         if (matcher.find()) {
             if (this.raidLimitOpen) {
-                this.log.info("【大BOSS】封印解除");
                 this.limitOpen();
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("【大BOSS】封印解除");
+                }
                 return "/raid/stage";
             } else {
-                this.log.info("【大BOSS】封印解除可能");
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("【大BOSS】封印解除可能");
+                }
             }
         }
         return "/raid/stage-forward";
@@ -82,6 +86,5 @@ public class RaidStageHandler extends Tnk47EventHandler {
                                           raidId);
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
-        this.log.debug(html);
     }
 }

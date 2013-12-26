@@ -4,9 +4,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 public class MypageHandler extends Tnk47EventHandler {
 
-    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>(.*?)</title>");
     private static final Pattern HTML_USER_STATUS_PATTERN = Pattern.compile("<div class=\"userStatusParams\">(.*?)</div>");
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<p class=\"userName\">(.*?)</p>");
     private static final Pattern HTML_USER_LEVEL_PATTERN = Pattern.compile("<dl class=\"userLevel\"><dt>Lv</dt><dd>(.*?)</dd></dl>");
@@ -41,12 +42,12 @@ public class MypageHandler extends Tnk47EventHandler {
                 this.printMyInfo(userStatusHtml);
                 session.put("isMypage", true);
             } else {
+                String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
-                    final Matcher titleMatcher = MypageHandler.HTML_TITLE_PATTERN.matcher(html);
-                    if (titleMatcher.find()) {
-                        final String title = titleMatcher.group(1);
-                        this.log.info(title);
-                    }
+                    this.log.info(title);
+                }
+                if (StringUtils.contains(title, "メンテナンスのお知らせ")) {
+                    return "/exit";
                 }
                 return "/mypage";
             }
