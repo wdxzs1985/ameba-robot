@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing
+Robot.username=
 # 密码
-Robot.password=wangjue
+Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
@@ -13,9 +13,7 @@ Robot.requestDelay=6
 Robot.scheduleDelay=6
 
 ###########################
-#
-# Tnk47Robot
-#
+# 天下脚本机器人
 ###########################
 # 签到开关
 Tnk47Robot.stampGachaEnable=true
@@ -93,10 +91,11 @@ Tnk47Robot.useGiveItem=false
 Tnk47Robot.onlyGiveOne=false
 
 ###########################
-# RAID
+# 讨伐
 ###########################
+# 自动开大BOSS
 Tnk47Robot.raidLimitOpen=true
-
-Tnk47Robot.useRaidRegenItem=true
-
-Tnk47Robot.useRaidSpecialAttack=true
+# 打大BOSS的时候使用AP药
+Tnk47Robot.useRaidRegenItem=false
+# 打大BOSS的时候使用超全力
+Tnk47Robot.useRaidSpecialAttack=false
