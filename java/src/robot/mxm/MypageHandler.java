@@ -20,7 +20,6 @@ import robot.mxm.convert.MonsterConvert;
 
 public class MypageHandler extends MxmEventHandler {
 
-    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>(.*)?</title>");
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<div class=\"fsLarge marginRight10\">(.*?)</div>");
 
     private static final Pattern HELP_PATTERN = Pattern.compile("/raid/(\\d+)/help/list");
@@ -56,12 +55,12 @@ public class MypageHandler extends MxmEventHandler {
                 this.log.info(String.format("角色： %s", userName));
                 session.put("isMypage", true);
             } else {
+                String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
-                    final Matcher titleMatcher = MypageHandler.HTML_TITLE_PATTERN.matcher(html);
-                    if (titleMatcher.find()) {
-                        final String title = titleMatcher.group(1);
-                        this.log.info(title);
-                    }
+                    this.log.info(title);
+                }
+                if (StringUtils.contains(title, "メンテナンスのお知らせ")) {
+                    return "/exit";
                 }
                 return "/mypage";
             }
