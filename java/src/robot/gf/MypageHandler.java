@@ -4,9 +4,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 public class MypageHandler extends GFEventHandler {
 
-    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>(.*?)</title>");
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<h1><a href=\"/profile\">(.*?)</a></h1>");
     private static final Pattern HTML_JOB_CARD_SETTING_PATTERN = Pattern.compile("/job/job-card-setting");
     private static final Pattern HTML_JOB_FINISH_PATTERN = Pattern.compile("<a id=\"finishJobBtn\" class=\"btnPink\">受け取る</a>");
@@ -58,12 +59,12 @@ public class MypageHandler extends GFEventHandler {
                 this.log.info(String.format("角色： %s", userName));
                 session.put("isMypage", true);
             } else {
+                String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
-                    final Matcher titleMatcher = MypageHandler.HTML_TITLE_PATTERN.matcher(html);
-                    if (titleMatcher.find()) {
-                        final String title = titleMatcher.group(1);
-                        this.log.info(title);
-                    }
+                    this.log.info(title);
+                }
+                if (StringUtils.contains(title, "メンテナンスのお知らせ")) {
+                    return "/exit";
                 }
                 return "/mypage";
             }
