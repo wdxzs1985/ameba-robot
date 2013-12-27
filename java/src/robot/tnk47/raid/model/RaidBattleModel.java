@@ -2,7 +2,15 @@ package robot.tnk47.raid.model;
 
 public class RaidBattleModel {
 
-    private boolean mine = false;
+    public static final int NORMAL_BOSS = 0;
+    public static final int LIMIT_BOSS = 2;
+    public static final int EMPTY = 0;
+    public static final int NO_COST = 0;
+    public static final int HUNDRED = 100;
+    public static final int FULL_ATTACK = 6;
+    public static final int SPECIAL_ATTACK = 15;
+
+    // private boolean mine = false;
     private boolean raid = false;
     private boolean raidResult = false;
     private boolean helpEnable = false;
@@ -10,6 +18,7 @@ public class RaidBattleModel {
 
     private int raidBossType = 0;
     private int maxHp = 0;
+    private int minDamage = 0;
     private int bossHpPercent = 0;
     private int deckAttack = 0;
     private int feverRate = 0;
@@ -29,23 +38,41 @@ public class RaidBattleModel {
     private boolean isFullPower = false;
     private boolean isSpecialAttack = false;
 
+    public boolean isHpFull() {
+        return this.getBossHpPercent() == HUNDRED;
+    }
+
     public int getCurrentHp() {
-        return this.getMaxHp() * this.getBossHpPercent() / 100;
+        return this.getMaxHp() * this.getBossHpPercent() / HUNDRED;
     }
 
     public int getAttackPoint() {
-        return this.getDeckAttack() * (this.getFeverRate() + 100) / 100;
+        return this.getDeckAttack() * (this.getFeverRate() + HUNDRED) / HUNDRED;
     }
 
-    public boolean isFirstEntry() {
-        return this.apCost == 0;
+    public boolean canSpecialAttack() {
+        int totalAttack = this.getAttackPoint() * SPECIAL_ATTACK;
+        boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
+        boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
+        return isCurrentHpEnough && isMinDamageEnough;
+    }
+
+    public boolean canFullAttack() {
+        int totalAttack = this.getAttackPoint() * FULL_ATTACK;
+        boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
+        boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
+        return isCurrentHpEnough && isMinDamageEnough;
+    }
+
+    public boolean isNoCost() {
+        return this.apCost == NO_COST;
     }
 
     public boolean isLimitedBoss() {
-        return this.raidBossType == 2;
+        return this.raidBossType == LIMIT_BOSS;
     }
 
-    public boolean hasAp() {
+    public boolean isApEnough() {
         return this.getApNow() >= this.getApCost();
     }
 
@@ -54,15 +81,7 @@ public class RaidBattleModel {
     }
 
     public boolean hasSpecialAttack() {
-        return this.getSpecialAttack().getItemCount() > 0;
-    }
-
-    public boolean isBossHpMoreThanSpecialAttack() {
-        return this.getCurrentHp() > this.getAttackPoint() * 15;
-    }
-
-    public boolean isBossHpMoreThanFullAttack() {
-        return this.getCurrentHp() > this.getAttackPoint() * 5;
+        return this.getSpecialAttack().getItemCount() > EMPTY;
     }
 
     public int getDeckAttack() {
@@ -81,13 +100,13 @@ public class RaidBattleModel {
         this.feverRate = feverRate;
     }
 
-    public boolean isMine() {
-        return this.mine;
-    }
-
-    public void setMine(boolean mine) {
-        this.mine = mine;
-    }
+    // public boolean isMine() {
+    // return this.mine;
+    // }
+    //
+    // public void setMine(boolean mine) {
+    // this.mine = mine;
+    // }
 
     public int getMaxHp() {
         return this.maxHp;
@@ -220,4 +239,13 @@ public class RaidBattleModel {
     public RaidItemModel getSpecialAttack() {
         return this.specialAttack;
     }
+
+    public int getMinDamage() {
+        return this.minDamage;
+    }
+
+    public void setMinDamage(int minDamage) {
+        this.minDamage = minDamage;
+    }
+
 }

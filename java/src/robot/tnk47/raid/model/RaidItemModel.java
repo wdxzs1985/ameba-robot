@@ -4,7 +4,7 @@ public class RaidItemModel {
 
     private int itemCount = 0;
 
-    private int recovery = 0;
+    private int regenValue = 0;
 
     private int useCount = 0;
 
@@ -16,20 +16,20 @@ public class RaidItemModel {
         this.itemCount = itemCount;
     }
 
-    public int getRecovery() {
-        return this.recovery;
-    }
-
-    public void setRecovery(int recovery) {
-        this.recovery = recovery;
-    }
-
     public int getUseCount() {
         return this.useCount;
     }
 
     public void setUseCount(int useCount) {
         this.useCount = useCount;
+    }
+
+    public int getRegenValue() {
+        return this.regenValue;
+    }
+
+    public void setRegenValue(int regenValue) {
+        this.regenValue = regenValue;
     }
 
 }

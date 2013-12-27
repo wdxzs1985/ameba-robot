@@ -10,13 +10,17 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
+import robot.tnk47.raid.model.RaidBattleDamageMap;
 
 public class RaidBattleAnimationHandler extends Tnk47EventHandler {
 
     private static final Pattern RAID_RESULT_DATA_PATTERN = Pattern.compile("raidResultData = '(\\{.*\\})';");
 
-    public RaidBattleAnimationHandler(final Tnk47Robot robot) {
+    private final RaidBattleDamageMap damageMap;
+
+    public RaidBattleAnimationHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
         super(robot);
+        this.damageMap = damageMap;
     }
 
     @Override
@@ -45,12 +49,17 @@ public class RaidBattleAnimationHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        if (this.log.isInfoEnabled()) {
-            final JSONObject raidResultData = this.resolveRaidResultData(html);
-            if (raidResultData != null) {
-                final JSONObject animation = raidResultData.optJSONObject("animation");
-                final int damagePoint = animation.optInt("damagePoint");
-                this.log.info(String.format("对BOSS造成 %d 的伤害。", damagePoint));
+        final JSONObject raidResultData = this.resolveRaidResultData(html);
+        if (raidResultData != null) {
+            final JSONObject animation = raidResultData.optJSONObject("animation");
+            final int damagePoint = animation.optInt("damagePoint");
+            this.damageMap.addDamage(raidBattleId, damagePoint);
+            if (this.log.isInfoEnabled()) {
+                int totalDamage = this.damageMap.getRaidBattleDamageBean(raidBattleId)
+                                                .getDamage();
+                this.log.info(String.format("对BOSS造成 %d 的伤害, total: %d。",
+                                            damagePoint,
+                                            totalDamage));
             }
         }
         return "/raid/battle";

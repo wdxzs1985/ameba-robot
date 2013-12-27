@@ -11,14 +11,18 @@ import org.apache.commons.lang.StringUtils;
 
 import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
+import robot.tnk47.raid.model.RaidBattleDamageMap;
 
 public class RaidBattleEncountHandler extends Tnk47EventHandler {
 
     private static final Pattern RAID_BATTLE_ID_PATTERN = Pattern.compile("/raid/raid-battle\\?raidBattleId=([0-9]+_[0-9]+)");
     private static final Pattern BOSS_DATA_PATTERN = Pattern.compile("bossData = JSON.parse\\('(\\{.*\\})'\\);");
 
-    public RaidBattleEncountHandler(final Tnk47Robot robot) {
+    private final RaidBattleDamageMap damageMap;
+
+    public RaidBattleEncountHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
         super(robot);
+        this.damageMap = damageMap;
     }
 
     @Override
@@ -42,30 +46,29 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        this.findRaidBattleId(html);
+        String raidBattleId = this.findRaidBattleId(html);
         final JSONObject bossData = this.findBossData(html);
-        if (bossData != null) {
+        if (StringUtils.isNotBlank(raidBattleId) && bossData != null) {
             this.printBossData(bossData);
             final int raidBossType = bossData.optInt("raidBossType");
             final int maxHp = bossData.optInt("maxHitPoint");
-            final int bossRank = bossData.optInt("bossRank");
+            session.put("raidBattleId", raidBattleId);
             session.put("raidBossType", raidBossType);
             session.put("maxHp", maxHp);
-            if (bossRank <= 5) {
-                return "/raid/battle";
-            }
+            session.put("minDamage", 0);
+            this.damageMap.setMinDamage(raidBattleId, 0);
+            return "/raid/battle";
         }
         return "/raid/stage";
     }
 
-    private void findRaidBattleId(final String html) {
-        final Map<String, Object> session = this.robot.getSession();
+    private String findRaidBattleId(final String html) {
         final Matcher matcher = RaidBattleEncountHandler.RAID_BATTLE_ID_PATTERN.matcher(html);
         if (matcher.find()) {
             final String raidBattleId = matcher.group(1);
-            session.put("raidBattleId", raidBattleId);
-            session.put("isMine", true);
+            return raidBattleId;
         }
+        return null;
     }
 
     private JSONObject findBossData(final String html) {

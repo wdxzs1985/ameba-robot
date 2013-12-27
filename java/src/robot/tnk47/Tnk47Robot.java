@@ -30,11 +30,11 @@ import robot.tnk47.quest.QuestStatusUpHandler;
 import robot.tnk47.raid.RaidBattleAnimationHandler;
 import robot.tnk47.raid.RaidBattleEncountHandler;
 import robot.tnk47.raid.RaidBattleHandler;
-import robot.tnk47.raid.RaidBattleListHandler;
 import robot.tnk47.raid.RaidBattleResultHandler;
 import robot.tnk47.raid.RaidHandler;
 import robot.tnk47.raid.RaidStageForwardHandler;
 import robot.tnk47.raid.RaidStageHandler;
+import robot.tnk47.raid.model.RaidBattleDamageMap;
 import robot.tnk47.upgrade.UpgradeAnimationHandler;
 import robot.tnk47.upgrade.UpgradeAutoConfirmHandler;
 import robot.tnk47.upgrade.UpgradeHandler;
@@ -110,16 +110,16 @@ public class Tnk47Robot extends AbstractRobot {
                              new UpgradeAnimationHandler(this));
 
         // 控制器：RAID
-        this.registerHandler("/raid", new RaidHandler(this));
-        this.registerHandler("/raid/battle-list",
-                             new RaidBattleListHandler(this));
-        this.registerHandler("/raid/battle", new RaidBattleHandler(this));
+        RaidBattleDamageMap damageMap = new RaidBattleDamageMap();
+        this.registerHandler("/raid", new RaidHandler(this, damageMap));
+        this.registerHandler("/raid/battle", new RaidBattleHandler(this,
+                                                                   damageMap));
         this.registerHandler("/raid/battle-animation",
-                             new RaidBattleAnimationHandler(this));
+                             new RaidBattleAnimationHandler(this, damageMap));
         this.registerHandler("/raid/battle-result",
-                             new RaidBattleResultHandler(this));
+                             new RaidBattleResultHandler(this, damageMap));
         this.registerHandler("/raid/battle-encount",
-                             new RaidBattleEncountHandler(this));
+                             new RaidBattleEncountHandler(this, damageMap));
         this.registerHandler("/raid/stage", new RaidStageHandler(this));
         this.registerHandler("/raid/stage-forward",
                              new RaidStageForwardHandler(this));

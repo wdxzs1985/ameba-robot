@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
+import robot.tnk47.raid.model.RaidBattleDamageMap;
 
 public class RaidBattleResultHandler extends Tnk47EventHandler {
 
@@ -17,8 +18,11 @@ public class RaidBattleResultHandler extends Tnk47EventHandler {
     private static final Pattern POINT_PATTERN = Pattern.compile("<p class=\"getContributionPointText\"><span class=\"getContributionPointLiner\">(.*?)</span><span class=\"contributionPointNum\">(.*?)</span></p>");
     private static final Pattern TOTAL_POINT_PATTERN = Pattern.compile("<p class=\"totalContributionPoint\">(.*?)</p>");
 
-    public RaidBattleResultHandler(final Tnk47Robot robot) {
+    private final RaidBattleDamageMap damageMap;
+
+    public RaidBattleResultHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
         super(robot);
+        this.damageMap = damageMap;
     }
 
     @Override
@@ -34,6 +38,8 @@ public class RaidBattleResultHandler extends Tnk47EventHandler {
         this.printBossName(html);
         this.printPoint(html);
         this.printTotalPoint(html);
+
+        this.damageMap.remove(raidBattleId);
         return "/raid";
     }
 

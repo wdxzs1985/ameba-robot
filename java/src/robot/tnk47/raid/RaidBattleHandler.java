@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
+import robot.tnk47.raid.model.RaidBattleDamageMap;
 import robot.tnk47.raid.model.RaidBattleModel;
 import robot.tnk47.raid.model.RaidItemModel;
 
@@ -29,11 +30,13 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
     private final boolean useRaidRegenItem;
     private final boolean useRaidSpecialAttack;
+    private final RaidBattleDamageMap damageMap;
 
-    public RaidBattleHandler(final Tnk47Robot robot) {
+    public RaidBattleHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
         super(robot);
         this.useRaidRegenItem = robot.isUseRaidRegenItem();
         this.useRaidSpecialAttack = robot.isUseRaidSpecialAttack();
+        this.damageMap = damageMap;
     }
 
     @Override
@@ -59,12 +62,12 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             }
             this.sleep();
 
-            if (model.isFirstEntry()) {
+            if (model.isNoCost()) {
                 model.setCanAttack(true);
                 model.setFullPower(false);
                 model.setSpecialAttack(false);
-            } else if (model.isMine()) {
-                if (model.hasAp()) {
+            } else if (!this.damageMap.isDamageEnough(raidBattleId)) {
+                if (model.isApEnough()) {
                     model.setCanAttack(true);
                     model.setFullPower(false);
                     model.setSpecialAttack(false);
@@ -82,6 +85,10 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                         if (this.isCanFullAttack(model)) {
                             model.setCanAttack(true);
                             model.setFullPower(true);
+                            model.setSpecialAttack(false);
+                        } else if (model.isApEnough()) {
+                            model.setCanAttack(true);
+                            model.setFullPower(false);
                             model.setSpecialAttack(false);
                         }
                     }
@@ -123,38 +130,41 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     }
 
     private void useRaidRegenItem(RaidBattleModel model) {
-        this.useRaidRegenItem(model, model.getApSmall());
-        this.useRaidRegenItem(model, model.getApFull());
-        this.useRaidRegenItem(model, model.getPowerHalf());
-        this.useRaidRegenItem(model, model.getPowerFull());
+        if (!model.isApEnough()) {
+            this.useRaidRegenItem(model, model.getApSmall());
+            this.useRaidRegenItem(model, model.getApFull());
+            this.useRaidRegenItem(model, model.getPowerHalf());
+            this.useRaidRegenItem(model, model.getPowerFull());
+        }
     }
 
     private void useRaidRegenItem(RaidBattleModel model, RaidItemModel itemModel) {
         int apNow = model.getApNow();
         int maxAp = model.getMaxAp();
-        int recovery = itemModel.getRecovery();
+        int regenValue = itemModel.getRegenValue();
         int itemCount = itemModel.getItemCount();
         int useCount = itemModel.getUseCount();
-        while (itemCount > 0 && maxAp >= apNow + recovery) {
-            apNow += recovery;
+        while (itemCount > 0 && maxAp >= apNow + regenValue) {
+            apNow += regenValue;
             itemCount--;
             useCount++;
         }
         model.setApNow(apNow);
         itemModel.setItemCount(itemCount);
-        itemModel.setItemCount(useCount);
+        itemModel.setUseCount(useCount);
     }
 
     private boolean isCanFullAttack(RaidBattleModel model) {
         boolean canFullAttack = true;
-        canFullAttack = canFullAttack && model.isBossHpMoreThanFullAttack();
+        canFullAttack = canFullAttack && model.canFullAttack();
         canFullAttack = canFullAttack && model.isApFull();
+        canFullAttack = canFullAttack && !model.isHpFull();
         return canFullAttack;
     }
 
     private boolean isCanSpecialAttack(RaidBattleModel model) {
         boolean canSpecialAttack = this.isUseRaidSpecialAttack();
-        canSpecialAttack = canSpecialAttack && model.isBossHpMoreThanSpecialAttack();
+        canSpecialAttack = canSpecialAttack && model.canSpecialAttack();
         canSpecialAttack = canSpecialAttack && model.hasSpecialAttack();
         return canSpecialAttack;
     }
@@ -171,10 +181,10 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     private RaidBattleModel initModel(String html) {
         final Map<String, Object> session = this.robot.getSession();
         RaidBattleModel model = new RaidBattleModel();
-        model.setMine((Boolean) session.get("isMine"));
 
         model.setRaidBossType((Integer) session.get("raidBossType"));
         model.setMaxHp((Integer) session.get("maxHp"));
+        model.setMinDamage((Integer) session.get("minDamage"));
         model.setBossHpPercent(this.getBossHpPercent(html));
 
         model.setHelpEnable(this.isHelpEnable(html));
@@ -194,7 +204,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             final JSONObject item = itemList.optJSONObject(i);
             final String imgPath = item.optString("imgPath");
             final boolean isOneDay = StringUtils.contains(imgPath, "oneday");
-            final int recovery = item.optInt("recovery");
+            final int regenValue = item.optInt("regenValue");
             int itemCount = item.optInt("itemCount");
 
             RaidItemModel itemModel = null;
@@ -202,25 +212,25 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             case 0:
                 itemModel = model.getApSmall();
                 itemModel.setItemCount(itemCount);
-                itemModel.setRecovery(recovery);
+                itemModel.setRegenValue(regenValue);
                 break;
             case 1:
                 itemModel = model.getApFull();
                 itemModel.setItemCount(itemCount);
-                itemModel.setRecovery(recovery);
+                itemModel.setRegenValue(regenValue);
                 break;
             case 2:
                 if (isOneDay) {
                     itemModel = model.getPowerHalf();
                     itemModel.setItemCount(itemCount);
-                    itemModel.setRecovery(recovery);
+                    itemModel.setRegenValue(regenValue);
                 }
                 break;
             case 3:
                 if (isOneDay) {
                     itemModel = model.getPowerFull();
                     itemModel.setItemCount(itemCount);
-                    itemModel.setRecovery(recovery);
+                    itemModel.setRegenValue(regenValue);
                 }
                 break;
             default:
@@ -230,7 +240,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
         RaidItemModel specialAttackItem = model.getSpecialAttack();
         specialAttackItem.setItemCount(this.getSpecialAttack(html));
-        specialAttackItem.setRecovery(0);
+        specialAttackItem.setRegenValue(0);
         specialAttackItem.setUseCount(0);
         return model;
     }
