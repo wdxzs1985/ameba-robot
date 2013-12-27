@@ -52,6 +52,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
     }
 
     private void exit() {
+        this.reset();
         this.nextHandler = null;
         if (this.log.isInfoEnabled()) {
             final int delay = this.getScheduleDelay();
