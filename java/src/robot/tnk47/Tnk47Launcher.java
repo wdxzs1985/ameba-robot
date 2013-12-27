@@ -29,7 +29,7 @@ public class Tnk47Launcher extends Launcher {
         robot.setConfig(this.config);
         robot.setHttpClient(this.httpClient);
         robot.init();
-
+        robot.reset();
         final int delay = robot.getScheduleDelay();
         this.executor.scheduleWithFixedDelay(robot, 0, delay, TimeUnit.MINUTES);
     }

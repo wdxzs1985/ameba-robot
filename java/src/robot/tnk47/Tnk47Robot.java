@@ -1,5 +1,7 @@
 package robot.tnk47;
 
+import java.util.Map;
+
 import robot.AbstractRobot;
 import robot.LoginHandler;
 import robot.tnk47.battle.BattleAnimationHandler;
@@ -42,7 +44,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.7.0";
+    public static final String VERSION = "天下自动脚本  0.7.1";
 
     @Override
     public void init() {
@@ -125,7 +127,25 @@ public class Tnk47Robot extends AbstractRobot {
     }
 
     @Override
-    public String getHost() {
+    public void reset() {
+        final Map<String, Object> session = this.getSession();
+        session.put("isMypage", false);
+        session.put("isStampGachaEnable", this.isStampGachaEnable());
+        session.put("isEventEnable", this.isEventEnable());
+        session.put("isGiftEnable", this.isGiftEnable());
+        session.put("isQuestEnable", this.isQuestEnable());
+        session.put("isBattleEnable", this.isBattleEnable());
+        session.put("isUpgradeEnable", this.isUpgradeEnable());
+
+        session.put("isQuestCardFull", false);
+        session.put("isQuestFindAll", false);
+        session.put("isBattlePowerOut", false);
+        session.put("isBattlePointEnough", false);
+
+    }
+
+    @Override
+    protected String getHost() {
         return Tnk47Robot.HOST;
     }
 

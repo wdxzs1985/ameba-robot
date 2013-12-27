@@ -12,22 +12,8 @@ public class MypageHandler extends Tnk47EventHandler {
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<p class=\"userName\">(.*?)</p>");
     private static final Pattern HTML_USER_LEVEL_PATTERN = Pattern.compile("<dl class=\"userLevel\"><dt>Lv</dt><dd>(.*?)</dd></dl>");
 
-    private final boolean stampGachaEnable;
-    private final boolean eventEnable;
-    private final boolean giftEnable;
-    private final boolean questEnable;
-    private final boolean battleEnable;
-    private final boolean upgradeEnable;
-
     public MypageHandler(final Tnk47Robot robot) {
         super(robot);
-        this.stampGachaEnable = robot.isStampGachaEnable();
-        this.eventEnable = robot.isEventEnable();
-        this.giftEnable = robot.isGiftEnable();
-        this.questEnable = robot.isQuestEnable();
-        this.battleEnable = robot.isBattleEnable();
-        this.upgradeEnable = robot.isUpgradeEnable();
-        this.reset();
     }
 
     @Override
@@ -78,7 +64,6 @@ public class MypageHandler extends Tnk47EventHandler {
             return "/quest";
         }
 
-        this.reset();
         return "/exit";
     }
 
@@ -97,19 +82,4 @@ public class MypageHandler extends Tnk47EventHandler {
         }
     }
 
-    private void reset() {
-        final Map<String, Object> session = this.robot.getSession();
-        session.put("isMypage", false);
-        session.put("isStampGachaEnable", this.stampGachaEnable);
-        session.put("isEventEnable", this.eventEnable);
-        session.put("isGiftEnable", this.giftEnable);
-        session.put("isQuestEnable", this.questEnable);
-        session.put("isBattleEnable", this.battleEnable);
-        session.put("isUpgradeEnable", this.upgradeEnable);
-
-        session.put("isQuestCardFull", false);
-        session.put("isQuestFindAll", false);
-        session.put("isBattlePowerOut", false);
-        session.put("isBattlePointEnough", false);
-    }
 }
