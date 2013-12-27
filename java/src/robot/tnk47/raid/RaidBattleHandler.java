@@ -32,7 +32,8 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     private final boolean useRaidSpecialAttack;
     private final RaidBattleDamageMap damageMap;
 
-    public RaidBattleHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
+    public RaidBattleHandler(final Tnk47Robot robot,
+            final RaidBattleDamageMap damageMap) {
         super(robot);
         this.useRaidRegenItem = robot.isUseRaidRegenItem();
         this.useRaidSpecialAttack = robot.isUseRaidSpecialAttack();
@@ -50,14 +51,14 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
         if (this.isRaid(html)) {
-            RaidBattleModel model = this.initModel(html);
+            final RaidBattleModel model = this.initModel(html);
             if (model.isHelpEnable()) {
                 this.sleep();
                 this.raidInvite();
             }
             if (model.isFeverEnable()) {
                 this.sleep();
-                int feverRate = this.raidBattleFever();
+                final int feverRate = this.raidBattleFever();
                 model.setFeverRate(feverRate);
             }
             this.sleep();
@@ -80,21 +81,25 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                         model.setSpecialAttack(true);
                     } else {
                         if (this.isCanFullAttack(model)) {
-                            if (!model.isApFull()) {
-                                if (this.isUseRaidRegenItem()) {
-                                    this.useRaidRegenItem(model);
-                                }
+                            if (this.isUseRaidRegenItem()) {
+                                this.useRaidRegenItem(model, model.getMaxAp());
                             }
                             if (model.isApFull()) {
                                 model.setCanAttack(true);
                                 model.setFullPower(true);
                                 model.setSpecialAttack(false);
                             }
-                        } else if (model.isApEnough()) {
-                            model.setCanAttack(true);
-                            model.setFullPower(false);
-                            model.setSpecialAttack(false);
+                        } else {
+                            if (this.isUseRaidRegenItem()) {
+                                this.useRaidRegenItem(model, model.getApCost());
+                            }
+                            if (model.isApEnough()) {
+                                model.setCanAttack(true);
+                                model.setFullPower(false);
+                                model.setSpecialAttack(false);
+                            }
                         }
+
                     }
                 }
             }
@@ -136,19 +141,20 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         return "/raid";
     }
 
-    private void useRaidRegenItem(RaidBattleModel model) {
+    private void useRaidRegenItem(final RaidBattleModel model, final int maxAp) {
         if (!model.isApEnough()) {
-            this.useRaidRegenItem(model, model.getApSmall());
-            this.useRaidRegenItem(model, model.getApFull());
-            this.useRaidRegenItem(model, model.getPowerHalf());
-            this.useRaidRegenItem(model, model.getPowerFull());
+            this.useRaidRegenItem(model, model.getApSmall(), maxAp);
+            this.useRaidRegenItem(model, model.getApFull(), maxAp);
+            this.useRaidRegenItem(model, model.getPowerHalf(), maxAp);
+            this.useRaidRegenItem(model, model.getPowerFull(), maxAp);
         }
     }
 
-    private void useRaidRegenItem(RaidBattleModel model, RaidItemModel itemModel) {
+    private void useRaidRegenItem(final RaidBattleModel model,
+                                  final RaidItemModel itemModel,
+                                  final int maxAp) {
         int apNow = model.getApNow();
-        int maxAp = model.getMaxAp();
-        int regenValue = itemModel.getRegenValue();
+        final int regenValue = itemModel.getRegenValue();
         int itemCount = itemModel.getItemCount();
         int useCount = itemModel.getUseCount();
         while (itemCount > 0 && maxAp >= apNow + regenValue) {
@@ -161,14 +167,14 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         itemModel.setUseCount(useCount);
     }
 
-    private boolean isCanFullAttack(RaidBattleModel model) {
+    private boolean isCanFullAttack(final RaidBattleModel model) {
         boolean canFullAttack = true;
         canFullAttack = canFullAttack && model.canFullAttack();
         canFullAttack = canFullAttack && !model.isHpFull();
         return canFullAttack;
     }
 
-    private boolean isCanSpecialAttack(RaidBattleModel model) {
+    private boolean isCanSpecialAttack(final RaidBattleModel model) {
         boolean canSpecialAttack = this.isUseRaidSpecialAttack();
         canSpecialAttack = canSpecialAttack && model.canSpecialAttack();
         canSpecialAttack = canSpecialAttack && model.hasSpecialAttack();
@@ -184,9 +190,9 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         return 0;
     }
 
-    private RaidBattleModel initModel(String html) {
+    private RaidBattleModel initModel(final String html) {
         final Map<String, Object> session = this.robot.getSession();
-        RaidBattleModel model = new RaidBattleModel();
+        final RaidBattleModel model = new RaidBattleModel();
 
         model.setRaidBossType((Integer) session.get("raidBossType"));
         model.setMaxHp((Integer) session.get("maxHp"));
@@ -211,7 +217,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             final String imgPath = item.optString("imgPath");
             final boolean isOneDay = StringUtils.contains(imgPath, "oneday");
             final int regenValue = item.optInt("regenValue");
-            int itemCount = item.optInt("itemCount");
+            final int itemCount = item.optInt("itemCount");
 
             RaidItemModel itemModel = null;
             switch (i) {
@@ -244,20 +250,20 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             }
         }
 
-        RaidItemModel specialAttackItem = model.getSpecialAttack();
+        final RaidItemModel specialAttackItem = model.getSpecialAttack();
         specialAttackItem.setItemCount(this.getSpecialAttack(html));
         specialAttackItem.setRegenValue(0);
         specialAttackItem.setUseCount(0);
         return model;
     }
 
-    private boolean isHelpEnable(String html) {
-        final Matcher matcher = HELP_PATTERN.matcher(html);
+    private boolean isHelpEnable(final String html) {
+        final Matcher matcher = RaidBattleHandler.HELP_PATTERN.matcher(html);
         return matcher.find();
     }
 
-    private boolean isFeverEnable(String html) {
-        final Matcher matcher = FEVER_PATTERN.matcher(html);
+    private boolean isFeverEnable(final String html) {
+        final Matcher matcher = RaidBattleHandler.FEVER_PATTERN.matcher(html);
         return matcher.find();
     }
 
@@ -272,7 +278,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     }
 
     private int getBossHpPercent(final String html) {
-        final Matcher matcher = BOSS_HP_MATER_PATTERN.matcher(html);
+        final Matcher matcher = RaidBattleHandler.BOSS_HP_MATER_PATTERN.matcher(html);
         while (matcher.find()) {
             final int bossHpPercent = Integer.valueOf(matcher.group(1));
             return bossHpPercent;
@@ -282,7 +288,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
     private int getTotalPoint(final String html) {
         int totalPoint = 0;
-        final Matcher matcher = TOTAL_POINT_PATTERN.matcher(html);
+        final Matcher matcher = RaidBattleHandler.TOTAL_POINT_PATTERN.matcher(html);
         if (matcher.find()) {
             final int point = Integer.valueOf(matcher.group(1));
             if (totalPoint < point) {
@@ -294,7 +300,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
     private int getFeverRate(final String html) {
         int feverRate = 0;
-        final Matcher matcher = FEVER_RATE_PATTERN.matcher(html);
+        final Matcher matcher = RaidBattleHandler.FEVER_RATE_PATTERN.matcher(html);
         while (matcher.find()) {
             feverRate = Integer.valueOf(matcher.group(1));
         }
