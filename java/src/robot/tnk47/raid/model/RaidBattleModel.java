@@ -8,8 +8,8 @@ public class RaidBattleModel {
     public static final int EMPTY = 0;
     public static final int NO_COST = 0;
     public static final int HUNDRED = 100;
-    public static final int FULL_ATTACK = 6;
-    public static final int SPECIAL_ATTACK = 15;
+    public static final int FULL_ATTACK = 6 - 2;
+    public static final int SPECIAL_ATTACK = 15 - 2;
 
     // private boolean mine = false;
     private boolean raid = false;
@@ -18,8 +18,8 @@ public class RaidBattleModel {
     private boolean feverEnable = false;
 
     private int raidBossType = 0;
-    private int maxHp = 0;
-    private int minDamage = 0;
+    private long maxHp = 0;
+    private long minDamage = 0;
     private int bossHpPercent = 0;
     private int deckAttack = 0;
     private int feverRate = 0;
@@ -43,25 +43,25 @@ public class RaidBattleModel {
         return this.getBossHpPercent() == RaidBattleModel.HUNDRED;
     }
 
-    public int getCurrentHp() {
+    public long getCurrentHp() {
         return this.getMaxHp() * this.getBossHpPercent()
                / RaidBattleModel.HUNDRED;
     }
 
-    public int getAttackPoint() {
+    public long getAttackPoint() {
         return this.getDeckAttack() * (this.getFeverRate() + RaidBattleModel.HUNDRED)
                / RaidBattleModel.HUNDRED;
     }
 
     public boolean canSpecialAttack() {
-        final int totalAttack = this.getAttackPoint() * RaidBattleModel.SPECIAL_ATTACK;
+        final long totalAttack = this.getAttackPoint() * RaidBattleModel.SPECIAL_ATTACK;
         final boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
         final boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
         return isCurrentHpEnough && isMinDamageEnough;
     }
 
     public boolean canFullAttack() {
-        final int totalAttack = this.getAttackPoint() * RaidBattleModel.FULL_ATTACK;
+        final long totalAttack = this.getAttackPoint() * RaidBattleModel.FULL_ATTACK;
         final boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
         final boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
         return isCurrentHpEnough && isMinDamageEnough;
@@ -91,7 +91,7 @@ public class RaidBattleModel {
         return this.getSpecialAttack().getItemCount() > RaidBattleModel.EMPTY;
     }
 
-    public int getDeckAttack() {
+    public long getDeckAttack() {
         return this.deckAttack;
     }
 
@@ -107,19 +107,11 @@ public class RaidBattleModel {
         this.feverRate = feverRate;
     }
 
-    // public boolean isMine() {
-    // return this.mine;
-    // }
-    //
-    // public void setMine(boolean mine) {
-    // this.mine = mine;
-    // }
-
-    public int getMaxHp() {
+    public long getMaxHp() {
         return this.maxHp;
     }
 
-    public void setMaxHp(final int maxHp) {
+    public void setMaxHp(final long maxHp) {
         this.maxHp = maxHp;
     }
 
@@ -247,11 +239,11 @@ public class RaidBattleModel {
         return this.specialAttack;
     }
 
-    public int getMinDamage() {
+    public long getMinDamage() {
         return this.minDamage;
     }
 
-    public void setMinDamage(final int minDamage) {
+    public void setMinDamage(final long minDamage) {
         this.minDamage = minDamage;
     }
 

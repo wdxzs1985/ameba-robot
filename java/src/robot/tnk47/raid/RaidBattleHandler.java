@@ -61,7 +61,6 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                 final int feverRate = this.raidBattleFever();
                 model.setFeverRate(feverRate);
             }
-            this.sleep();
 
             if (model.isNoCost()) {
                 model.setCanAttack(true);
@@ -195,8 +194,8 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         final RaidBattleModel model = new RaidBattleModel();
 
         model.setRaidBossType((Integer) session.get("raidBossType"));
-        model.setMaxHp((Integer) session.get("maxHp"));
-        model.setMinDamage((Integer) session.get("minDamage"));
+        model.setMaxHp((Long) session.get("maxHp"));
+        model.setMinDamage((Long) session.get("minDamage"));
         model.setBossHpPercent(this.getBossHpPercent(html));
 
         model.setHelpEnable(this.isHelpEnable(html));

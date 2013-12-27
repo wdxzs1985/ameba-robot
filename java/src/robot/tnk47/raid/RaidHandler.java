@@ -95,13 +95,13 @@ public class RaidHandler extends Tnk47EventHandler {
         final Map<String, Object> session = this.robot.getSession();
         this.printRaidDto(raidDto);
         final String raidBattleId = raidDto.optString("raidBattleId");
-        final int maxHp = raidDto.optInt("maxHp");
+        final long maxHp = raidDto.optLong("maxHp");
         final boolean endBattle = raidDto.optBoolean("endBattle");
         final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
         final int raidBossType = bossDto.optInt("raidBossType");
         final int raidBossRank = bossDto.optInt("raidBossRank");
         final int memberCount = bossDto.optInt("memberCount");
-        final int minDamage = maxHp / memberCount;
+        final long minDamage = maxHp / memberCount;
         session.put("raidBattleId", raidBattleId);
         session.put("raidBossType", raidBossType);
         session.put("raidBossRank", raidBossRank);
@@ -122,13 +122,13 @@ public class RaidHandler extends Tnk47EventHandler {
         for (int i = 0; i < raidBossTileDtos.size(); i++) {
             final JSONObject raidDto = raidBossTileDtos.optJSONObject(i);
             final String raidBattleId = raidDto.optString("raidBattleId");
-            final int maxHp = raidDto.optInt("maxHp");
+            final long maxHp = raidDto.optLong("maxHp");
             final boolean entry = raidDto.optBoolean("entry");
             final boolean endBattle = raidDto.optBoolean("endBattle");
             final int currentHp = raidDto.optInt("currentHp");
             final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
             final int memberCount = bossDto.optInt("memberCount");
-            final int minDamage = maxHp / memberCount;
+            final long minDamage = maxHp / memberCount;
             if (endBattle) {
                 selectedRaid = raidDto;
                 break;
@@ -156,8 +156,8 @@ public class RaidHandler extends Tnk47EventHandler {
         final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
         this.printBossDto(bossDto);
         // -----------------------
-        final int currentHp = raidDto.optInt("currentHp");
-        final int maxHp = raidDto.optInt("maxHp");
+        final long currentHp = raidDto.optLong("currentHp");
+        final long maxHp = raidDto.optLong("maxHp");
         final int raidBossHpPercent = raidDto.optInt("raidBossHpPercent");
 
         this.log.info(String.format("HP:%d/%d (%d%%)",
@@ -194,35 +194,12 @@ public class RaidHandler extends Tnk47EventHandler {
         final String raidBossName = bossDto.optString("raidBossName");
         final int raidBossLevel = bossDto.optInt("raidBossLevel");
         final int raidBossRank = bossDto.optInt("raidBossRank");
-        final int raidBossType = bossDto.optInt("raidBossType");
-        final int battleServiceMinPoint = bossDto.optInt("battleServiceMinPoint");
+        bossDto.optInt("raidBossType");
         if (this.log.isInfoEnabled()) {
-            switch (raidBossType) {
-            case 2:
-                this.log.info(String.format("【%s】 %s (Lv%d) %s",
-                                            "大",
-                                            raidBossName,
-                                            raidBossLevel,
-                                            StringUtils.repeat("★",
-                                                               raidBossRank)));
-                break;
-            case 1:
-                this.log.info(String.format("【%s】 %s (Lv%d) %s",
-                                            "疾风",
-                                            raidBossName,
-                                            raidBossLevel,
-                                            StringUtils.repeat("★",
-                                                               raidBossRank)));
-                break;
-            default:
-                this.log.info(String.format("%s (Lv%d) %s",
-                                            raidBossName,
-                                            raidBossLevel,
-                                            StringUtils.repeat("★",
-                                                               raidBossRank)));
-                break;
-            }
-            this.log.info(String.format("MIN DAMAGE: %d", battleServiceMinPoint));
+            this.log.info(String.format("%s (Lv%d) %s",
+                                        raidBossName,
+                                        raidBossLevel,
+                                        StringUtils.repeat("★", raidBossRank)));
         }
     }
 }

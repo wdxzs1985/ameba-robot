@@ -52,8 +52,8 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
         if (StringUtils.isNotBlank(raidBattleId) && bossData != null) {
             this.printBossData(bossData);
             final int raidBossType = bossData.optInt("raidBossType");
-            final int maxHp = bossData.optInt("maxHitPoint");
-            final int minDamage = maxHp / 20;
+            final long maxHp = bossData.optLong("maxHitPoint");
+            final long minDamage = 0;
             session.put("raidBattleId", raidBattleId);
             session.put("raidBossType", raidBossType);
             session.put("maxHp", maxHp);

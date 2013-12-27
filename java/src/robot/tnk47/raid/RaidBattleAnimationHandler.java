@@ -19,7 +19,8 @@ public class RaidBattleAnimationHandler extends Tnk47EventHandler {
 
     private final RaidBattleDamageMap damageMap;
 
-    public RaidBattleAnimationHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
+    public RaidBattleAnimationHandler(final Tnk47Robot robot,
+            final RaidBattleDamageMap damageMap) {
         super(robot);
         this.damageMap = damageMap;
     }
@@ -53,11 +54,11 @@ public class RaidBattleAnimationHandler extends Tnk47EventHandler {
         final JSONObject raidResultData = this.resolveRaidResultData(html);
         if (raidResultData != null) {
             final JSONObject animation = raidResultData.optJSONObject("animation");
-            final int damagePoint = animation.optInt("damagePoint");
+            final long damagePoint = animation.optInt("damagePoint");
             this.damageMap.addDamage(raidBattleId, damagePoint);
             if (this.log.isInfoEnabled()) {
-                RaidBattleDamageBean damageBean = this.damageMap.getRaidBattleDamageBean(raidBattleId);
-                int totalDamage = damageBean.getDamage();
+                final RaidBattleDamageBean damageBean = this.damageMap.getRaidBattleDamageBean(raidBattleId);
+                final long totalDamage = damageBean.getDamage();
                 this.log.info(String.format("对BOSS造成 %d 的伤害, total: %d。",
                                             damagePoint,
                                             totalDamage));
@@ -67,7 +68,7 @@ public class RaidBattleAnimationHandler extends Tnk47EventHandler {
     }
 
     private JSONObject resolveRaidResultData(final String html) {
-        final Matcher matcher = RAID_RESULT_DATA_PATTERN.matcher(html);
+        final Matcher matcher = RaidBattleAnimationHandler.RAID_RESULT_DATA_PATTERN.matcher(html);
         if (matcher.find()) {
             String text = matcher.group(1);
             text = StringEscapeUtils.unescapeJava(text);
