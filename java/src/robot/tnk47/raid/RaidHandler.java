@@ -22,14 +22,15 @@ public class RaidHandler extends Tnk47EventHandler {
 
     private final RaidBattleDamageMap damageMap;
 
-    public RaidHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
+    public RaidHandler(final Tnk47Robot robot,
+            final RaidBattleDamageMap damageMap) {
         super(robot);
         this.damageMap = damageMap;
     }
 
     @Override
     public String handleIt() {
-        RaidModel model = new RaidModel();
+        final RaidModel model = new RaidModel();
         this.initBattleList(model);
         final JSONObject data = this.getRaidBattleList(model);
         if (data != null) {
@@ -54,7 +55,7 @@ public class RaidHandler extends Tnk47EventHandler {
         return "/mypage";
     }
 
-    private void initBattleList(RaidModel model) {
+    private void initBattleList(final RaidModel model) {
         final String path = "/raid/raid-battle-list";
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
@@ -75,7 +76,7 @@ public class RaidHandler extends Tnk47EventHandler {
         return 0;
     }
 
-    private JSONObject getRaidBattleList(RaidModel model) {
+    private JSONObject getRaidBattleList(final RaidModel model) {
         final String raidId = model.getRaidId();
 
         final Map<String, Object> session = this.robot.getSession();
@@ -90,7 +91,7 @@ public class RaidHandler extends Tnk47EventHandler {
         return jsonResponse.optJSONObject("data");
     }
 
-    private String raidBattle(RaidModel model, final JSONObject raidDto) {
+    private String raidBattle(final RaidModel model, final JSONObject raidDto) {
         final Map<String, Object> session = this.robot.getSession();
         this.printRaidDto(raidDto);
         final String raidBattleId = raidDto.optString("raidBattleId");
@@ -99,7 +100,8 @@ public class RaidHandler extends Tnk47EventHandler {
         final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
         final int raidBossType = bossDto.optInt("raidBossType");
         final int raidBossRank = bossDto.optInt("raidBossRank");
-        final int minDamage = bossDto.optInt("battleServiceMinPoint");
+        final int memberCount = bossDto.optInt("memberCount");
+        final int minDamage = maxHp / memberCount;
         session.put("raidBattleId", raidBattleId);
         session.put("raidBossType", raidBossType);
         session.put("raidBossRank", raidBossRank);
@@ -113,17 +115,20 @@ public class RaidHandler extends Tnk47EventHandler {
         }
     }
 
-    private JSONObject findRaid(RaidModel model, final JSONArray raidBossTileDtos) {
+    private JSONObject findRaid(final RaidModel model,
+                                final JSONArray raidBossTileDtos) {
         int maxFever = 0;
         JSONObject selectedRaid = null;
         for (int i = 0; i < raidBossTileDtos.size(); i++) {
             final JSONObject raidDto = raidBossTileDtos.optJSONObject(i);
             final String raidBattleId = raidDto.optString("raidBattleId");
+            final int maxHp = raidDto.optInt("maxHp");
             final boolean entry = raidDto.optBoolean("entry");
             final boolean endBattle = raidDto.optBoolean("endBattle");
             final int currentHp = raidDto.optInt("currentHp");
             final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
-            final int battleServiceMinPoint = bossDto.optInt("battleServiceMinPoint");
+            final int memberCount = bossDto.optInt("memberCount");
+            final int minDamage = maxHp / memberCount;
             if (endBattle) {
                 selectedRaid = raidDto;
                 break;
@@ -133,9 +138,9 @@ public class RaidHandler extends Tnk47EventHandler {
                 break;
             }
 
-            boolean hasAp = model.hasAp();
-            boolean isHpEnough = currentHp > battleServiceMinPoint;
-            boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
+            final boolean hasAp = model.hasAp();
+            final boolean isHpEnough = currentHp > minDamage;
+            final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
             if (hasAp && isHpEnough && isDamageNotEnough) {
                 final int feverRate = raidDto.optInt("feverRate");
                 if (maxFever < feverRate) {

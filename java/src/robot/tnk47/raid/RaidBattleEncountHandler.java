@@ -20,7 +20,8 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
 
     private final RaidBattleDamageMap damageMap;
 
-    public RaidBattleEncountHandler(final Tnk47Robot robot, RaidBattleDamageMap damageMap) {
+    public RaidBattleEncountHandler(final Tnk47Robot robot,
+            final RaidBattleDamageMap damageMap) {
         super(robot);
         this.damageMap = damageMap;
     }
@@ -46,13 +47,13 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
         final String html = this.httpGet(path);
         this.resolveInputToken(html);
 
-        String raidBattleId = this.findRaidBattleId(html);
+        final String raidBattleId = this.findRaidBattleId(html);
         final JSONObject bossData = this.findBossData(html);
         if (StringUtils.isNotBlank(raidBattleId) && bossData != null) {
             this.printBossData(bossData);
             final int raidBossType = bossData.optInt("raidBossType");
             final int maxHp = bossData.optInt("maxHitPoint");
-            int minDamage = maxHp * 5 / 100;
+            final int minDamage = maxHp / 20;
             session.put("raidBattleId", raidBattleId);
             session.put("raidBossType", raidBossType);
             session.put("maxHp", maxHp);
