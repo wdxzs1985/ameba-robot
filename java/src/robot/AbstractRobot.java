@@ -20,7 +20,6 @@ public abstract class AbstractRobot implements Robot, Runnable {
     private CommonHttpClient httpClient = null;
     private EventHandler nextHandler = null;
     private Properties config = null;
-    private boolean running = false;
 
     protected void registerHandler(final String path, final EventHandler handler) {
         this.handlerMapping.put(path, handler);
@@ -28,9 +27,8 @@ public abstract class AbstractRobot implements Robot, Runnable {
 
     @Override
     public void run() {
-        this.setRunning(true);
         this.dispatch("/");
-        while (this.isRunning() && this.nextHandler != null) {
+        while (this.nextHandler != null) {
             final EventHandler currEventHandler = this.nextHandler;
             this.nextHandler = null;
             currEventHandler.handle();
@@ -41,18 +39,23 @@ public abstract class AbstractRobot implements Robot, Runnable {
     @Override
     public void dispatch(final String event) {
         if (StringUtils.equals(event, "/exit")) {
-            this.setRunning(false);
-            if (this.log.isInfoEnabled()) {
-                final int delay = this.getScheduleDelay();
-                this.log.info(String.format("休息%d分钟", delay));
-            }
+            this.exit();
         } else {
             this.nextHandler = this.handlerMapping.get(event);
             if (this.nextHandler == null) {
                 if (this.log.isWarnEnabled()) {
                     this.log.warn(String.format("未知方法[%s]", event));
                 }
+                this.exit();
             }
+        }
+    }
+
+    private void exit() {
+        this.nextHandler = null;
+        if (this.log.isInfoEnabled()) {
+            final int delay = this.getScheduleDelay();
+            this.log.info(String.format("休息%d分钟", delay));
         }
     }
 
@@ -107,11 +110,4 @@ public abstract class AbstractRobot implements Robot, Runnable {
         return value;
     }
 
-    public boolean isRunning() {
-        return this.running;
-    }
-
-    public void setRunning(final boolean running) {
-        this.running = running;
-    }
 }

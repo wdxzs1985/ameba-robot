@@ -38,6 +38,7 @@ public abstract class AbstractEventHandler<T extends AbstractRobot> implements E
         } catch (final Exception e) {
             final String message = e.getMessage();
             this.log.error("发生异常: " + message, e);
+            this.robot.dispatch("/exit");
         } finally {
             this.after();
         }
