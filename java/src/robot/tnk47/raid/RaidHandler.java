@@ -21,10 +21,12 @@ public class RaidHandler extends Tnk47EventHandler {
     private static final Pattern RAID_AP_NUM_PATTERN = Pattern.compile("<span id=\"jsiRaidApNum\">(\\d)/5</span>");
 
     private final RaidBattleDamageMap damageMap;
+    private final int minDamageRatio;
 
     public RaidHandler(final Tnk47Robot robot,
             final RaidBattleDamageMap damageMap) {
         super(robot);
+        this.minDamageRatio = robot.getMinDamageRatio();
         this.damageMap = damageMap;
     }
 
@@ -100,8 +102,7 @@ public class RaidHandler extends Tnk47EventHandler {
         final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
         final int raidBossType = bossDto.optInt("raidBossType");
         final int raidBossRank = bossDto.optInt("raidBossRank");
-        final int memberCount = bossDto.optInt("memberCount");
-        final long minDamage = maxHp / memberCount;
+        final long minDamage = maxHp * this.minDamageRatio / 100;
         session.put("raidBattleId", raidBattleId);
         session.put("raidBossType", raidBossType);
         session.put("raidBossRank", raidBossRank);
@@ -159,11 +160,13 @@ public class RaidHandler extends Tnk47EventHandler {
         final long currentHp = raidDto.optLong("currentHp");
         final long maxHp = raidDto.optLong("maxHp");
         final int raidBossHpPercent = raidDto.optInt("raidBossHpPercent");
+        final long minDamage = maxHp * this.minDamageRatio / 100;
 
         this.log.info(String.format("HP:%d/%d (%d%%)",
                                     currentHp,
                                     maxHp,
                                     raidBossHpPercent));
+        this.log.info(String.format("最小伤害:%d", minDamage));
 
         final int memberCount = raidDto.optInt("memberCount");
         final int maxMemberCount = raidDto.optInt("maxMemberCount");

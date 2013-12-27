@@ -19,10 +19,12 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
     private static final Pattern BOSS_DATA_PATTERN = Pattern.compile("bossData = JSON.parse\\('(\\{.*\\})'\\);");
 
     private final RaidBattleDamageMap damageMap;
+    private final int minDamageRatio;
 
     public RaidBattleEncountHandler(final Tnk47Robot robot,
             final RaidBattleDamageMap damageMap) {
         super(robot);
+        this.minDamageRatio = robot.getMinDamageRatio();
         this.damageMap = damageMap;
     }
 
@@ -53,7 +55,7 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
             this.printBossData(bossData);
             final int raidBossType = bossData.optInt("raidBossType");
             final long maxHp = bossData.optLong("maxHitPoint");
-            final long minDamage = 0;
+            final long minDamage = maxHp * this.minDamageRatio / 100;
             session.put("raidBattleId", raidBattleId);
             session.put("raidBossType", raidBossType);
             session.put("maxHp", maxHp);
@@ -86,33 +88,14 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
 
     private void printBossData(final JSONObject bossData) {
         final String name = bossData.optString("name");
-        final int raidBossType = bossData.optInt("raidBossType");
         final int bossRank = bossData.optInt("bossRank");
         final int level = bossData.optInt("level");
 
         if (this.log.isInfoEnabled()) {
-            switch (raidBossType) {
-            case 2:
-                this.log.info(String.format("【%s】 %s (Lv%d) %s",
-                                            "大",
-                                            name,
-                                            level,
-                                            StringUtils.repeat("★", bossRank)));
-                break;
-            case 1:
-                this.log.info(String.format("【%s】 %s (Lv%d) %s",
-                                            "疾风",
-                                            name,
-                                            level,
-                                            StringUtils.repeat("★", bossRank)));
-                break;
-            default:
-                this.log.info(String.format("%s (Lv%d) %s",
-                                            name,
-                                            level,
-                                            StringUtils.repeat("★", bossRank)));
-                break;
-            }
+            this.log.info(String.format("%s (Lv%d) %s",
+                                        name,
+                                        level,
+                                        StringUtils.repeat("★", bossRank)));
         }
     }
 }

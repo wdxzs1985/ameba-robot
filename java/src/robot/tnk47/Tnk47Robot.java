@@ -316,4 +316,10 @@ public class Tnk47Robot extends AbstractRobot {
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }
+
+    public int getMinDamageRatio() {
+        final String key = "Tnk47Robot.minDamageRatio";
+        final String value = this.getConfig().getProperty(key, "4");
+        return Integer.valueOf(value);
+    }
 }
