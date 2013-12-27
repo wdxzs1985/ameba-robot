@@ -3,6 +3,7 @@ package robot.tnk47.raid.model;
 public class RaidBattleModel {
 
     public static final int NORMAL_BOSS = 0;
+    public static final int SPEED_BOSS = 1;
     public static final int LIMIT_BOSS = 2;
     public static final int EMPTY = 0;
     public static final int NO_COST = 0;
@@ -39,37 +40,43 @@ public class RaidBattleModel {
     private boolean isSpecialAttack = false;
 
     public boolean isHpFull() {
-        return this.getBossHpPercent() == HUNDRED;
+        return this.getBossHpPercent() == RaidBattleModel.HUNDRED;
     }
 
     public int getCurrentHp() {
-        return this.getMaxHp() * this.getBossHpPercent() / HUNDRED;
+        return this.getMaxHp() * this.getBossHpPercent()
+               / RaidBattleModel.HUNDRED;
     }
 
     public int getAttackPoint() {
-        return this.getDeckAttack() * (this.getFeverRate() + HUNDRED) / HUNDRED;
+        return this.getDeckAttack() * (this.getFeverRate() + RaidBattleModel.HUNDRED)
+               / RaidBattleModel.HUNDRED;
     }
 
     public boolean canSpecialAttack() {
-        int totalAttack = this.getAttackPoint() * SPECIAL_ATTACK;
-        boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
-        boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
+        final int totalAttack = this.getAttackPoint() * RaidBattleModel.SPECIAL_ATTACK;
+        final boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
+        final boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
         return isCurrentHpEnough && isMinDamageEnough;
     }
 
     public boolean canFullAttack() {
-        int totalAttack = this.getAttackPoint() * FULL_ATTACK;
-        boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
-        boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
+        final int totalAttack = this.getAttackPoint() * RaidBattleModel.FULL_ATTACK;
+        final boolean isCurrentHpEnough = this.getCurrentHp() > totalAttack;
+        final boolean isMinDamageEnough = this.getMinDamage() > totalAttack;
         return isCurrentHpEnough && isMinDamageEnough;
     }
 
     public boolean isNoCost() {
-        return this.apCost == NO_COST;
+        return this.apCost == RaidBattleModel.NO_COST;
     }
 
     public boolean isLimitedBoss() {
-        return this.raidBossType == LIMIT_BOSS;
+        return this.raidBossType == RaidBattleModel.LIMIT_BOSS;
+    }
+
+    public boolean isSpeedBoss() {
+        return this.raidBossType == RaidBattleModel.SPEED_BOSS;
     }
 
     public boolean isApEnough() {
@@ -81,14 +88,14 @@ public class RaidBattleModel {
     }
 
     public boolean hasSpecialAttack() {
-        return this.getSpecialAttack().getItemCount() > EMPTY;
+        return this.getSpecialAttack().getItemCount() > RaidBattleModel.EMPTY;
     }
 
     public int getDeckAttack() {
         return this.deckAttack;
     }
 
-    public void setDeckAttack(int deckAttack) {
+    public void setDeckAttack(final int deckAttack) {
         this.deckAttack = deckAttack;
     }
 
@@ -96,7 +103,7 @@ public class RaidBattleModel {
         return this.feverRate;
     }
 
-    public void setFeverRate(int feverRate) {
+    public void setFeverRate(final int feverRate) {
         this.feverRate = feverRate;
     }
 
@@ -112,7 +119,7 @@ public class RaidBattleModel {
         return this.maxHp;
     }
 
-    public void setMaxHp(int maxHp) {
+    public void setMaxHp(final int maxHp) {
         this.maxHp = maxHp;
     }
 
@@ -120,7 +127,7 @@ public class RaidBattleModel {
         return this.bossHpPercent;
     }
 
-    public void setBossHpPercent(int bossHpPercent) {
+    public void setBossHpPercent(final int bossHpPercent) {
         this.bossHpPercent = bossHpPercent;
     }
 
@@ -128,7 +135,7 @@ public class RaidBattleModel {
         return this.deckId;
     }
 
-    public void setDeckId(String deckId) {
+    public void setDeckId(final String deckId) {
         this.deckId = deckId;
     }
 
@@ -136,7 +143,7 @@ public class RaidBattleModel {
         return this.apCost;
     }
 
-    public void setApCost(int apCost) {
+    public void setApCost(final int apCost) {
         this.apCost = apCost;
     }
 
@@ -144,7 +151,7 @@ public class RaidBattleModel {
         return this.maxAp;
     }
 
-    public void setMaxAp(int maxAp) {
+    public void setMaxAp(final int maxAp) {
         this.maxAp = maxAp;
     }
 
@@ -152,7 +159,7 @@ public class RaidBattleModel {
         return this.apNow;
     }
 
-    public void setApNow(int apNow) {
+    public void setApNow(final int apNow) {
         this.apNow = apNow;
     }
 
@@ -176,7 +183,7 @@ public class RaidBattleModel {
         return this.raid;
     }
 
-    public void setRaid(boolean raid) {
+    public void setRaid(final boolean raid) {
         this.raid = raid;
     }
 
@@ -184,7 +191,7 @@ public class RaidBattleModel {
         return this.raidResult;
     }
 
-    public void setRaidResult(boolean raidResult) {
+    public void setRaidResult(final boolean raidResult) {
         this.raidResult = raidResult;
     }
 
@@ -192,7 +199,7 @@ public class RaidBattleModel {
         return this.helpEnable;
     }
 
-    public void setHelpEnable(boolean helpEnable) {
+    public void setHelpEnable(final boolean helpEnable) {
         this.helpEnable = helpEnable;
     }
 
@@ -200,7 +207,7 @@ public class RaidBattleModel {
         return this.feverEnable;
     }
 
-    public void setFeverEnable(boolean feverEnable) {
+    public void setFeverEnable(final boolean feverEnable) {
         this.feverEnable = feverEnable;
     }
 
@@ -208,7 +215,7 @@ public class RaidBattleModel {
         return this.isFullPower;
     }
 
-    public void setFullPower(boolean isFullPower) {
+    public void setFullPower(final boolean isFullPower) {
         this.isFullPower = isFullPower;
     }
 
@@ -216,7 +223,7 @@ public class RaidBattleModel {
         return this.isSpecialAttack;
     }
 
-    public void setSpecialAttack(boolean isSpecialAttack) {
+    public void setSpecialAttack(final boolean isSpecialAttack) {
         this.isSpecialAttack = isSpecialAttack;
     }
 
@@ -224,7 +231,7 @@ public class RaidBattleModel {
         return this.canAttack;
     }
 
-    public void setCanAttack(boolean canAttack) {
+    public void setCanAttack(final boolean canAttack) {
         this.canAttack = canAttack;
     }
 
@@ -232,7 +239,7 @@ public class RaidBattleModel {
         return this.raidBossType;
     }
 
-    public void setRaidBossType(int raidBossType) {
+    public void setRaidBossType(final int raidBossType) {
         this.raidBossType = raidBossType;
     }
 
@@ -244,7 +251,7 @@ public class RaidBattleModel {
         return this.minDamage;
     }
 
-    public void setMinDamage(int minDamage) {
+    public void setMinDamage(final int minDamage) {
         this.minDamage = minDamage;
     }
 

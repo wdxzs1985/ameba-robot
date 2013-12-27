@@ -73,7 +73,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                     model.setFullPower(false);
                     model.setSpecialAttack(false);
                 }
-                if (model.isLimitedBoss()) {
+                if (model.isLimitedBoss() || model.isSpeedBoss()) {
                     // 大boss
                     if (this.isCanSpecialAttack(model)) {
                         model.setCanAttack(true);
