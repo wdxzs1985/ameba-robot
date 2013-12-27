@@ -1,5 +1,7 @@
 package robot.gf;
 
+import java.util.Map;
+
 import robot.AbstractRobot;
 import robot.LoginHandler;
 import robot.gf.cupid.CupidExecHandler;
@@ -30,7 +32,7 @@ public class GFRobot extends AbstractRobot {
 
     public static final String HOST = "http://vcard.ameba.jp";
 
-    public static final String VERSION = "GF印花脚本  0.0.2";
+    public static final String VERSION = "GF印花脚本  0.0.3";
 
     @Override
     public void init() {
@@ -77,7 +79,19 @@ public class GFRobot extends AbstractRobot {
         this.registerHandler("/raidwar/quest/touch",
                              new RaidwarQuestTouchHandler(this));
         this.registerHandler("/raidwar/boss", new RaidwarBossHandler(this));
+    }
 
+    @Override
+    public void reset() {
+        final Map<String, Object> session = this.getSession();
+        session.put("isMypage", false);
+        session.put("isUpgradeEnable", this.isUpgradeEnable());
+        session.put("isCupidEnable", this.isCupidEnable());
+        session.put("isCupidStampEnable", this.isCupidStampEnable());
+        session.put("isGiftEnable", this.isGiftEnable());
+        session.put("isJobEnable", this.isJobEnable());
+        session.put("isQuestEnable", this.isQuestEnable());
+        session.put("isRaidwarEnable", this.isRaidwarEnable());
     }
 
     @Override

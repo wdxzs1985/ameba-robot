@@ -13,36 +13,8 @@ public class MypageHandler extends GFEventHandler {
     private static final Pattern HTML_JOB_FINISH_PATTERN = Pattern.compile("<a id=\"finishJobBtn\" class=\"btnPink\">受け取る</a>");
     private static final Pattern HTML_RAID_WAR_PATTERN = Pattern.compile("/raidwar\\?eventId=(\\d+)");
 
-    private final boolean upgradeEnable;
-    private final boolean cupidEnable;
-    private final boolean cupidStampEnable;
-    private final boolean giftEnable;
-    private final boolean jobEnable;
-    private final boolean questEnable;
-    private final boolean raidwarEnable;
-
     public MypageHandler(final GFRobot robot) {
         super(robot);
-        this.upgradeEnable = robot.isUpgradeEnable();
-        this.cupidEnable = robot.isCupidEnable();
-        this.cupidStampEnable = robot.isCupidStampEnable();
-        this.giftEnable = robot.isGiftEnable();
-        this.jobEnable = robot.isJobEnable();
-        this.questEnable = robot.isQuestEnable();
-        this.raidwarEnable = robot.isRaidwarEnable();
-        this.reset();
-    }
-
-    private void reset() {
-        final Map<String, Object> session = this.robot.getSession();
-        session.put("isMypage", false);
-        session.put("isUpgradeEnable", this.upgradeEnable);
-        session.put("isCupidEnable", this.cupidEnable);
-        session.put("isCupidStampEnable", this.cupidStampEnable);
-        session.put("isGiftEnable", this.giftEnable);
-        session.put("isJobEnable", this.jobEnable);
-        session.put("isQuestEnable", this.questEnable);
-        session.put("isRaidwarEnable", this.raidwarEnable);
     }
 
     @Override
@@ -116,7 +88,6 @@ public class MypageHandler extends GFEventHandler {
             session.put("isQuestEnable", false);
             return "/quest";
         }
-        this.reset();
         return "/exit";
     }
 }
