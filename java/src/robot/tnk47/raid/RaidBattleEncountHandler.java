@@ -52,11 +52,12 @@ public class RaidBattleEncountHandler extends Tnk47EventHandler {
             this.printBossData(bossData);
             final int raidBossType = bossData.optInt("raidBossType");
             final int maxHp = bossData.optInt("maxHitPoint");
+            int minDamage = maxHp * 5 / 100;
             session.put("raidBattleId", raidBattleId);
             session.put("raidBossType", raidBossType);
             session.put("maxHp", maxHp);
-            session.put("minDamage", 0);
-            this.damageMap.setMinDamage(raidBattleId, 0);
+            session.put("minDamage", minDamage);
+            this.damageMap.setMinDamage(raidBattleId, minDamage);
             return "/raid/battle";
         }
         return "/raid/stage";

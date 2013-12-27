@@ -79,13 +79,17 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                         model.setFullPower(false);
                         model.setSpecialAttack(true);
                     } else {
-                        if (this.isUseRaidRegenItem()) {
-                            this.useRaidRegenItem(model);
-                        }
                         if (this.isCanFullAttack(model)) {
-                            model.setCanAttack(true);
-                            model.setFullPower(true);
-                            model.setSpecialAttack(false);
+                            if (!model.isApFull()) {
+                                if (this.isUseRaidRegenItem()) {
+                                    this.useRaidRegenItem(model);
+                                }
+                            }
+                            if (model.isApFull()) {
+                                model.setCanAttack(true);
+                                model.setFullPower(true);
+                                model.setSpecialAttack(false);
+                            }
                         } else if (model.isApEnough()) {
                             model.setCanAttack(true);
                             model.setFullPower(false);
@@ -97,6 +101,9 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
             if (model.isCanAttack()) {
                 if (this.log.isInfoEnabled()) {
+                    this.log.info(String.format("HP: %d/%d",
+                                                model.getCurrentHp(),
+                                                model.getMaxHp()));
                     if (model.isSpecialAttack()) {
                         this.log.info("超全力攻撃");
                     } else if (model.isFullPower()) {
@@ -157,7 +164,6 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     private boolean isCanFullAttack(RaidBattleModel model) {
         boolean canFullAttack = true;
         canFullAttack = canFullAttack && model.canFullAttack();
-        canFullAttack = canFullAttack && model.isApFull();
         canFullAttack = canFullAttack && !model.isHpFull();
         return canFullAttack;
     }

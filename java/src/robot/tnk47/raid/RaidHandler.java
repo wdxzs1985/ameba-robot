@@ -35,27 +35,18 @@ public class RaidHandler extends Tnk47EventHandler {
         if (data != null) {
             if (model.hasAp()) {
                 final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
-                int minHp = Integer.MAX_VALUE;
-                JSONObject selectRaidDto = null;
-                for (int i = 0; i < raidBossEncountTileDtos.size(); i++) {
-                    final JSONObject raidDto = raidBossEncountTileDtos.optJSONObject(i);
-                    final int currentHp = raidDto.optInt("currentHp");
-                    if (minHp > currentHp) {
-                        minHp = currentHp;
-                        selectRaidDto = raidDto;
-                    }
+                final JSONObject raidDto = this.findRaid(model,
+                                                         raidBossEncountTileDtos);
+                if (raidDto != null) {
+                    return this.raidBattle(model, raidDto);
                 }
-                if (selectRaidDto != null) {
-                    return this.raidBattle(model, selectRaidDto, true);
-                }
-
             }
             if (!this.is("limited")) {
                 final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
                 final JSONObject raidDto = this.findRaid(model,
                                                          raidBossTileDtos);
                 if (raidDto != null) {
-                    return this.raidBattle(model, raidDto, false);
+                    return this.raidBattle(model, raidDto);
                 }
             }
             return "/raid/stage";
@@ -99,7 +90,7 @@ public class RaidHandler extends Tnk47EventHandler {
         return jsonResponse.optJSONObject("data");
     }
 
-    private String raidBattle(RaidModel model, final JSONObject raidDto, boolean isMine) {
+    private String raidBattle(RaidModel model, final JSONObject raidDto) {
         final Map<String, Object> session = this.robot.getSession();
         this.printRaidDto(raidDto);
         final String raidBattleId = raidDto.optString("raidBattleId");
@@ -113,8 +104,8 @@ public class RaidHandler extends Tnk47EventHandler {
         session.put("raidBossType", raidBossType);
         session.put("raidBossRank", raidBossRank);
         session.put("maxHp", maxHp);
-        session.put("minDamage", isMine ? maxHp : minDamage);
-        this.damageMap.setMinDamage(raidBattleId, isMine ? maxHp : minDamage);
+        session.put("minDamage", minDamage);
+        this.damageMap.setMinDamage(raidBattleId, minDamage);
         if (endBattle) {
             return "/raid/battle-result";
         } else {
