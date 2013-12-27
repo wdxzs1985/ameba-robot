@@ -1,5 +1,7 @@
 package robot.mxm;
 
+import java.util.Map;
+
 import robot.AbstractRobot;
 import robot.LoginHandler;
 import robot.mxm.item.ItemPotionHandler;
@@ -53,6 +55,14 @@ public class MxmRobot extends AbstractRobot {
         this.registerHandler("/raid/attack", new RaidAttackHandler(this));
         // item
         this.registerHandler("/item/potion", new ItemPotionHandler(this));
+    }
+
+    @Override
+    public void reset() {
+        final Map<String, Object> session = this.getSession();
+        session.put("isMypage", false);
+        session.put("isRaidHistoryEnable", true);
+        session.put("isQuestEnable", this.isQuestEnable());
     }
 
     @Override

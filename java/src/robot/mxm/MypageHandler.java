@@ -32,16 +32,13 @@ public class MypageHandler extends MxmEventHandler {
     private static final Pattern SUMMON_PATTERN = Pattern.compile("<li data-btn=\"push\" data-summon-point=\"(\\d)\" data-max-sumon-point=\"\\d\" data-iusermonster-id=\"\\d+\" data-index=\"\\d\" data-recipe-id=\"(\\d+)\" data-mst-name=\"(.*?)\" data-mst-path=\".*?\" data-rarity-id=\"(\\d)\" data-element-id=\"(\\d)\">");
     private static final Pattern STAMINA_PATTERN = Pattern.compile("<li>元気: <span class=\"colorWhite\">(\\d{1,2})</span>/(\\d{1,2})</li>");
 
-    private final boolean questEnable;
     private final boolean raidEnable;
     private final boolean usePotion;
 
     public MypageHandler(final MxmRobot robot) {
         super(robot);
-        this.questEnable = robot.isQuestEnable();
         this.raidEnable = robot.isRaidEnable();
         this.usePotion = robot.isUsePotion();
-        this.reset();
     }
 
     @Override
@@ -70,9 +67,7 @@ public class MypageHandler extends MxmEventHandler {
         if (!this.hasMonsterType()) {
             return "/monster";
         }
-
         this.setDailyElement(html);
-
         this.summon(html);
 
         if (this.is("isRaidHistoryEnable")) {
@@ -93,18 +88,15 @@ public class MypageHandler extends MxmEventHandler {
             }
         }
 
-        if (this.is("isQuestEnable")) {
-            if (this.isStaminaOut(html)) {
-                if (this.usePotion) {
-                    session.put("potionId", "1");
-                    return "/item/potion";
-                }
-            } else {
-                return "/quest";
+        if (this.isStaminaOut(html)) {
+            session.put("isQuestEnable", false);
+            if (this.usePotion) {
+                session.put("potionId", "1");
+                return "/item/potion";
             }
+        } else if (this.is("isQuestEnable")) {
+            return "/quest";
         }
-
-        this.reset();
         return "/exit";
     }
 
@@ -325,12 +317,5 @@ public class MypageHandler extends MxmEventHandler {
             return true;
         }
         return false;
-    }
-
-    private void reset() {
-        final Map<String, Object> session = this.robot.getSession();
-        session.put("isMypage", false);
-        session.put("isRaidHistoryEnable", true);
-        session.put("isQuestEnable", this.questEnable);
     }
 }
