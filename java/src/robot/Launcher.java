@@ -7,11 +7,14 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import common.CommonHttpClient;
 
 public class Launcher {
 
+    protected final Log log = LogFactory.getLog(this.getClass());
     protected final Properties config = new Properties();
     protected final CommonHttpClient httpClient = new CommonHttpClient();
 
