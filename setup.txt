@@ -8,7 +8,7 @@ Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
-Robot.requestDelay=6
+Robot.requestDelay=3
 # 等待回复时间(单位为分钟)
 Robot.scheduleDelay=6
 
@@ -96,6 +96,8 @@ Tnk47Robot.onlyGiveOne=false
 # 自动开大BOSS
 Tnk47Robot.raidLimitOpen=true
 # 打大BOSS的时候使用AP药
-Tnk47Robot.useRaidRegenItem=false
+Tnk47Robot.useRaidRegenItem=true
 # 打大BOSS的时候使用超全力
 Tnk47Robot.useRaidSpecialAttack=false
+# BOSS最小伤害比例
+Tnk47Robot.minDamageRatio=4
