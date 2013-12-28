@@ -141,6 +141,7 @@ public class Tnk47Robot extends AbstractRobot {
         session.put("isQuestFindAll", false);
         session.put("isBattlePowerOut", false);
         session.put("isBattlePointEnough", false);
+        session.put("isLimitedOpen", false);
 
     }
 

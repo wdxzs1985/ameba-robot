@@ -36,21 +36,17 @@ public class RaidHandler extends Tnk47EventHandler {
         this.initBattleList(model);
         final JSONObject data = this.getRaidBattleList(model);
         if (data != null) {
+            JSONObject selectedRaidDto = null;
             if (model.hasAp()) {
                 final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
-                final JSONObject raidDto = this.findRaid(model,
-                                                         raidBossEncountTileDtos);
-                if (raidDto != null) {
-                    return this.raidBattle(model, raidDto);
-                }
+                selectedRaidDto = this.findRaid(model, raidBossEncountTileDtos);
             }
-            if (!this.is("limited")) {
+            if (selectedRaidDto == null) {
                 final JSONArray raidBossTileDtos = data.optJSONArray("raidBossTileDtos");
-                final JSONObject raidDto = this.findRaid(model,
-                                                         raidBossTileDtos);
-                if (raidDto != null) {
-                    return this.raidBattle(model, raidDto);
-                }
+                selectedRaidDto = this.findRaid(model, raidBossTileDtos);
+            }
+            if (selectedRaidDto != null) {
+                return this.raidBattle(model, selectedRaidDto);
             }
             return "/raid/stage";
         }
@@ -101,11 +97,9 @@ public class RaidHandler extends Tnk47EventHandler {
         final boolean endBattle = raidDto.optBoolean("endBattle");
         final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
         final int raidBossType = bossDto.optInt("raidBossType");
-        final int raidBossRank = bossDto.optInt("raidBossRank");
         final long minDamage = maxHp * this.minDamageRatio / 100;
         session.put("raidBattleId", raidBattleId);
         session.put("raidBossType", raidBossType);
-        session.put("raidBossRank", raidBossRank);
         session.put("maxHp", maxHp);
         session.put("minDamage", minDamage);
         this.damageMap.setMinDamage(raidBattleId, minDamage);

@@ -17,12 +17,12 @@ import robot.tnk47.Tnk47Robot;
 public class RaidStageForwardHandler extends Tnk47EventHandler {
 
     private static final Pattern BOSS_ENCOUNT_PATTERN = Pattern.compile("/raid/raid-boss-encount-animation\\?raidBossId=(\\d+)&raidBossLevel=(\\d+)&raidId=(\\d+)&questId=(\\d+)&areaId=(\\d+)&stageId=(\\d+)&token=([a-zA-Z0-9]{6})");
+    private static final Pattern STAGE_DETAIL_PATTERN = Pattern.compile("/raid/raid-stage-detail\\?raidId=(\\d+)&questId=(\\d+)&areaId=(\\d+)&stageId=(\\d+)&token=([a-zA-Z0-9]{6})");
 
     public RaidStageForwardHandler(final Tnk47Robot robot) {
         super(robot);
         final Map<String, Object> session = robot.getSession();
         session.put("needExpForNextLevel", 0);
-        session.put("limited", false);
     }
 
     @Override
@@ -57,18 +57,6 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                                                 stamina,
                                                 maxStamina,
                                                 needExpForNextLevel));
-                }
-            }
-
-            final JSONObject limitedData = data.optJSONObject("limited");
-            if (limitedData != null) {
-                final int progress = limitedData.optInt("progress");
-                final boolean limited = progress == 100;
-                session.put("limited", limited);
-                if (limited) {
-                    if (this.log.isInfoEnabled()) {
-                        this.log.info("大BOSS出现中");
-                    }
                 }
             }
 
@@ -120,8 +108,8 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
     private String battleEncountAnimation(final JSONObject jsonResponse) {
         final Map<String, Object> session = this.robot.getSession();
         final String url = jsonResponse.optString("url");
-        final Matcher matcher = RaidStageForwardHandler.BOSS_ENCOUNT_PATTERN.matcher(url);
-        if (matcher.find()) {
+        Matcher matcher = null;
+        if ((matcher = RaidStageForwardHandler.BOSS_ENCOUNT_PATTERN.matcher(url)).find()) {
             final String raidBossId = matcher.group(1);
             final String raidBossLevel = matcher.group(2);
             final String raidId = matcher.group(3);
@@ -138,6 +126,18 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
             session.put("stageId", stageId);
             session.put("token", token);
             return "/raid/battle-encount";
+        } else if ((matcher = RaidStageForwardHandler.STAGE_DETAIL_PATTERN.matcher(url)).find()) {
+            final String raidId = matcher.group(1);
+            final String questId = matcher.group(2);
+            final String areaId = matcher.group(3);
+            final String stageId = matcher.group(4);
+            final String token = matcher.group(5);
+            session.put("raidId", raidId);
+            session.put("questId", questId);
+            session.put("areaId", areaId);
+            session.put("stageId", stageId);
+            session.put("token", token);
+            return "/raid/stage";
         }
         return "/mypage";
     }

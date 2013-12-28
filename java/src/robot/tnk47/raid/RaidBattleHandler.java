@@ -67,6 +67,9 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                 model.setFullPower(false);
                 model.setSpecialAttack(false);
             } else if (!this.damageMap.isDamageEnough(raidBattleId)) {
+                if (this.isUseRaidRegenItem()) {
+                    this.useRaidRegenItem(model, model.getApCost());
+                }
                 if (model.isApEnough()) {
                     model.setCanAttack(true);
                     model.setFullPower(false);
@@ -78,25 +81,14 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                         model.setCanAttack(true);
                         model.setFullPower(false);
                         model.setSpecialAttack(true);
-                    } else {
-                        if (this.isCanFullAttack(model)) {
-                            if (this.isUseRaidRegenItem()) {
-                                this.useRaidRegenItem(model, model.getMaxAp());
-                            }
-                            if (model.isApFull()) {
-                                model.setCanAttack(true);
-                                model.setFullPower(true);
-                                model.setSpecialAttack(false);
-                            }
-                        } else {
-                            if (this.isUseRaidRegenItem()) {
-                                this.useRaidRegenItem(model, model.getApCost());
-                            }
-                            if (model.isApEnough()) {
-                                model.setCanAttack(true);
-                                model.setFullPower(false);
-                                model.setSpecialAttack(false);
-                            }
+                    } else if (this.isCanFullAttack(model)) {
+                        if (this.isUseRaidRegenItem()) {
+                            this.useRaidRegenItem(model, model.getMaxAp());
+                        }
+                        if (model.isApFull()) {
+                            model.setCanAttack(true);
+                            model.setFullPower(true);
+                            model.setSpecialAttack(false);
                         }
                     }
                 }
@@ -104,9 +96,10 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
             if (model.isCanAttack()) {
                 if (this.log.isInfoEnabled()) {
-                    this.log.info(String.format("HP: %d/%d",
+                    this.log.info(String.format("HP: %d/%d (%d%%)",
                                                 model.getCurrentHp(),
-                                                model.getMaxHp()));
+                                                model.getMaxHp(),
+                                                model.getBossHpPercent()));
                     if (model.isSpecialAttack()) {
                         this.log.info("超全力攻撃");
                     } else if (model.isFullPower()) {
@@ -324,7 +317,7 @@ public class RaidBattleHandler extends Tnk47EventHandler {
             feverRate = feverUpDetailDto.optInt("rate");
             if (this.log.isInfoEnabled()) {
                 final String displayUpRate = feverUpDetailDto.optString("displayUpRate");
-                this.log.info(String.format("3分間全員の攻撃力が%sアップ", displayUpRate));
+                this.log.info(String.format("全員攻撃力 %s UP", displayUpRate));
             }
         }
         return feverRate;
