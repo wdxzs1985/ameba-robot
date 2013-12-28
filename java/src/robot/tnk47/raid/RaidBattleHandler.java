@@ -98,7 +98,6 @@ public class RaidBattleHandler extends Tnk47EventHandler {
                                 model.setSpecialAttack(false);
                             }
                         }
-
                     }
                 }
             }

@@ -127,9 +127,7 @@ public class RaidHandler extends Tnk47EventHandler {
             final boolean entry = raidDto.optBoolean("entry");
             final boolean endBattle = raidDto.optBoolean("endBattle");
             final int currentHp = raidDto.optInt("currentHp");
-            final JSONObject bossDto = raidDto.optJSONObject("raidBossDto");
-            final int memberCount = bossDto.optInt("memberCount");
-            final long minDamage = maxHp / memberCount;
+            final long minDamage = maxHp * this.minDamageRatio / 100;
             if (endBattle) {
                 selectedRaid = raidDto;
                 break;
@@ -144,7 +142,7 @@ public class RaidHandler extends Tnk47EventHandler {
             final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
             if (hasAp && isHpEnough && isDamageNotEnough) {
                 final int feverRate = raidDto.optInt("feverRate");
-                if (maxFever < feverRate) {
+                if (selectedRaid == null || maxFever < feverRate) {
                     maxFever = feverRate;
                     selectedRaid = raidDto;
                 }
