@@ -63,6 +63,8 @@ public class MxmRobot extends AbstractRobot {
         session.put("isMypage", false);
         session.put("isRaidHistoryEnable", true);
         session.put("isQuestEnable", this.isQuestEnable());
+        session.put("isUsePotion", this.isUsePotion());
+        session.put("isRaidEnable", this.isRaidEnable());
     }
 
     @Override

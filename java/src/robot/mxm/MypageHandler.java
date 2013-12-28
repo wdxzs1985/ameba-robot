@@ -32,13 +32,8 @@ public class MypageHandler extends MxmEventHandler {
     private static final Pattern SUMMON_PATTERN = Pattern.compile("<li data-btn=\"push\" data-summon-point=\"(\\d)\" data-max-sumon-point=\"\\d\" data-iusermonster-id=\"\\d+\" data-index=\"\\d\" data-recipe-id=\"(\\d+)\" data-mst-name=\"(.*?)\" data-mst-path=\".*?\" data-rarity-id=\"(\\d)\" data-element-id=\"(\\d)\">");
     private static final Pattern STAMINA_PATTERN = Pattern.compile("<li>元気: <span class=\"colorWhite\">(\\d{1,2})</span>/(\\d{1,2})</li>");
 
-    private final boolean raidEnable;
-    private final boolean usePotion;
-
     public MypageHandler(final MxmRobot robot) {
         super(robot);
-        this.raidEnable = robot.isRaidEnable();
-        this.usePotion = robot.isUsePotion();
     }
 
     @Override
@@ -52,7 +47,7 @@ public class MypageHandler extends MxmEventHandler {
                 this.log.info(String.format("角色： %s", userName));
                 session.put("isMypage", true);
             } else {
-                String title = this.getHtmlTitle(html);
+                final String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
                     this.log.info(title);
                 }
@@ -75,7 +70,7 @@ public class MypageHandler extends MxmEventHandler {
             return "/raid/history";
         }
 
-        if (this.raidEnable) {
+        if (this.is("isRaidEnable")) {
             if (this.isRaiding(html)) {
                 if (this.getBpCount(html) > 0) {
                     return "/raid/top";
@@ -90,7 +85,8 @@ public class MypageHandler extends MxmEventHandler {
 
         if (this.isStaminaOut(html)) {
             session.put("isQuestEnable", false);
-            if (this.usePotion) {
+            if (this.is("isUsePotion")) {
+                session.put("isUsePotion", false);
                 session.put("potionId", "1");
                 return "/item/potion";
             }
@@ -100,7 +96,7 @@ public class MypageHandler extends MxmEventHandler {
         return "/exit";
     }
 
-    private boolean isStaminaOut(String html) {
+    private boolean isStaminaOut(final String html) {
         final Matcher matcher = MypageHandler.STAMINA_PATTERN.matcher(html);
         if (matcher.find()) {
             final int stamina = Integer.valueOf(matcher.group(1));
