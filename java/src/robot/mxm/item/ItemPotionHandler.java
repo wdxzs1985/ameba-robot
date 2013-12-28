@@ -21,25 +21,22 @@ public class ItemPotionHandler extends MxmEventHandler {
 
     @Override
     public String handleIt() {
-        this.itemBox();
-        this.itemPotionConfirm();
-        this.itemPotionResult();
+        final int potion = this.findPotion();
+        if (potion > 0) {
+            this.sleep();
+            this.itemPotionConfirm();
+            this.sleep();
+            this.itemPotionResult();
+        }
         return "/mypage";
     }
 
-    private void itemBox() {
-        final Map<String, Object> session = this.robot.getSession();
-        String path = "/item/item_box";
-        String html = this.httpGet(path);
-
-        int potion = this.findPotion(html);
-        session.put("potion", potion);
-    }
-
-    private int findPotion(String html) {
-        Matcher matcher = POTION_PATTERN.matcher(html);
+    private int findPotion() {
+        final String path = "/item/item_box";
+        final String html = this.httpGet(path);
+        final Matcher matcher = ItemPotionHandler.POTION_PATTERN.matcher(html);
         if (matcher.find()) {
-            int num = Integer.valueOf(matcher.group(1));
+            final int num = Integer.valueOf(matcher.group(1));
             return num;
         }
         return 0;
@@ -47,28 +44,28 @@ public class ItemPotionHandler extends MxmEventHandler {
 
     private void itemPotionConfirm() {
         final Map<String, Object> session = this.robot.getSession();
-        String potionId = (String) session.get("potionId");
-        String path = "/item/potion/confirm";
-        List<BasicNameValuePair> nvps = this.createNameValuePairs();
+        final String potionId = (String) session.get("potionId");
+        final String path = "/item/potion/confirm";
+        final List<BasicNameValuePair> nvps = this.createNameValuePairs();
         nvps.add(new BasicNameValuePair("potionId", potionId));
-        String html = this.httpPost(path, nvps);
+        final String html = this.httpPost(path, nvps);
         this.resolveInputToken(html);
     }
 
     private void itemPotionResult() {
         final Map<String, Object> session = this.robot.getSession();
-        String potionId = (String) session.get("potionId");
-        String token = (String) session.get("token");
-        String path = "/item/potion/result";
-        List<BasicNameValuePair> nvps = this.createNameValuePairs();
+        final String potionId = (String) session.get("potionId");
+        final String token = (String) session.get("token");
+        final String path = "/item/potion/result";
+        final List<BasicNameValuePair> nvps = this.createNameValuePairs();
         nvps.add(new BasicNameValuePair("potionId", potionId));
         nvps.add(new BasicNameValuePair("token", token));
-        String html = this.httpPost(path, nvps);
-        Matcher matcher = RESULT_PATTERN.matcher(html);
+        final String html = this.httpPost(path, nvps);
+        final Matcher matcher = ItemPotionHandler.RESULT_PATTERN.matcher(html);
         while (matcher.find()) {
-            String name = matcher.group(1);
-            String before = matcher.group(2);
-            String after = matcher.group(3);
+            final String name = matcher.group(1);
+            final String before = matcher.group(2);
+            final String after = matcher.group(3);
             this.log.info(String.format("%s %s → %s", name, before, after));
         }
     }
