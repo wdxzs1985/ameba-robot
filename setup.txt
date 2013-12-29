@@ -13,7 +13,7 @@ Robot.requestDelay=3
 Robot.scheduleDelay=6
 
 ###########################
-# 天下脚本机器人
+# 天下脚本
 ###########################
 # 签到开关
 Tnk47Robot.stampGachaEnable=true
