@@ -126,12 +126,8 @@ public class RaidHandler extends Tnk47EventHandler {
                 selectedRaid = raidDto;
                 break;
             }
-            if (!entry) {
-                selectedRaid = raidDto;
-                break;
-            }
 
-            final boolean hasAp = model.hasAp();
+            final boolean hasAp = model.hasAp() || !entry;
             final boolean isHpEnough = currentHp > minDamage;
             final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
             if (hasAp && isHpEnough && isDamageNotEnough) {
