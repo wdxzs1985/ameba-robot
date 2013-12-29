@@ -44,7 +44,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.7.5";
+    public static final String VERSION = "天下自动脚本  0.7.6";
 
     @Override
     public void init() {
@@ -322,5 +322,11 @@ public class Tnk47Robot extends AbstractRobot {
         final String key = "Tnk47Robot.minDamageRatio";
         final String value = this.getConfig().getProperty(key, "4");
         return Integer.valueOf(value);
+    }
+
+    public boolean isEcoMode() {
+        final String key = "Tnk47Robot.ecoMode";
+        final String value = this.getConfig().getProperty(key, "true");
+        return Boolean.valueOf(value);
     }
 }

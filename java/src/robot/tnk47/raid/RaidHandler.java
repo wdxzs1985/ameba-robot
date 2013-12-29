@@ -20,13 +20,15 @@ public class RaidHandler extends Tnk47EventHandler {
 
     private static final Pattern RAID_AP_NUM_PATTERN = Pattern.compile("<span id=\"jsiRaidApNum\">(\\d)/5</span>");
 
-    private final RaidBattleDamageMap damageMap;
     private final int minDamageRatio;
+    private final boolean ecoMode;
+    private final RaidBattleDamageMap damageMap;
 
     public RaidHandler(final Tnk47Robot robot,
             final RaidBattleDamageMap damageMap) {
         super(robot);
         this.minDamageRatio = robot.getMinDamageRatio();
+        this.ecoMode = robot.isEcoMode();
         this.damageMap = damageMap;
     }
 
@@ -123,6 +125,11 @@ public class RaidHandler extends Tnk47EventHandler {
             final int currentHp = raidDto.optInt("currentHp");
             final long minDamage = maxHp * this.minDamageRatio / 100;
             if (endBattle) {
+                selectedRaid = raidDto;
+                break;
+            }
+
+            if (this.ecoMode && !entry) {
                 selectedRaid = raidDto;
                 break;
             }
