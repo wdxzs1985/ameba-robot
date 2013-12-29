@@ -133,12 +133,10 @@ public class RaidBattleHandler extends Tnk47EventHandler {
     }
 
     private void useRaidRegenItem(final RaidBattleModel model, final int maxAp) {
-        if (!model.isApEnough()) {
-            this.useRaidRegenItem(model, model.getApSmall(), maxAp);
-            this.useRaidRegenItem(model, model.getApFull(), maxAp);
-            this.useRaidRegenItem(model, model.getPowerHalf(), maxAp);
-            this.useRaidRegenItem(model, model.getPowerFull(), maxAp);
-        }
+        this.useRaidRegenItem(model, model.getApSmall(), maxAp);
+        this.useRaidRegenItem(model, model.getApFull(), maxAp);
+        this.useRaidRegenItem(model, model.getPowerHalf(), maxAp);
+        this.useRaidRegenItem(model, model.getPowerFull(), maxAp);
     }
 
     private void useRaidRegenItem(final RaidBattleModel model,

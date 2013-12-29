@@ -9,7 +9,7 @@ public class RaidBattleModel {
     public static final int NO_COST = 0;
     public static final int HUNDRED = 100;
     public static final int FULL_ATTACK = 5;
-    public static final int SPECIAL_ATTACK = 13;
+    public static final int SPECIAL_ATTACK = 12;
 
     // private boolean mine = false;
     private boolean raid = false;

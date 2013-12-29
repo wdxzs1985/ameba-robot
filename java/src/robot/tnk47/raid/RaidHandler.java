@@ -128,7 +128,7 @@ public class RaidHandler extends Tnk47EventHandler {
             }
 
             final boolean hasAp = model.hasAp() || !entry;
-            final boolean isHpEnough = currentHp > minDamage;
+            final boolean isHpEnough = currentHp > minDamage * 2;
             final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
             if (hasAp && isHpEnough && isDamageNotEnough) {
                 final int feverRate = raidDto.optInt("feverRate");
