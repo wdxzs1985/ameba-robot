@@ -1,5 +1,7 @@
 package robot.fs;
 
+import java.util.Map;
+
 import robot.AbstractRobot;
 import robot.LoginHandler;
 import robot.fs.quest.QuestAnimationHandler;
@@ -24,6 +26,16 @@ public class FSRobot extends AbstractRobot {
         this.registerHandler("/quest/animation",
                              new QuestAnimationHandler(this));
         this.registerHandler("/quest/boss", new QuestBossHandler(this));
+    }
+
+    @Override
+    public void reset() {
+        final Map<String, Object> session = this.getSession();
+        session.put("isMypage", false);
+        session.put("isGiftEnable", this.isGiftEnable());
+        session.put("isQuestEnable", this.isQuestEnable());
+        session.put("isBattleEnable", this.isBattleEnable());
+        session.put("isUpgradeEnable", this.isUpgradeEnable());
     }
 
     @Override

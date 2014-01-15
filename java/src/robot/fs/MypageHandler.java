@@ -4,23 +4,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 public class MypageHandler extends FSEventHandler {
 
-    private static final Pattern HTML_TITLE_PATTERN = Pattern.compile("<title>(.*?)</title>");
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<li class=\"name\"><div id=\"sphereIcon\" class=\"sphere\\d\"></div>(.*?)</li>");
-
-    private final boolean questEnable;
 
     public MypageHandler(final FSRobot robot) {
         super(robot);
-        this.questEnable = robot.isQuestEnable();
-        this.reset();
-    }
-
-    private void reset() {
-        final Map<String, Object> session = this.robot.getSession();
-        session.put("isMypage", false);
-        session.put("isQuestEnable", this.questEnable);
     }
 
     @Override
@@ -35,13 +26,12 @@ public class MypageHandler extends FSEventHandler {
                 this.log.info(String.format("角色： %s", userName));
                 session.put("isMypage", true);
             } else {
+                String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
-                    final Matcher titleMatcher = MypageHandler.HTML_TITLE_PATTERN.matcher(html);
-                    if (titleMatcher.find()) {
-                        final String title = titleMatcher.group(1);
-                        this.log.info(html);
-                        this.log.info(title);
-                    }
+                    this.log.info(title);
+                }
+                if (StringUtils.contains(title, "メンテナンスのお知らせ")) {
+                    return "/exit";
                 }
                 return "/mypage";
             }
@@ -52,7 +42,6 @@ public class MypageHandler extends FSEventHandler {
             return "/quest";
         }
 
-        this.reset();
         return "/exit";
     }
 }
