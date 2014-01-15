@@ -99,6 +99,7 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.is("isUpgradeEnable")) {
                     session.put("isUpgradeEnable", false);
+                    session.put("callback", "/marathon/stage");
                     return "/upgrade";
                 }
             }
@@ -172,7 +173,7 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.robot.isUseStamina50() && StringUtils.contains(code,
                                                                         "stamina50")
-                    && needExpForNextLevel > maxStamina / 2) {
+                        && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/marathon");
@@ -180,7 +181,7 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.robot.isUseStamina100() && StringUtils.contains(code,
                                                                          "stamina100")
-                    && needExpForNextLevel > maxStamina) {
+                        && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/marathon");

@@ -94,6 +94,7 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.is("isUpgradeEnable")) {
                     session.put("isUpgradeEnable", false);
+                    session.put("callback", "/quest");
                     return "/upgrade";
                 }
             }
@@ -204,7 +205,7 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
             final Map<String, Object> session = this.robot.getSession();
             final JSONObject userData = data.optJSONObject("userData");
             final int maxStamina = userData.optInt("maxStamina") * this.useStaminaRatio
-                                   / 100;
+                    / 100;
             final int needExpForNextLevel = (Integer) session.get("needExpForNextLevel");
             for (int i = 0; i < regenStaminaItems.size(); i++) {
                 final JSONObject regenStamina = (JSONObject) regenStaminaItems.get(i);
@@ -212,23 +213,23 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
                 final String name = regenStamina.optString("name");
                 final String itemId = regenStamina.optString("itemId");
                 if (this.useStaminaToday && StringUtils.contains(name, "当日")
-                    && StringUtils.contains(code, "stamina50")
-                    && needExpForNextLevel > maxStamina / 2) {
+                        && StringUtils.contains(code, "stamina50")
+                        && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
                     return true;
                 }
                 if (this.useStaminaToday && StringUtils.contains(name, "当日")
-                    && StringUtils.contains(code, "stamina100")
-                    && needExpForNextLevel > maxStamina) {
+                        && StringUtils.contains(code, "stamina100")
+                        && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
                     return true;
                 }
                 if (this.useStamina50 && StringUtils.contains(code, "stamina50")
-                    && needExpForNextLevel > maxStamina / 2) {
+                        && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");
@@ -236,7 +237,7 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.useStamina100 && StringUtils.contains(code,
                                                                "stamina100")
-                    && needExpForNextLevel > maxStamina) {
+                        && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/quest/stage/forward");

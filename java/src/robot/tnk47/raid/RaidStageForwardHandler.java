@@ -88,6 +88,20 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                 return "/raid/stage";
             }
             //
+            if (this.isCardFull(data)) {
+                if (!this.is("isQuestCardFull")) {
+                    session.put("isQuestCardFull", true);
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info("你包里的卡满出来了");
+                    }
+                    if (this.is("isUpgradeEnable")) {
+                        session.put("isUpgradeEnable", false);
+                        session.put("callback", "/raid/stage");
+                        return "/upgrade";
+                    }
+                }
+            }
+            //
             final String questMessage = data.optString("questMessage");
             if (!StringUtils.equals(questMessage, "null")) {
                 if (StringUtils.equals("行動Ptが足りません", questMessage)) {
@@ -171,7 +185,7 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.robot.isUseStamina50() && StringUtils.contains(code,
                                                                         "stamina50")
-                    && needExpForNextLevel > maxStamina / 2) {
+                        && needExpForNextLevel > maxStamina / 2) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/raid/stage");
@@ -179,7 +193,7 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
                 }
                 if (this.robot.isUseStamina100() && StringUtils.contains(code,
                                                                          "stamina100")
-                    && needExpForNextLevel > maxStamina) {
+                        && needExpForNextLevel > maxStamina) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/raid/stage");
@@ -188,5 +202,12 @@ public class RaidStageForwardHandler extends Tnk47EventHandler {
             }
         }
         return false;
+    }
+
+    private boolean isCardFull(final JSONObject data) {
+        final JSONObject userData = data.optJSONObject("userData");
+        final int maxCardCount = userData.optInt("maxCardCount");
+        final int cardCount = userData.optInt("cardCount");
+        return maxCardCount == cardCount;
     }
 }

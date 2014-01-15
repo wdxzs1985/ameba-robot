@@ -22,6 +22,7 @@ public class UpgradeAnimationHandler extends Tnk47EventHandler {
         final String baseUserCardId = (String) session.get("baseUserCardId");
         final String materialUserCardIds = (String) session.get("materialUserCardIds");
         final String token = (String) session.get("token");
+        final String callback = (String) session.get("callback");
         final List<BasicNameValuePair> nvps = this.createNameValuePairs();
         nvps.add(new BasicNameValuePair("baseUserCardId", baseUserCardId));
         nvps.add(new BasicNameValuePair("materialUserCardIds",
@@ -45,6 +46,6 @@ public class UpgradeAnimationHandler extends Tnk47EventHandler {
             }
             session.put("isQuestCardFull", false);
         }
-        return "/mypage";
+        return callback;
     }
 }
