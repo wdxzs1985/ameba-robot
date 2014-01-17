@@ -100,7 +100,7 @@ Tnk47Robot.useRaidRegenItem=true
 # 打大BOSS的时候使用超全力
 Tnk47Robot.useRaidSpecialAttack=true
 # BOSS最小伤害比例
-Tnk47Robot.minDamageRatio=5
+Tnk47Robot.minDamageRatio=10
 # 省药模式（优先打小BOSS）=true
 # 刷药模式（优先打高Fever）=false
 Tnk47Robot.ecoMode=true
