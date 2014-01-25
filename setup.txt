@@ -17,6 +17,8 @@ Robot.scheduleDelay=6
 ###########################
 # 签到开关
 Tnk47Robot.stampGachaEnable=true
+# 千两箱开关
+Tnk47Robot.gachaEnable=true
 # 活动开关
 Tnk47Robot.eventEnable=true
 # 领取礼物开关（只领药那一排）

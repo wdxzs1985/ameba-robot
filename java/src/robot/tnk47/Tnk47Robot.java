@@ -12,7 +12,9 @@ import robot.tnk47.battle.BattleResultHandler;
 import robot.tnk47.battle.PrefectureBattleListHandler;
 import robot.tnk47.battle.PrefectureBattleResultHandler;
 import robot.tnk47.gacha.BattleGachaHandler;
+import robot.tnk47.gacha.GachaHandler;
 import robot.tnk47.gacha.StampGachaHandler;
+import robot.tnk47.gacha.TicketGachaHandler;
 import robot.tnk47.marathon.MarathonHandler;
 import robot.tnk47.marathon.MarathonMissionAnimationHandler;
 import robot.tnk47.marathon.MarathonMissionHandler;
@@ -44,7 +46,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.7.8";
+    public static final String VERSION = "天下自动脚本  0.8.0";
 
     @Override
     public void init() {
@@ -53,6 +55,9 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/mypage", new MypageHandler(this));
         this.registerHandler("/event-infomation",
                              new EventInfomationHandler(this));
+        this.registerHandler("/gacha", new GachaHandler(this));
+        this.registerHandler("/gacha/ticket-gacha",
+                             new TicketGachaHandler(this));
         this.registerHandler("/gacha/stamp-gacha", new StampGachaHandler(this));
         this.registerHandler("/gacha/battle-gacha",
                              new BattleGachaHandler(this));
@@ -131,6 +136,7 @@ public class Tnk47Robot extends AbstractRobot {
         final Map<String, Object> session = this.getSession();
         session.put("isMypage", false);
         session.put("isStampGachaEnable", this.isStampGachaEnable());
+        session.put("isGachaEnable", this.isGachaEnable());
         session.put("isEventEnable", this.isEventEnable());
         session.put("isGiftEnable", this.isGiftEnable());
         session.put("isQuestEnable", this.isQuestEnable());
@@ -327,6 +333,12 @@ public class Tnk47Robot extends AbstractRobot {
     public boolean isEcoMode() {
         final String key = "Tnk47Robot.ecoMode";
         final String value = this.getConfig().getProperty(key, "true");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isGachaEnable() {
+        final String key = "Tnk47Robot.gachaEnable";
+        final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }
 }

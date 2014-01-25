@@ -28,7 +28,7 @@ public class MypageHandler extends Tnk47EventHandler {
                 this.printMyInfo(userStatusHtml);
                 session.put("isMypage", true);
             } else {
-                String title = this.getHtmlTitle(html);
+                final String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
                     this.log.info(title);
                 }
@@ -42,6 +42,11 @@ public class MypageHandler extends Tnk47EventHandler {
         if (this.is("isStampGachaEnable")) {
             session.put("isStampGachaEnable", false);
             return "/gacha/stamp-gacha";
+        }
+
+        if (this.is("isGachaEnable")) {
+            session.put("isGachaEnable", false);
+            return "/gacha";
         }
 
         if (this.is("isGiftEnable")) {
