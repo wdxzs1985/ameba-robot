@@ -12,6 +12,7 @@ public class MypageHandler extends GFEventHandler {
     private static final Pattern HTML_JOB_CARD_SETTING_PATTERN = Pattern.compile("/job/job-card-setting");
     private static final Pattern HTML_JOB_FINISH_PATTERN = Pattern.compile("<a id=\"finishJobBtn\" class=\"btnPink\">受け取る</a>");
     private static final Pattern HTML_RAID_WAR_PATTERN = Pattern.compile("/raidwar\\?eventId=(\\d+)");
+    private static final Pattern HTML_POST_URL = Pattern.compile("var POST_URL = '(.*?)'");
 
     public MypageHandler(final GFRobot robot) {
         super(robot);
@@ -31,12 +32,22 @@ public class MypageHandler extends GFEventHandler {
                 this.log.info(String.format("角色： %s", userName));
                 session.put("isMypage", true);
             } else {
-                String title = this.getHtmlTitle(html);
+                final String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
                     this.log.info(title);
                 }
                 if (StringUtils.contains(title, "メンテナンスのお知らせ")) {
                     return "/exit";
+                }
+
+                String html2 = html;
+                while (true) {
+                    final String postURL = this.getPostURL(html2);
+                    if (StringUtils.isNotBlank(postURL)) {
+                        html2 = this.httpGet(postURL);
+                    } else {
+                        break;
+                    }
                 }
                 return "/mypage";
             }
@@ -89,5 +100,13 @@ public class MypageHandler extends GFEventHandler {
             return "/quest";
         }
         return "/exit";
+    }
+
+    private String getPostURL(final String html) {
+        final Matcher matcher = MypageHandler.HTML_POST_URL.matcher(html);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }
