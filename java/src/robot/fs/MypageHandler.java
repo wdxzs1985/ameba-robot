@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class MypageHandler extends FSEventHandler {
 
-    private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<li class=\"name\"><div id=\"sphereIcon\" class=\"sphere\\d\"></div>(.*?)</li>");
+    private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<h1 class=\".*?\">(.*?)<span class=\".*?\">さんのステータス</span></h1>");
 
     public MypageHandler(final FSRobot robot) {
         super(robot);
@@ -26,7 +26,7 @@ public class MypageHandler extends FSEventHandler {
                 this.log.info(String.format("角色： %s", userName));
                 session.put("isMypage", true);
             } else {
-                String title = this.getHtmlTitle(html);
+                final String title = this.getHtmlTitle(html);
                 if (this.log.isInfoEnabled()) {
                     this.log.info(title);
                 }
