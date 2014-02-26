@@ -46,7 +46,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.8.0";
+    public static final String VERSION = "天下自动脚本  0.8.1";
 
     @Override
     public void init() {
