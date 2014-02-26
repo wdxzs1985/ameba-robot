@@ -16,7 +16,7 @@ public class MarathonMissionResultHandler extends Tnk47EventHandler {
     private static final Pattern TOTAL_POINT_PATTERN = Pattern.compile("<span class=\"contributionPointNum\">(.*?)</span>");
 
     private static final Pattern DISCOVERY_FLAG_PATTERN = Pattern.compile("'/event/marathon/marathon-notification\\?eventId=\\d+&missionId=\\d+&userMissionId=[\\d_]+&discoveryFlg=(.*?)'");
-    private static final Pattern NOTIFICATION_USER_PATTERN = Pattern.compile("<li class=\"user selected\" data-user-id=\"(\\d+)\">");
+    private static final Pattern NOTIFICATION_USER_PATTERN = Pattern.compile("<div class=\"user selected\" data-user-id=\"(\\d+)\">");
 
     private final String notificationUser;
 
