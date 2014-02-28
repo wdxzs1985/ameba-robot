@@ -258,12 +258,12 @@ public class RaidBattleHandler extends Tnk47EventHandler {
 
     private boolean isRaid(final String html) {
         final String title = this.getHtmlTitle(html);
-        return StringUtils.equals(title, "天クロ｜大乱闘 | ボス対戦");
+        return StringUtils.contains(title, "ボス対戦");
     }
 
     private boolean isRaidResult(final String html) {
         final String title = this.getHtmlTitle(html);
-        return StringUtils.equals(title, "天クロ｜大乱闘 | 討伐結果");
+        return StringUtils.contains(title, "討伐結果");
     }
 
     private int getBossHpPercent(final String html) {
