@@ -26,6 +26,8 @@ Tnk47Robot.giftEnable=true
 # 冒险开关
 Tnk47Robot.questEnable=true
 # 合战开关
+Tnk47Robot.duelEnable=true
+# 合战开关
 Tnk47Robot.battleEnable=true
 # 自动强化(N卡和HN卡)开关
 Tnk47Robot.upgradeEnable=true

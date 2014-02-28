@@ -11,6 +11,11 @@ import robot.tnk47.battle.BattleHandler;
 import robot.tnk47.battle.BattleResultHandler;
 import robot.tnk47.battle.PrefectureBattleListHandler;
 import robot.tnk47.battle.PrefectureBattleResultHandler;
+import robot.tnk47.duel.DuelBattleAnimationHandler;
+import robot.tnk47.duel.DuelBattleCheckHandler;
+import robot.tnk47.duel.DuelBattleResultHandler;
+import robot.tnk47.duel.DuelBattleSelectHandler;
+import robot.tnk47.duel.DuelHandler;
 import robot.tnk47.gacha.BattleGachaHandler;
 import robot.tnk47.gacha.GachaHandler;
 import robot.tnk47.gacha.StampGachaHandler;
@@ -46,7 +51,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.8.1";
+    public static final String VERSION = "天下自动脚本  0.9.0";
 
     @Override
     public void init() {
@@ -129,6 +134,16 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/raid/stage-forward",
                              new RaidStageForwardHandler(this));
 
+        // 控制器：
+        this.registerHandler("/duel", new DuelHandler(this));
+        this.registerHandler("/duel/duel-battle-select",
+                             new DuelBattleSelectHandler(this));
+        this.registerHandler("/duel/duel-battle-check",
+                             new DuelBattleCheckHandler(this));
+        this.registerHandler("/duel/duel-battle-animation",
+                             new DuelBattleAnimationHandler(this));
+        this.registerHandler("/duel/duel-battle-result",
+                             new DuelBattleResultHandler(this));
     }
 
     @Override
@@ -142,6 +157,7 @@ public class Tnk47Robot extends AbstractRobot {
         session.put("isQuestEnable", this.isQuestEnable());
         session.put("isBattleEnable", this.isBattleEnable());
         session.put("isUpgradeEnable", this.isUpgradeEnable());
+        session.put("isDuelEnable", this.isDuelEnable());
 
         session.put("isQuestCardFull", false);
         session.put("isQuestFindAll", false);
@@ -338,6 +354,12 @@ public class Tnk47Robot extends AbstractRobot {
 
     public boolean isGachaEnable() {
         final String key = "Tnk47Robot.gachaEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isDuelEnable() {
+        final String key = "Tnk47Robot.duelEnable";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }

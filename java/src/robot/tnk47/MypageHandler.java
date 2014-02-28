@@ -12,6 +12,8 @@ public class MypageHandler extends Tnk47EventHandler {
     private static final Pattern HTML_USER_NAME_PATTERN = Pattern.compile("<p class=\"userName\">(.*?)</p>");
     private static final Pattern HTML_USER_LEVEL_PATTERN = Pattern.compile("<dl class=\"userLevel\"><dt>Lv</dt><dd>(.*?)</dd></dl>");
 
+    private static final Pattern HTML_STATUS_MATER_PATTERN = Pattern.compile("<dt>([\\d]*?)/([\\d]*?)</dt>");
+
     public MypageHandler(final Tnk47Robot robot) {
         super(robot);
     }
@@ -22,10 +24,7 @@ public class MypageHandler extends Tnk47EventHandler {
         final String html = this.httpGet("/mypage");
         this.resolveInputToken(html);
         if (!this.is("isMypage")) {
-            final Matcher userStatusMatcher = MypageHandler.HTML_USER_STATUS_PATTERN.matcher(html);
-            if (userStatusMatcher.find()) {
-                final String userStatusHtml = userStatusMatcher.group(1);
-                this.printMyInfo(userStatusHtml);
+            if (this.isMypage(html)) {
                 session.put("isMypage", true);
             } else {
                 final String title = this.getHtmlTitle(html);
@@ -38,6 +37,8 @@ public class MypageHandler extends Tnk47EventHandler {
                 return "/mypage";
             }
         }
+
+        this.processStatusMater(html, session);
 
         if (this.is("isStampGachaEnable")) {
             session.put("isStampGachaEnable", false);
@@ -59,6 +60,11 @@ public class MypageHandler extends Tnk47EventHandler {
             return "/event-infomation";
         }
 
+        if (this.is("isDuelEnable")) {
+            session.put("isDuelEnable", false);
+            return "/duel";
+        }
+
         if (this.is("isBattleEnable")) {
             session.put("isBattleEnable", false);
             return "/battle";
@@ -70,6 +76,16 @@ public class MypageHandler extends Tnk47EventHandler {
         }
 
         return "/exit";
+    }
+
+    private boolean isMypage(String html) {
+        final Matcher userStatusMatcher = MypageHandler.HTML_USER_STATUS_PATTERN.matcher(html);
+        if (userStatusMatcher.find()) {
+            final String userStatusHtml = userStatusMatcher.group(1);
+            this.printMyInfo(userStatusHtml);
+            return true;
+        }
+        return false;
     }
 
     private void printMyInfo(final String userStatusHtml) {
@@ -87,4 +103,23 @@ public class MypageHandler extends Tnk47EventHandler {
         }
     }
 
+    private void processStatusMater(String html, Map<String, Object> session) {
+        final Matcher matcher = MypageHandler.HTML_STATUS_MATER_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String current = matcher.group(1);
+            final String max = matcher.group(2);
+
+            if (!StringUtils.equals(current, max)) {
+                session.put("isBattleEnable", false);
+            }
+        }
+        if (matcher.find()) {
+            final String current = matcher.group(1);
+            final String max = matcher.group(2);
+
+            if (!StringUtils.equals(current, max)) {
+                session.put("isQuestEnable", false);
+            }
+        }
+    }
 }
