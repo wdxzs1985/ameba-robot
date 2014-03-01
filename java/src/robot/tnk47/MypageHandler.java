@@ -78,7 +78,7 @@ public class MypageHandler extends Tnk47EventHandler {
         return "/exit";
     }
 
-    private boolean isMypage(String html) {
+    private boolean isMypage(final String html) {
         final Matcher userStatusMatcher = MypageHandler.HTML_USER_STATUS_PATTERN.matcher(html);
         if (userStatusMatcher.find()) {
             final String userStatusHtml = userStatusMatcher.group(1);
@@ -103,14 +103,15 @@ public class MypageHandler extends Tnk47EventHandler {
         }
     }
 
-    private void processStatusMater(String html, Map<String, Object> session) {
+    private void processStatusMater(final String html,
+                                    final Map<String, Object> session) {
         final Matcher matcher = MypageHandler.HTML_STATUS_MATER_PATTERN.matcher(html);
         if (matcher.find()) {
             final String current = matcher.group(1);
             final String max = matcher.group(2);
 
             if (!StringUtils.equals(current, max)) {
-                session.put("isBattleEnable", false);
+                session.put("isQuestEnable", false);
             }
         }
         if (matcher.find()) {
@@ -118,7 +119,7 @@ public class MypageHandler extends Tnk47EventHandler {
             final String max = matcher.group(2);
 
             if (!StringUtils.equals(current, max)) {
-                session.put("isQuestEnable", false);
+                session.put("isBattleEnable", false);
             }
         }
     }

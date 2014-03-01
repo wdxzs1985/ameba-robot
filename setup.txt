@@ -25,7 +25,7 @@ Tnk47Robot.eventEnable=true
 Tnk47Robot.giftEnable=true
 # 冒险开关
 Tnk47Robot.questEnable=true
-# 合战开关
+# 战神开关
 Tnk47Robot.duelEnable=true
 # 合战开关
 Tnk47Robot.battleEnable=true

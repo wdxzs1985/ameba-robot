@@ -39,7 +39,12 @@ public class RaidHandler extends Tnk47EventHandler {
         final JSONObject data = this.getRaidBattleList(model);
         if (data != null) {
             JSONObject selectedRaidDto = null;
-            if (model.hasAp()) {
+            if (selectedRaidDto == null && model.hasAp()) {
+                final JSONArray raidBossAutoEncountTileDtos = data.optJSONArray("raidBossAutoEncountTileDtos");
+                selectedRaidDto = this.findRaid(model,
+                                                raidBossAutoEncountTileDtos);
+            }
+            if (selectedRaidDto == null && model.hasAp()) {
                 final JSONArray raidBossEncountTileDtos = data.optJSONArray("raidBossEncountTileDtos");
                 selectedRaidDto = this.findRaid(model, raidBossEncountTileDtos);
             }
@@ -120,7 +125,7 @@ public class RaidHandler extends Tnk47EventHandler {
             final JSONObject raidDto = raidBossTileDtos.optJSONObject(i);
             final String raidBattleId = raidDto.optString("raidBattleId");
             final long maxHp = raidDto.optLong("maxHp");
-            final boolean entry = raidDto.optBoolean("entry");
+            final boolean noApAttack = raidDto.optBoolean("noApAttack");
             final boolean endBattle = raidDto.optBoolean("endBattle");
             final int currentHp = raidDto.optInt("currentHp");
             final long minDamage = maxHp * this.minDamageRatio / 100;
@@ -129,12 +134,12 @@ public class RaidHandler extends Tnk47EventHandler {
                 break;
             }
 
-            if (this.ecoMode && !entry) {
+            if (this.ecoMode && noApAttack) {
                 selectedRaid = raidDto;
                 break;
             }
 
-            final boolean hasAp = model.hasAp() || !entry;
+            final boolean hasAp = model.hasAp() || noApAttack;
             final boolean isHpEnough = currentHp > minDamage * 2;
             final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
             if (hasAp && isHpEnough && isDamageNotEnough) {
@@ -173,10 +178,7 @@ public class RaidHandler extends Tnk47EventHandler {
                                     playerHpPercent));
 
         final boolean endBattle = raidDto.optBoolean("endBattle");
-        final boolean entry = raidDto.optBoolean("entry");
-        this.log.info(String.format("%s %s",
-                                    endBattle ? "終了" : "進行中",
-                                    entry ? "参加中" : "未参加"));
+        this.log.info(endBattle ? "结束" : "讨伐中");
 
         final boolean fever = raidDto.optBoolean("fever");
         if (fever) {
