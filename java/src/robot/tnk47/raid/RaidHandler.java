@@ -120,6 +120,8 @@ public class RaidHandler extends Tnk47EventHandler {
     private JSONObject findRaid(final RaidModel model,
                                 final JSONArray raidBossTileDtos) {
         int maxFever = 0;
+        int minHp = Integer.MAX_VALUE;
+
         JSONObject selectedRaid = null;
         for (int i = 0; i < raidBossTileDtos.size(); i++) {
             final JSONObject raidDto = raidBossTileDtos.optJSONObject(i);
@@ -129,24 +131,24 @@ public class RaidHandler extends Tnk47EventHandler {
             final boolean endBattle = raidDto.optBoolean("endBattle");
             final int currentHp = raidDto.optInt("currentHp");
             final long minDamage = maxHp * this.minDamageRatio / 100;
-            if (endBattle) {
-                selectedRaid = raidDto;
-                break;
-            }
+            final int feverRate = raidDto.optInt("feverRate");
 
             if (this.ecoMode && noApAttack) {
-                selectedRaid = raidDto;
-                break;
-            }
-
-            final boolean hasAp = model.hasAp() || noApAttack;
-            final boolean isHpEnough = currentHp > minDamage * 2;
-            final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
-            if (hasAp && isHpEnough && isDamageNotEnough) {
-                final int feverRate = raidDto.optInt("feverRate");
-                if (selectedRaid == null || maxFever < feverRate) {
-                    maxFever = feverRate;
+                if (selectedRaid == null || minHp > currentHp) {
+                    minHp = currentHp;
                     selectedRaid = raidDto;
+                }
+            } else if (endBattle) {
+                selectedRaid = raidDto;
+            } else {
+                final boolean hasAp = model.hasAp() || noApAttack;
+                final boolean isHpEnough = currentHp > minDamage * 2;
+                final boolean isDamageNotEnough = !this.damageMap.isDamageEnough(raidBattleId);
+                if (hasAp && isHpEnough && isDamageNotEnough) {
+                    if (selectedRaid == null || maxFever < feverRate) {
+                        maxFever = feverRate;
+                        selectedRaid = raidDto;
+                    }
                 }
             }
         }
