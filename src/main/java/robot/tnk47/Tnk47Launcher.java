@@ -6,19 +6,31 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import robot.Launcher;
 
-public class Tnk47Launcher extends Launcher {
+@Configuration
+@ComponentScan
+@EnableAutoConfiguration
+public class Tnk47Launcher extends Launcher implements CommandLineRunner {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     private final Log log = LogFactory.getLog(this.getClass());
 
     public static void main(final String[] args) {
+        SpringApplication.run(Tnk47Launcher.class, args);
+    }
+
+    @Override
+    public void run(String... args) {
         final String setup = args.length > 0 ? args[0] : "setup.txt";
-        final Tnk47Launcher launcher = new Tnk47Launcher();
-        launcher.init(setup);
-        launcher.launch();
+        this.init(setup);
+        this.launch();
     }
 
     public void launch() {

@@ -1,6 +1,5 @@
 package robot.tnk47.duel;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,14 +16,10 @@ public class DuelHandler extends Tnk47EventHandler {
 
     @Override
     protected String handleIt() {
-        final Map<String, Object> session = this.robot.getSession();
-
         final String html = this.httpGet("/duel");
-
         if (this.hasPoint(html)) {
             return "/duel/duel-battle-select";
         }
-
         return "/mypage";
     }
 
