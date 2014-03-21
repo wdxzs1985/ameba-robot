@@ -13,6 +13,7 @@ public class MypageHandler extends GFEventHandler {
     private static final Pattern HTML_JOB_FINISH_PATTERN = Pattern.compile("<a id=\"finishJobBtn\" class=\"btnPink\">受け取る</a>");
     private static final Pattern HTML_RAID_WAR_PATTERN = Pattern.compile("/raidwar\\?eventId=(\\d+)");
     private static final Pattern HTML_POST_URL = Pattern.compile("var POST_URL = '(.*?)'");
+    private static final Pattern HTML_NEXT_URL = Pattern.compile("var NEXT_URL = '(.*?)'");
 
     public MypageHandler(final GFRobot robot) {
         super(robot);
@@ -43,8 +44,11 @@ public class MypageHandler extends GFEventHandler {
                 String html2 = html;
                 while (true) {
                     final String postURL = this.getPostURL(html2);
+                    final String nextURL = this.getNextURL(html2);
                     if (StringUtils.isNotBlank(postURL)) {
                         html2 = this.httpGet(postURL);
+                    } else if (StringUtils.isNotBlank(nextURL)) {
+                        html2 = this.httpGet(nextURL);
                     } else {
                         break;
                     }
@@ -104,6 +108,14 @@ public class MypageHandler extends GFEventHandler {
 
     private String getPostURL(final String html) {
         final Matcher matcher = MypageHandler.HTML_POST_URL.matcher(html);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private String getNextURL(final String html) {
+        final Matcher matcher = MypageHandler.HTML_NEXT_URL.matcher(html);
         if (matcher.find()) {
             return matcher.group(1);
         }

@@ -32,7 +32,7 @@ public class GFRobot extends AbstractRobot {
 
     public static final String HOST = "http://vcard.ameba.jp";
 
-    public static final String VERSION = "GF印花脚本  0.0.3";
+    public static final String VERSION = "GF印花脚本  0.0.4";
 
     @Override
     public void init() {
