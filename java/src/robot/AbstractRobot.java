@@ -1,10 +1,15 @@
 package robot;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +24,39 @@ public abstract class AbstractRobot implements Robot, Runnable {
 
     private CommonHttpClient httpClient = null;
     private EventHandler nextHandler = null;
+    private String configPath = null;
     private Properties config = null;
+
+    @Override
+    public void init() {
+        this.refresh();
+        this.initHttpClient();
+        this.initHandlers();
+        this.reset();
+    }
+
+    public void refresh() {
+        this.config = new Properties();
+        InputStream inputConfig = null;
+        try {
+            inputConfig = FileUtils.openInputStream(new File(this.configPath));
+            this.config.load(inputConfig);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(inputConfig);
+        }
+    }
+
+    public void initHttpClient() {
+        this.httpClient = new CommonHttpClient();
+        final String username = this.config.getProperty("Robot.username");
+        final String cookie = this.config.getProperty("Robot.cookie");
+        final File cookieFile = new File(username + cookie);
+        this.httpClient.loadCookie(cookieFile);
+    }
+
+    protected abstract void initHandlers();
 
     protected void registerHandler(final String path, final EventHandler handler) {
         this.handlerMapping.put(path, handler);
@@ -52,6 +89,7 @@ public abstract class AbstractRobot implements Robot, Runnable {
     }
 
     private void exit() {
+        this.refresh();
         this.reset();
         this.nextHandler = null;
         if (this.log.isInfoEnabled()) {
@@ -81,10 +119,6 @@ public abstract class AbstractRobot implements Robot, Runnable {
         return this.config;
     }
 
-    public void setConfig(final Properties config) {
-        this.config = config;
-    }
-
     protected abstract String getHost();
 
     public int getRequestDelay() {
@@ -109,6 +143,14 @@ public abstract class AbstractRobot implements Robot, Runnable {
         final String key = "Robot.password";
         final String value = this.getConfig().getProperty(key);
         return value;
+    }
+
+    public String getConfigPath() {
+        return this.configPath;
+    }
+
+    public void setConfigPath(final String configPath) {
+        this.configPath = configPath;
     }
 
 }
