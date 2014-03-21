@@ -20,6 +20,13 @@ import robot.tnk47.gacha.BattleGachaHandler;
 import robot.tnk47.gacha.GachaHandler;
 import robot.tnk47.gacha.StampGachaHandler;
 import robot.tnk47.gacha.TicketGachaHandler;
+import robot.tnk47.guildbattle.GuildBattleAnimationHandler;
+import robot.tnk47.guildbattle.GuildBattleChargeHandler;
+import robot.tnk47.guildbattle.GuildBattleCheckHandler;
+import robot.tnk47.guildbattle.GuildBattleHandler;
+import robot.tnk47.guildbattle.GuildBattleResultHandler;
+import robot.tnk47.guildbattle.GuildBattleSelectHandler;
+import robot.tnk47.guildbattle.GuildBattleSkillHandler;
 import robot.tnk47.marathon.MarathonHandler;
 import robot.tnk47.marathon.MarathonMissionAnimationHandler;
 import robot.tnk47.marathon.MarathonMissionHandler;
@@ -51,10 +58,10 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  0.9.2";
+    public static final String VERSION = "天下自动脚本  10.0";
 
     @Override
-    public void init() {
+    public void initHandlers() {
         this.registerHandler("/", new HomeHandler(this));
         this.registerHandler("/login", new LoginHandler(this));
         this.registerHandler("/mypage", new MypageHandler(this));
@@ -134,7 +141,7 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/raid/stage-forward",
                              new RaidStageForwardHandler(this));
 
-        // 控制器：
+        // 控制器：戦神リーグ
         this.registerHandler("/duel", new DuelHandler(this));
         this.registerHandler("/duel/duel-battle-select",
                              new DuelBattleSelectHandler(this));
@@ -144,6 +151,21 @@ public class Tnk47Robot extends AbstractRobot {
                              new DuelBattleAnimationHandler(this));
         this.registerHandler("/duel/duel-battle-result",
                              new DuelBattleResultHandler(this));
+
+        // 控制器：同盟戦
+        this.registerHandler("/guildbattle", new GuildBattleHandler(this));
+        this.registerHandler("/guildbattle/charge",
+                             new GuildBattleChargeHandler(this));
+        this.registerHandler("/guildbattle/skill",
+                             new GuildBattleSkillHandler(this));
+        this.registerHandler("/guildbattle/select",
+                             new GuildBattleSelectHandler(this));
+        this.registerHandler("/guildbattle/check",
+                             new GuildBattleCheckHandler(this));
+        this.registerHandler("/guildbattle/animation",
+                             new GuildBattleAnimationHandler(this));
+        this.registerHandler("/guildbattle/result",
+                             new GuildBattleResultHandler(this));
     }
 
     @Override
@@ -152,12 +174,17 @@ public class Tnk47Robot extends AbstractRobot {
         session.put("isMypage", false);
         session.put("isStampGachaEnable", this.isStampGachaEnable());
         session.put("isGachaEnable", this.isGachaEnable());
-        session.put("isEventEnable", this.isEventEnable());
         session.put("isGiftEnable", this.isGiftEnable());
         session.put("isQuestEnable", this.isQuestEnable());
         session.put("isBattleEnable", this.isBattleEnable());
         session.put("isUpgradeEnable", this.isUpgradeEnable());
         session.put("isDuelEnable", this.isDuelEnable());
+
+        session.put("isEventEnable", true);
+        session.put("isMarathonEnable", this.isMarathonEnable());
+        session.put("isPointRaceEnable", this.isPointRaceEnable());
+        session.put("isRaidEnable", this.isRaidEnable());
+        session.put("isGuildBattleEnable", this.isGuildBattleEnable());
 
         session.put("isQuestCardFull", false);
         session.put("isQuestFindAll", false);
@@ -178,8 +205,26 @@ public class Tnk47Robot extends AbstractRobot {
         return Boolean.valueOf(value);
     }
 
-    public boolean isEventEnable() {
-        final String key = "Tnk47Robot.eventEnable";
+    public boolean isMarathonEnable() {
+        final String key = "Tnk47Robot.marathonEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isRaidEnable() {
+        final String key = "Tnk47Robot.raidEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isPointRaceEnable() {
+        final String key = "Tnk47Robot.pointRaceEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isGuildBattleEnable() {
+        final String key = "Tnk47Robot.guildBattleEnable";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }

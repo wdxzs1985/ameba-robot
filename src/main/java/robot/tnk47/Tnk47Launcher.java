@@ -12,36 +12,30 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import robot.Launcher;
-
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class Tnk47Launcher extends Launcher implements CommandLineRunner {
+public class Tnk47Launcher implements CommandLineRunner {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     private final Log log = LogFactory.getLog(this.getClass());
 
     public static void main(final String[] args) {
-        SpringApplication.run(Tnk47Launcher.class, args);
+        final SpringApplication app = new SpringApplication(Tnk47Launcher.class);
+        app.setShowBanner(false);
+        app.setLogStartupInfo(false);
+        app.run(args);
     }
 
     @Override
-    public void run(String... args) {
+    public void run(final String... args) {
         final String setup = args.length > 0 ? args[0] : "setup.txt";
-        this.init(setup);
-        this.launch();
-    }
-
-    public void launch() {
         if (this.log.isInfoEnabled()) {
             this.log.info(Tnk47Robot.VERSION);
         }
         final Tnk47Robot robot = new Tnk47Robot();
-        robot.setConfig(this.config);
-        robot.setHttpClient(this.httpClient);
+        robot.setConfigPath(setup);
         robot.init();
-        robot.reset();
         final int delay = robot.getScheduleDelay();
         this.executor.scheduleWithFixedDelay(robot, 0, delay, TimeUnit.MINUTES);
     }

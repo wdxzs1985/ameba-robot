@@ -2,19 +2,13 @@ package robot.tnk47.marathon;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import net.sf.json.JSONObject;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import robot.AbstractEventHandler;
+import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class MarathonStageBossHandler extends AbstractEventHandler<Tnk47Robot> {
-
-    private static final Pattern BOSS_RESULT_PATTERN = Pattern.compile("var bossResult = '(.*)';");
+public class MarathonStageBossHandler extends Tnk47EventHandler {
 
     public MarathonStageBossHandler(final Tnk47Robot robot) {
         super(robot);
@@ -31,19 +25,7 @@ public class MarathonStageBossHandler extends AbstractEventHandler<Tnk47Robot> {
         nvps.add(new BasicNameValuePair("eventId", eventId));
         nvps.add(new BasicNameValuePair("token", token));
         final String html = this.httpPost(path, nvps);
-
-        if (this.log.isInfoEnabled()) {
-            String bossName = "???";
-            final Matcher bossResultMatcher = MarathonStageBossHandler.BOSS_RESULT_PATTERN.matcher(html);
-            if (bossResultMatcher.find()) {
-                final String jsonString = bossResultMatcher.group(1);
-                final JSONObject data = JSONObject.fromObject(jsonString);
-                final JSONObject bossResult = data.optJSONObject("bossResult");
-                final JSONObject bossInfo = bossResult.optJSONObject("bossInfo");
-                bossName = bossInfo.optString("name");
-                this.log.info("击败BOSS: " + bossName);
-            }
-        }
+        this.resolveInputToken(html);
         return "/marathon/stage";
     }
 

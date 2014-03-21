@@ -18,6 +18,7 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
     private static final Pattern MARATHON_PATTERN = Pattern.compile("/event/marathon/event-marathon\\?eventId=([0-9]+)");
     private static final String POINTRACE = "/event/pointrace";
     private static final String RAID = "/event/raid";
+    private static final String GUILD_BATTLE = "/guildbattle/roundbattle";
 
     public EventInfomationHandler(final Tnk47Robot robot) {
         super(robot);
@@ -45,15 +46,27 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
             }
 
             final String linkUrl = currentEventInfoDto.optString("linkUrl");
-            if (this.isPointRace(linkUrl)) {
-                session.put("isBattleEnable", false);
-                return "/pointrace";
-            } else if (this.isMarathon(linkUrl)) {
-                session.put("isQuestEnable", false);
-                return "/marathon";
+            if (this.isMarathon(linkUrl)) {
+                if (this.is("isMarathonEnable")) {
+                    session.put("isQuestEnable", false);
+                    return "/marathon";
+                }
+            } else if (this.isPointRace(linkUrl)) {
+                if (this.is("isPointRaceEnable")) {
+                    session.put("isBattleEnable", false);
+                    return "/pointrace";
+                }
             } else if (this.isRaid(linkUrl)) {
-                session.put("isQuestEnable", false);
-                return "/raid";
+                if (this.is("isRaidEnable")) {
+                    session.put("isQuestEnable", false);
+                    return "/raid";
+                }
+            } else if (this.isGuildBattle(linkUrl)) {
+                if (this.is("isGuildBattleEnable")) {
+                    session.put("isBattleEnable", false);
+                    session.put("isQuestEnable", false);
+                    return "/guildbattle";
+                }
             }
         }
         return "/mypage";
@@ -76,6 +89,10 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
 
     private boolean isRaid(final String linkUrl) {
         return StringUtils.equals(linkUrl, EventInfomationHandler.RAID);
+    }
+
+    private boolean isGuildBattle(final String linkUrl) {
+        return StringUtils.equals(linkUrl, EventInfomationHandler.GUILD_BATTLE);
     }
 
 }
