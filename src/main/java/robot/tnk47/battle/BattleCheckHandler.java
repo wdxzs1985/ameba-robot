@@ -11,15 +11,8 @@ import robot.tnk47.Tnk47Robot;
 
 public class BattleCheckHandler extends AbstractBattleHandler {
 
-    private final boolean useTodayPowerRegenItem;
-    private final boolean useHalfPowerRegenItem;
-    private final boolean useFullPowerRegenItem;
-
     public BattleCheckHandler(final Tnk47Robot robot) {
         super(robot);
-        this.useTodayPowerRegenItem = robot.isUseTodayPowerRegenItem();
-        this.useHalfPowerRegenItem = robot.isUseHalfPowerRegenItem();
-        this.useFullPowerRegenItem = robot.isUseFullPowerRegenItem();
     }
 
     @Override
@@ -61,7 +54,7 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                 final JSONObject fullRegenUserItemDto = powerRegenItems.optJSONObject("fullRegenUserItemDto");
 
                 final int halfRegenTodayCount = halfRegenUserItemDto.optInt("todayCount");
-                if (this.useTodayPowerRegenItem && halfRegenTodayCount > 0) {
+                if (this.robot.isUseTodayPowerRegenItem() && halfRegenTodayCount > 0) {
                     final String itemName = halfRegenUserItemDto.optString("itemName");
                     session.put("itemName", itemName);
                     session.put("powerRegenItemType", "0");
@@ -71,27 +64,7 @@ public class BattleCheckHandler extends AbstractBattleHandler {
                 }
 
                 final int fullRegenTodayCount = fullRegenUserItemDto.optInt("todayCount");
-                if (this.useTodayPowerRegenItem && fullRegenTodayCount > 0) {
-                    final String itemName = fullRegenUserItemDto.optString("itemName");
-                    session.put("itemName", itemName);
-                    session.put("powerRegenItemType", "1");
-                    session.put("deckId", deckId);
-                    session.put("attackType", "1");
-                    return "/battle/battle-animation";
-                }
-
-                final int halfRegenTotalCount = halfRegenUserItemDto.optInt("totalCount");
-                if (this.useHalfPowerRegenItem && halfRegenTotalCount > 0) {
-                    final String itemName = halfRegenUserItemDto.optString("itemName");
-                    session.put("itemName", itemName);
-                    session.put("powerRegenItemType", "0");
-                    session.put("deckId", deckId);
-                    session.put("attackType", "1");
-                    return "/battle/battle-animation";
-                }
-
-                final int fullRegenTotalCount = fullRegenUserItemDto.optInt("totalCount");
-                if (this.useFullPowerRegenItem && fullRegenTotalCount > 0) {
+                if (this.robot.isUseTodayPowerRegenItem() && fullRegenTodayCount > 0) {
                     final String itemName = fullRegenUserItemDto.optString("itemName");
                     session.put("itemName", itemName);
                     session.put("powerRegenItemType", "1");

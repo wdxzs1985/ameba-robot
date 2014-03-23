@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=
+Robot.username=bushing2
 # 密码
-Robot.password=
+Robot.password=wdxzs1985
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
@@ -31,6 +31,14 @@ Tnk47Robot.duelEnable=true
 Tnk47Robot.battleEnable=true
 # 自动强化(N卡和HN卡)开关
 Tnk47Robot.upgradeEnable=true
+# 爬塔开关
+Tnk47Robot.marathonEnable=true
+# 争夺战开关
+Tnk47Robot.pointRaceEnable=true
+# 讨伐开关
+Tnk47Robot.raidEnable=true
+# 萌战开关
+Tnk47Robot.guildBattleEnable=true
 
 ###########################
 # 冒险
@@ -85,7 +93,7 @@ Tnk47Robot.useFullPowerRegenItem=false
 # 爬塔
 ###########################
 # 指定发送情报的ID
-Tnk47Robot.notificationUser=
+Tnk47Robot.notificationUser=949612
 
 # 允许使用当日爬塔道具
 Tnk47Robot.useGiveItemToday=true
@@ -100,11 +108,11 @@ Tnk47Robot.onlyGiveOne=false
 # 自动开大BOSS
 Tnk47Robot.raidLimitOpen=true
 # 打大BOSS的时候使用AP药
-Tnk47Robot.useRaidRegenItem=true
+Tnk47Robot.useRaidRegenItem=false
 # 打大BOSS的时候使用超全力
-Tnk47Robot.useRaidSpecialAttack=true
+Tnk47Robot.useRaidSpecialAttack=false
 # BOSS最小伤害比例
-Tnk47Robot.minDamageRatio=10
+Tnk47Robot.minDamageRatio=5
 # 省药模式（优先打小BOSS）=true
 # 刷药模式（优先打高Fever）=false
 Tnk47Robot.ecoMode=true
