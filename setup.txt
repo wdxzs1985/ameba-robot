@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing2
+Robot.username=
 # 密码
-Robot.password=wdxzs1985
+Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
