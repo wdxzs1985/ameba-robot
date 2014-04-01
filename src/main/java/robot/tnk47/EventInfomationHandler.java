@@ -19,6 +19,7 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
     private static final String POINTRACE = "/event/pointrace";
     private static final String RAID = "/event/raid";
     private static final String GUILD_BATTLE = "/guildbattle/roundbattle";
+    private static final String CONQUEST = "/conquest";
 
     public EventInfomationHandler(final Tnk47Robot robot) {
         super(robot);
@@ -54,6 +55,7 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
             } else if (this.isPointRace(linkUrl)) {
                 if (this.is("isPointRaceEnable")) {
                     session.put("isBattleEnable", false);
+                    session.put("isPointRace", true);
                     return "/pointrace";
                 }
             } else if (this.isRaid(linkUrl)) {
@@ -66,6 +68,11 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
                     session.put("isBattleEnable", false);
                     session.put("isQuestEnable", false);
                     return "/guildbattle";
+                }
+            } else if (this.isConquest(linkUrl)) {
+                if (this.is("isConquestEnable")) {
+                    session.put("isBattleEnable", false);
+                    return "/conquest";
                 }
             }
         }
@@ -93,6 +100,10 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
 
     private boolean isGuildBattle(final String linkUrl) {
         return StringUtils.equals(linkUrl, EventInfomationHandler.GUILD_BATTLE);
+    }
+
+    private boolean isConquest(final String linkUrl) {
+        return StringUtils.equals(linkUrl, EventInfomationHandler.CONQUEST);
     }
 
 }

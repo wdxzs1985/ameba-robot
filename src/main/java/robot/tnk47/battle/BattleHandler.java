@@ -17,9 +17,6 @@ public class BattleHandler extends AbstractBattleHandler {
     @Override
     protected String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
-        if (this.is("isBattlePowerOut") || this.is("isBattlePointEnough")) {
-            return "/mypage";
-        }
 
         final String html = this.httpGet("/battle");
         if (this.isBattleResult(html)) {
@@ -34,15 +31,20 @@ public class BattleHandler extends AbstractBattleHandler {
             session.put("battleStartType", battleStartType);
 
             if (StringUtils.equals(battleStartType, "1")) {
-                if (this.log.isInfoEnabled()) {
-                    this.log.info("尚未参战");
+                if (this.is("isBattlePowerFull") || this.is("isPointRace")) {
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info("尚未参战");
+                    }
+                    final String prefectureId = jsonPageParams.optString("prefectureId");
+                    session.put("prefectureId", prefectureId);
+                    return "/battle/prefecture-battle-list";
                 }
-                final String prefectureId = jsonPageParams.optString("prefectureId");
-                session.put("prefectureId", prefectureId);
-                return "/battle/prefecture-battle-list";
             } else {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("合战中");
+                }
+                if (this.is("isBattlePowerOut") || this.is("isBattlePointEnough")) {
+                    return "/mypage";
                 }
                 final String prefectureBattleId = jsonPageParams.optString("prefectureBattleId");
                 session.put("prefectureBattleId", prefectureBattleId);
