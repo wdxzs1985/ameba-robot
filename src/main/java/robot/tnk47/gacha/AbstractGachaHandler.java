@@ -10,7 +10,8 @@ import robot.tnk47.Tnk47Robot;
 
 public abstract class AbstractGachaHandler extends Tnk47EventHandler {
 
-    private static final Pattern GACHA_RESULT_PATTHERN = Pattern.compile("var gachaResultObj = (\\{.*\\})");
+    private static final Pattern GACHA_RESULT_PATTHERN = Pattern.compile("gachaInfo = (\\{.*\\})");
+    private final static Pattern RESET_PATTERN = Pattern.compile("/gacha/box-gacha-reset\\?gachaId=(\\d+)&token=([a-zA-Z0-9]{6})");
 
     public AbstractGachaHandler(final Tnk47Robot robot) {
         super(robot);
@@ -35,4 +36,16 @@ public abstract class AbstractGachaHandler extends Tnk47EventHandler {
         }
     }
 
+    protected void boxGachareset(final String html) {
+        final Matcher matcher = AbstractGachaHandler.RESET_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String gachaId = matcher.group(1);
+            final String token = matcher.group(2);
+            final String path = String.format("/gacha/box-gacha-reset?gachaId=%s&token=%s",
+                                              gachaId,
+                                              token);
+            this.httpGet(path);
+        }
+
+    }
 }

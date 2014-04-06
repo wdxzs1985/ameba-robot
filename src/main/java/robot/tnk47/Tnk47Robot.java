@@ -17,6 +17,7 @@ import robot.tnk47.duel.DuelBattleResultHandler;
 import robot.tnk47.duel.DuelBattleSelectHandler;
 import robot.tnk47.duel.DuelHandler;
 import robot.tnk47.gacha.BattleGachaHandler;
+import robot.tnk47.gacha.BoxGachaHandler;
 import robot.tnk47.gacha.GachaHandler;
 import robot.tnk47.gacha.StampGachaHandler;
 import robot.tnk47.gacha.TicketGachaHandler;
@@ -70,6 +71,7 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/gacha", new GachaHandler(this));
         this.registerHandler("/gacha/ticket-gacha",
                              new TicketGachaHandler(this));
+        this.registerHandler("/gacha/box-gacha", new BoxGachaHandler(this));
         this.registerHandler("/gacha/stamp-gacha", new StampGachaHandler(this));
         this.registerHandler("/gacha/battle-gacha",
                              new BattleGachaHandler(this));
