@@ -11,11 +11,6 @@ import robot.tnk47.battle.BattleHandler;
 import robot.tnk47.battle.BattleResultHandler;
 import robot.tnk47.battle.PrefectureBattleListHandler;
 import robot.tnk47.battle.PrefectureBattleResultHandler;
-import robot.tnk47.conquest.ConquestAnimationHandler;
-import robot.tnk47.conquest.ConquestBattleCheckHandler;
-import robot.tnk47.conquest.ConquestBattleListHandler;
-import robot.tnk47.conquest.ConquestHandler;
-import robot.tnk47.conquest.ConquestResultHandler;
 import robot.tnk47.duel.DuelBattleAnimationHandler;
 import robot.tnk47.duel.DuelBattleCheckHandler;
 import robot.tnk47.duel.DuelBattleResultHandler;
@@ -64,11 +59,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-<<<<<<< HEAD
     public static final String VERSION = "天下自动脚本  10.1";
-=======
-    public static final String VERSION = "天下自动脚本  11.0";
->>>>>>> refs/remotes/origin/master
 
     @Override
     public void initHandlers() {
@@ -179,15 +170,15 @@ public class Tnk47Robot extends AbstractRobot {
                              new GuildBattleResultHandler(this));
 
         // 控制器：天下統一戦
-        this.registerHandler("/conquest", new ConquestHandler(this));
-        this.registerHandler("/conquest/battle-list",
-                             new ConquestBattleListHandler(this));
-        this.registerHandler("/conquest/battle-check",
-                             new ConquestBattleCheckHandler(this));
-        this.registerHandler("/conquest/battle-animation",
-                             new ConquestAnimationHandler(this));
-        this.registerHandler("/conquest/conquest-result",
-                             new ConquestResultHandler(this));
+        // this.registerHandler("/conquest", new ConquestHandler(this));
+        // this.registerHandler("/conquest/battle-list",
+        // new ConquestBattleListHandler(this));
+        // this.registerHandler("/conquest/battle-check",
+        // new ConquestBattleCheckHandler(this));
+        // this.registerHandler("/conquest/battle-animation",
+        // new ConquestAnimationHandler(this));
+        // this.registerHandler("/conquest/conquest-result",
+        // new ConquestResultHandler(this));
     }
 
     @Override
