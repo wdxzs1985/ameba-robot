@@ -34,18 +34,18 @@ public class DuelBattleSelectHandler extends Tnk47EventHandler {
             JSONArray data = jsonResponse.optJSONArray("data");
             if (data != null) {
                 JSONObject bestTarget = null;
+                int minWinRate = 100;
                 for (int i = 0; i < data.size(); i++) {
                     JSONObject target = data.optJSONObject(i);
+                    int totalWin = target.optInt("totalWins");
+                    int totalLosses = target.optInt("totalLosses");
+                    int winRate = totalWin * 100 / (totalWin + totalLosses);
                     if (bestTarget == null) {
                         bestTarget = target;
-                    } else if (bestTarget.optInt("defencePower") > target.optInt("defencePower")) {
+                        minWinRate = winRate;
+                    } else if (minWinRate > winRate) {
                         bestTarget = target;
-                    } else if (bestTarget.optInt("level") > target.optInt("level")) {
-                        bestTarget = target;
-                    } else if (bestTarget.optInt("totalWins") > target.optInt("totalWins")) {
-                        bestTarget = target;
-                    } else if (bestTarget.optInt("totalLosses") < target.optInt("totalLosses")) {
-                        bestTarget = target;
+                        minWinRate = winRate;
                     }
                 }
 
