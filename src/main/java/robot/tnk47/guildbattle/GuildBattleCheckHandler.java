@@ -37,6 +37,7 @@ public class GuildBattleCheckHandler extends Tnk47EventHandler {
             String attackType = "";
             String powerRegenItemType = "";
             String useRegenItemCount = "";
+            String itemName = "";
 
             if (this.canFullAttack(html)) {
                 attackType = "2";
@@ -44,9 +45,11 @@ public class GuildBattleCheckHandler extends Tnk47EventHandler {
                     final JSONObject powerRegenItems = jsonPageParams.optJSONObject("powerRegenItems");
                     final JSONObject powerRegenItemDto = powerRegenItems.optJSONObject("powerRegenItemDto");
                     if (powerRegenItems.optBoolean("hasGuildbattleItem")) {
+                        itemName = "决战药";
                         powerRegenItemType = "1";
                         useRegenItemCount = "1";
                     } else if (powerRegenItemDto.optBoolean("hasHalfRegenItem")) {
+                        itemName = "合战药（小）";
                         powerRegenItemType = "0";
                         if (curPower < maxPower / 2) {
                             useRegenItemCount = "2";
@@ -54,6 +57,7 @@ public class GuildBattleCheckHandler extends Tnk47EventHandler {
                             useRegenItemCount = "1";
                         }
                     } else if (powerRegenItemDto.optBoolean("hasFullRegenItem")) {
+                        itemName = "合战药";
                         powerRegenItemType = "1";
                         useRegenItemCount = "1";
                     } else {
@@ -67,6 +71,7 @@ public class GuildBattleCheckHandler extends Tnk47EventHandler {
                 if (curPower < spendAttackPower) {
                     final JSONObject powerRegenItems = jsonPageParams.optJSONObject("powerRegenItems");
                     if (powerRegenItems.optBoolean("hasGuildbattleItem")) {
+                        itemName = "决战药";
                         powerRegenItemType = "1";
                         useRegenItemCount = "1";
                     } else {
@@ -78,6 +83,7 @@ public class GuildBattleCheckHandler extends Tnk47EventHandler {
             session.put("enemyId", enemyId);
             session.put("deckId", deckId);
             session.put("attackType", attackType);
+            session.put("itemName", itemName);
             session.put("powerRegenItemType", powerRegenItemType);
             session.put("useRegenItemCount", useRegenItemCount);
             return "/guildbattle/animation";

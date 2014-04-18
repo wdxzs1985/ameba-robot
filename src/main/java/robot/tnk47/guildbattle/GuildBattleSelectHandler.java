@@ -72,7 +72,7 @@ public class GuildBattleSelectHandler extends Tnk47EventHandler {
 
     private JSONObject selectEnemy(final List<JSONObject> enemyList) {
         JSONObject enemy = null;
-        int minRank = Integer.MAX_VALUE;
+        int maxRank = 0;
         for (final JSONObject user : enemyList) {
             if (user.optBoolean("caution")) {
                 continue;
@@ -82,8 +82,8 @@ public class GuildBattleSelectHandler extends Tnk47EventHandler {
 
             final int userRank = userDt * battlePt;
 
-            if (minRank > userRank) {
-                minRank = userRank;
+            if (maxRank < userRank) {
+                maxRank = userRank;
                 enemy = user;
             }
 
