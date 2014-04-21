@@ -35,7 +35,7 @@ public class GFRobot extends AbstractRobot {
     public static final String VERSION = "GF印花脚本  0.0.4";
 
     @Override
-    public void init() {
+    public void initHandlers() {
         this.registerHandler("/", new HomeHandler(this));
         this.registerHandler("/login", new LoginHandler(this));
         this.registerHandler("/mypage", new MypageHandler(this));
