@@ -108,14 +108,14 @@ public class CommonHttpClient {
                                                               localContext);
             return response;
         } catch (final ClientProtocolException e) {
+            FileUtils.deleteQuietly(this.cookieFile);
             throw new RuntimeException(e);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public HttpResponse post(final String url,
-                             final List<? extends NameValuePair> nvps) {
+    public HttpResponse post(final String url, final List<? extends NameValuePair> nvps) {
         if (this.log.isInfoEnabled()) {
             this.log.info(String.format("[%4s] %s", "POST", url));
             for (final NameValuePair nvp : nvps) {
@@ -142,6 +142,7 @@ public class CommonHttpClient {
             httppost.setEntity(postEntity);
             return this.client.execute(httppost, localContext);
         } catch (final ClientProtocolException e) {
+            FileUtils.deleteQuietly(this.cookieFile);
             throw new RuntimeException("网络故障", e);
         } catch (final IOException e) {
             throw new RuntimeException("网络故障", e);
@@ -168,8 +169,7 @@ public class CommonHttpClient {
         }
     }
 
-    public String postForHtml(final String url,
-                              final List<? extends NameValuePair> nvps) {
+    public String postForHtml(final String url, final List<? extends NameValuePair> nvps) {
         final HttpResponse response = this.post(url, nvps);
         final HttpEntity entity = response.getEntity();
         String result;
@@ -193,8 +193,7 @@ public class CommonHttpClient {
         return JSONObject.fromObject(html);
     }
 
-    public JSONObject postForJSON(final String url,
-                                  final List<BasicNameValuePair> nvps) {
+    public JSONObject postForJSON(final String url, final List<BasicNameValuePair> nvps) {
         final String html = this.postForHtml(url, nvps);
         return JSONObject.fromObject(html);
     }
@@ -218,8 +217,7 @@ public class CommonHttpClient {
         }
     }
 
-    private String entityToString(final HttpEntity entity)
-            throws ParseException, IOException {
+    private String entityToString(final HttpEntity entity) throws ParseException, IOException {
         String result = null;
         if (this.isGzip(entity)) {
             result = EntityUtils.toString(new GzipDecompressingEntity(entity));
