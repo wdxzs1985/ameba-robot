@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing2
+Robot.username=amebaxh01
 # 密码
-Robot.password=wdxzs1985
+Robot.password=123456
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
@@ -16,29 +16,29 @@ Robot.scheduleDelay=6
 # 天下脚本
 ###########################
 # 签到开关
-Tnk47Robot.stampGachaEnable=true
+Tnk47Robot.stampGachaEnable=false
 # 千两箱开关
-Tnk47Robot.gachaEnable=true
+Tnk47Robot.gachaEnable=false
 # 活动开关
 Tnk47Robot.eventEnable=true
 # 领取礼物开关（只领药那一排）
 Tnk47Robot.giftEnable=false
 # 冒险开关
-Tnk47Robot.questEnable=true
+Tnk47Robot.questEnable=false
 # 战神开关
-Tnk47Robot.duelEnable=true
+Tnk47Robot.duelEnable=false
 # 合战开关
-Tnk47Robot.battleEnable=true
+Tnk47Robot.battleEnable=false
 # 自动强化(N卡和HN卡)开关
-Tnk47Robot.upgradeEnable=true
+Tnk47Robot.upgradeEnable=false
 # 爬塔开关
-Tnk47Robot.marathonEnable=true
+Tnk47Robot.marathonEnable=false
 # 争夺战开关
-Tnk47Robot.pointRaceEnable=true
+Tnk47Robot.pointRaceEnable=false
 # 讨伐开关
-Tnk47Robot.raidEnable=true
+Tnk47Robot.raidEnable=false
 # 萌战开关
-Tnk47Robot.guildBattleEnable=true
+Tnk47Robot.guildBattleEnable=false
 # 地方戦开关
 Tnk47Robot.conquestEnable=true
 

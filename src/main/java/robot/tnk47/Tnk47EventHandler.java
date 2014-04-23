@@ -8,10 +8,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+
 import robot.AbstractEventHandler;
 
-public abstract class Tnk47EventHandler extends
-        AbstractEventHandler<Tnk47Robot> {
+public abstract class Tnk47EventHandler extends AbstractEventHandler<Tnk47Robot> {
 
     private static final Pattern PAGE_PARAMS_PATTERN = Pattern.compile(".*\\.pageParams = (\\{.*\\});");
     private static final Pattern INPUT_TOKEN_PATTERN = Pattern.compile("<input id=\"__token\" type=\"hidden\" value=\"([a-zA-Z0-9]{6})\"( data-page-id=\".*\")?>");
@@ -30,7 +32,10 @@ public abstract class Tnk47EventHandler extends
     }
 
     protected JSONObject resolvePageParams(final String html) {
-        final Matcher pageParamsMatcher = Tnk47EventHandler.PAGE_PARAMS_PATTERN.matcher(html);
+        String text = StringUtils.replace(html,
+                                          "createjs.LoadQueue.JAVASCRIPT",
+                                          "'createjs.LoadQueue.JAVASCRIPT'");
+        final Matcher pageParamsMatcher = Tnk47EventHandler.PAGE_PARAMS_PATTERN.matcher(text);
         if (pageParamsMatcher.find()) {
             final String pageParams = pageParamsMatcher.group(1);
             final JSONObject jsonPageParams = JSONObject.fromObject(pageParams);
