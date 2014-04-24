@@ -7,10 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleSelectHandler extends Tnk47EventHandler {
+public class GuildBattleSelectHandler extends AbstractGuildBattleHandler {
 
     private static final Pattern USER_DISP_PATTERN = Pattern.compile("<dl class=\"userDispList\">(.*?)</dl>");
     private static final Pattern USER_NAME_PATTERN = Pattern.compile("<span class=\"userName .*?\">(.*?)</span>");
@@ -77,7 +76,8 @@ public class GuildBattleSelectHandler extends Tnk47EventHandler {
             if (user.optBoolean("caution")) {
                 continue;
             }
-            final int userDt = 1000 - user.optInt("battleDt");
+            final int battleDt = user.optInt("battleDt");
+            final int userDt = 1000 - battleDt == 0 ? 1000 : battleDt;
             final int battlePt = user.optInt("battlePt");
 
             final int userRank = userDt * battlePt;
@@ -89,11 +89,10 @@ public class GuildBattleSelectHandler extends Tnk47EventHandler {
 
             this.log.info(String.format("%s / DP: %d / PT: %d / RANK : %d",
                                         user.optString("userName"),
-                                        userDt,
+                                        battleDt,
                                         battlePt,
                                         userRank));
         }
         return enemy;
     }
-
 }

@@ -2,9 +2,9 @@
 # 基本设置
 ###########################
 # 用户名
-Robot.username=bushing2
+Robot.username=
 # 密码
-Robot.password=wdxzs1985
+Robot.password=
 # cookie
 Robot.cookie=_tnk47.cookie
 # 每次发送请求间隔（单位为秒）
@@ -22,7 +22,7 @@ Tnk47Robot.gachaEnable=true
 # 活动开关
 Tnk47Robot.eventEnable=true
 # 领取礼物开关（只领药那一排）
-Tnk47Robot.giftEnable=false
+Tnk47Robot.giftEnable=true
 # 冒险开关
 Tnk47Robot.questEnable=true
 # 战神开关

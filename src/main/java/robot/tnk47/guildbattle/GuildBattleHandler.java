@@ -5,10 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleHandler extends Tnk47EventHandler {
+public class GuildBattleHandler extends AbstractGuildBattleHandler {
 
     private static final Pattern CHARGE_PATTERN = Pattern.compile("/guildbattle/roundbattle-charge-comp\\?token=[a-zA-Z0-9]{6}");
     private static final Pattern SELECT_PATTERN = Pattern.compile("/guildbattle/roundbattle-select");

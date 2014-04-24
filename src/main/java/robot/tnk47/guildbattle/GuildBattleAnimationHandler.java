@@ -6,10 +6,9 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleAnimationHandler extends Tnk47EventHandler {
+public class GuildBattleAnimationHandler extends AbstractGuildBattleHandler {
 
     public GuildBattleAnimationHandler(final Tnk47Robot robot) {
         super(robot);

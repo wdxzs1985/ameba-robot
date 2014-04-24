@@ -3,10 +3,9 @@ package robot.tnk47.guildbattle;
 import java.util.Map;
 
 import net.sf.json.JSONObject;
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleSkillHandler extends Tnk47EventHandler {
+public class GuildBattleSkillHandler extends AbstractGuildBattleHandler {
 
     public GuildBattleSkillHandler(final Tnk47Robot robot) {
         super(robot);

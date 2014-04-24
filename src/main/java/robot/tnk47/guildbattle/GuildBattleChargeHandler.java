@@ -2,10 +2,9 @@ package robot.tnk47.guildbattle;
 
 import java.util.Map;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleChargeHandler extends Tnk47EventHandler {
+public class GuildBattleChargeHandler extends AbstractGuildBattleHandler {
 
     public GuildBattleChargeHandler(final Tnk47Robot robot) {
         super(robot);

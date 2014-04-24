@@ -4,10 +4,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleResultHandler extends Tnk47EventHandler {
+public class GuildBattleResultHandler extends AbstractGuildBattleHandler {
 
     private static final Pattern PT_PATTERN = Pattern.compile("<span class=\"totalRoundBattlePt\">(.*?)</span>");
 

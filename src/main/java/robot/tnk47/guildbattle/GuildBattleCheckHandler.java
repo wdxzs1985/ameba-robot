@@ -8,13 +8,12 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class GuildBattleCheckHandler extends Tnk47EventHandler {
+public class GuildBattleCheckHandler extends AbstractGuildBattleHandler {
 
     private static final Pattern BATTLE_POINT_UP = Pattern.compile("<span class=\"battlePointUp\">決戦Pt\\+(\\d+)%</span>");
-    private static final String FULL_ATTACK = "全力で戦うと大ダメージ";
+    private static final String FULL_ATTACK = "<p class=\"fullAttackAttention\">全力で戦うと大ダメージ&amp;大量決戦Pt!!</p>";
 
     public GuildBattleCheckHandler(final Tnk47Robot robot) {
         super(robot);

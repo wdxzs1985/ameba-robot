@@ -103,14 +103,15 @@ public class MypageHandler extends Tnk47EventHandler {
         }
     }
 
-    private void processStatusMater(final String html, final Map<String, Object> session) {
+    private void processStatusMater(final String html,
+                                    final Map<String, Object> session) {
         final Matcher matcher = MypageHandler.HTML_STATUS_MATER_PATTERN.matcher(html);
         if (matcher.find()) {
             final String current = matcher.group(1);
             final String max = matcher.group(2);
 
             if (!StringUtils.equals(current, max)) {
-                session.put("isQuestEnable", false);
+                // session.put("isQuestEnable", false);
             }
         }
         if (matcher.find()) {
