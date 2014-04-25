@@ -34,6 +34,10 @@ public abstract class AbstractConquestBattleHandler extends Tnk47EventHandler {
             final JSONObject enemy = users.optJSONObject(i);
             final int userDefencePoint = enemy.optInt("userDefencePoint");
             final int getBattlePoint = enemy.optInt("getBattlePoint");
+            if (userDefencePoint == 0) {
+                continue;
+            }
+
             int userRank = (1000 - userDefencePoint) * getBattlePoint;
             if (target == null || maxRank < userRank) {
                 target = enemy;

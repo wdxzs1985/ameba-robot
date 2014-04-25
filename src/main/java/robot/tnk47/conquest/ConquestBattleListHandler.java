@@ -40,26 +40,27 @@ public class ConquestBattleListHandler extends AbstractConquestBattleHandler {
 
         if (conquestBattleUsers.size() > 0) {
             final JSONObject enemy = this.filterEnemy(conquestBattleUsers);
-            final String userId = enemy.optString("userId");
-            session.put("battleStartType", battleStartType);
-            session.put("enemyId", userId);
-            session.put("eventId", eventId);
-            if (this.log.isInfoEnabled()) {
-                final String prefectureName = enemy.optString("prefectureName");
-                final String userName = enemy.optString("userName");
-                final int userLevel = enemy.optInt("level");
-                final int userDefencePoint = enemy.optInt("defencePoint");
-                final int getBattlePoint = enemy.optInt("battlePoint");
-                this.log.info(String.format("%s / %s (Lv: %d / 防御P: %d / 功績: %d)",
-                                            prefectureName,
-                                            userName,
-                                            userLevel,
-                                            userDefencePoint,
-                                            getBattlePoint));
+            if (enemy != null) {
+                final String userId = enemy.optString("userId");
+                session.put("battleStartType", battleStartType);
+                session.put("enemyId", userId);
+                session.put("eventId", eventId);
+                if (this.log.isInfoEnabled()) {
+                    final String prefectureName = enemy.optString("prefectureName");
+                    final String userName = enemy.optString("userName");
+                    final int userLevel = enemy.optInt("level");
+                    final int userDefencePoint = enemy.optInt("defencePoint");
+                    final int getBattlePoint = enemy.optInt("battlePoint");
+                    this.log.info(String.format("%s / %s (Lv: %d / 防御P: %d / 功績: %d)",
+                                                prefectureName,
+                                                userName,
+                                                userLevel,
+                                                userDefencePoint,
+                                                getBattlePoint));
+                }
+                return "/conquest/battle-check";
             }
-            return "/conquest/battle-check";
         }
-
         return "/mypage";
     }
 
