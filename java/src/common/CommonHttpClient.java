@@ -159,13 +159,13 @@ public class CommonHttpClient {
             if (this.log.isDebugEnabled()) {
                 this.log.debug(result);
             }
-            // Consume response content
-            EntityUtils.consume(entity);
             return result;
         } catch (final ParseException e) {
             throw new RuntimeException(e);
         } catch (final IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            EntityUtils.consumeQuietly(entity);
         }
     }
 
@@ -178,13 +178,13 @@ public class CommonHttpClient {
             if (this.log.isDebugEnabled()) {
                 this.log.debug(result);
             }
-            // Consume response content
-            EntityUtils.consume(entity);
             return result;
         } catch (final ParseException e) {
             throw new RuntimeException(e);
         } catch (final IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            EntityUtils.consumeQuietly(entity);
         }
     }
 
