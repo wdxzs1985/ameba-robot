@@ -70,8 +70,8 @@ public class EventInfomationHandler extends AbstractEventHandler<Tnk47Robot> {
                     return "/guildbattle";
                 }
             } else if (this.isConquest(linkUrl)) {
+                session.put("isBattleEnable", false);
                 if (this.is("isConquestEnable")) {
-                    session.put("isBattleEnable", false);
                     return "/conquest";
                 }
             }
