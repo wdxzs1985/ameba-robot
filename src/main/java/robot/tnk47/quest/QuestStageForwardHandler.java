@@ -186,6 +186,7 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
         if (this.isUseItem(data)) {
             return "/use-item";
         } else {
+            this.robot.getSession();
             return "/mypage";
         }
     }

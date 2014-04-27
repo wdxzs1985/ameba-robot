@@ -16,6 +16,7 @@ import robot.tnk47.conquest.ConquestAreaTopHandler;
 import robot.tnk47.conquest.ConquestBattleCheckHandler;
 import robot.tnk47.conquest.ConquestBattleHandler;
 import robot.tnk47.conquest.ConquestBattleListHandler;
+import robot.tnk47.conquest.ConquestFieldResultHandler;
 import robot.tnk47.conquest.ConquestHandler;
 import robot.tnk47.conquest.ConquestResultHandler;
 import robot.tnk47.duel.DuelBattleAnimationHandler;
@@ -25,6 +26,7 @@ import robot.tnk47.duel.DuelBattleSelectHandler;
 import robot.tnk47.duel.DuelHandler;
 import robot.tnk47.gacha.BattleGachaHandler;
 import robot.tnk47.gacha.BoxGachaHandler;
+import robot.tnk47.gacha.ConquestGachaHandler;
 import robot.tnk47.gacha.GachaHandler;
 import robot.tnk47.gacha.StampGachaHandler;
 import robot.tnk47.gacha.TicketGachaHandler;
@@ -190,6 +192,9 @@ public class Tnk47Robot extends AbstractRobot {
                              new ConquestResultHandler(this));
         this.registerHandler("/conquest/battle",
                              new ConquestBattleHandler(this));
+        this.registerHandler("/conquest/field-result",
+                             new ConquestFieldResultHandler(this));
+        this.registerHandler("/conquest/gacha", new ConquestGachaHandler(this));
     }
 
     @Override

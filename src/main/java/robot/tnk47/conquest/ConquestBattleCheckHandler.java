@@ -11,12 +11,12 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class ConquestBattleCheckHandler extends Tnk47EventHandler {
+public class ConquestBattleCheckHandler extends AbstractConquestBattleHandler {
 
-    private static final Pattern POINT_UP_PATTERN = Pattern.compile("<span class=\"bonusTitle\">功績</span>+(\\d+)%</span>");
+    private static final Pattern TENP_PATTERN = Pattern.compile("tnk\\.pageParams\\.itemList\\.push\\(\\{itemId: '2722',itemCount: (\\d+),imgPath: '/illustrations/item/ill_tenpyaku.jpg\\?.*?',apRegenValue: (\\d+),defenceRegenValue: (\\d+)\\}\\);");
+    private static final Pattern POWER100_PATTERN = Pattern.compile("tnk\\.pageParams\\.itemList\\.push\\(\\{itemId: '20',itemCount: (\\d+),imgPath: '/illustrations/item/ill_20_oneday_power100.jpg\\?.*?',apRegenValue: (\\d+),defenceRegenValue: (\\d+)\\}\\);");
 
     public ConquestBattleCheckHandler(final Tnk47Robot robot) {
         super(robot);
@@ -25,13 +25,13 @@ public class ConquestBattleCheckHandler extends Tnk47EventHandler {
     @Override
     protected String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
-        String battleStartType = (String) session.get("battleStartType");
-        String conquestBattleId = (String) session.get("conquestBattleId");
-        String eventId = (String) session.get("eventId");
-        String enemyId = (String) session.get("enemyId");
+        final String battleStartType = (String) session.get("battleStartType");
+        final String conquestBattleId = (String) session.get("conquestBattleId");
+        final String eventId = (String) session.get("eventId");
+        final String enemyId = (String) session.get("enemyId");
 
-        String path = "/conquest/conquest-battle-check";
-        List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
+        final String path = "/conquest/conquest-battle-check";
+        final List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
         nvps.add(new BasicNameValuePair("battleStartType", battleStartType));
         if (StringUtils.isNotBlank(eventId)) {
             nvps.add(new BasicNameValuePair("eventId", eventId));
@@ -42,34 +42,72 @@ public class ConquestBattleCheckHandler extends Tnk47EventHandler {
         }
         nvps.add(new BasicNameValuePair("enemyId", enemyId));
 
-        String html = this.httpPost(path, nvps);
+        final String html = this.httpPost(path, nvps);
         this.resolveInputToken(html);
 
-        int pointUp = this.getPointUp(html);
-        if (this.log.isInfoEnabled()) {
-            this.log.info(String.format("功績+%d%%", pointUp));
+        if (this.isBattleResult(html)) {
+            return "/conquest/field-result";
         }
 
-        JSONObject jsonPageParams = this.resolvePageParams(html);
+        final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
             final String deckId = jsonPageParams.optString("selectedDeckId");
-            session.put("useApSmall", "0");
-            session.put("useApFull", "0");
-            session.put("usePowerHalf", "0");
-            session.put("usePowerFull", "0");
-            session.put("deckId", deckId);
-            session.put("attackType", "1");
-            return "/conquest/battle-animation";
+            final boolean enableFullAttack = jsonPageParams.optBoolean("enableFullAttack");
+            // jsonPageParams.optBoolean("enableSpecialAttack");
+            // jsonPageParams.optInt("useSpecialAttackItemAmount");
+            final int tenP = jsonPageParams.optInt("tenP");
+            jsonPageParams.optInt("maxTenP");
+            final int tenPItem = this.findTenP(html);
+            final int power100Item = this.findPower100(html);
+
+            if (this.isHelp(html) || tenP > 0) {
+                session.put("useApSmall", "0");
+                session.put("useApFull", "0");
+                session.put("usePowerHalf", "0");
+                session.put("usePowerFull", "0");
+                session.put("deckId", deckId);
+                session.put("attackType", "1");
+                return "/conquest/battle-animation";
+            } else if (enableFullAttack) {
+                if (power100Item > 0) {
+                    session.put("useApSmall", "0");
+                    session.put("useApFull", "0");
+                    session.put("usePowerHalf", "0");
+                    session.put("usePowerFull", "1");
+                    session.put("deckId", deckId);
+                    session.put("attackType", "2");
+                    return "/conquest/battle-animation";
+                } else if (tenPItem > 5) {
+                    session.put("useApSmall", "5");
+                    session.put("useApFull", "0");
+                    session.put("usePowerHalf", "0");
+                    session.put("usePowerFull", "0");
+                    session.put("deckId", deckId);
+                    session.put("attackType", "2");
+                    return "/conquest/battle-animation";
+                }
+            }
         }
         return "/mypage";
     }
 
-    private int getPointUp(String html) {
-        Matcher matcher = POINT_UP_PATTERN.matcher(html);
+    private int findTenP(final String html) {
+        final Matcher matcher = ConquestBattleCheckHandler.TENP_PATTERN.matcher(html);
         if (matcher.find()) {
             return Integer.valueOf(matcher.group(1));
         }
         return 0;
     }
 
+    private int findPower100(final String html) {
+        final Matcher matcher = ConquestBattleCheckHandler.POWER100_PATTERN.matcher(html);
+        if (matcher.find()) {
+            return Integer.valueOf(matcher.group(1));
+        }
+        return 0;
+    }
+
+    private boolean isHelp(final String html) {
+        return StringUtils.contains(html, "救援依頼で攻撃");
+    }
 }

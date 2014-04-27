@@ -26,7 +26,7 @@ public class BattleHandler extends AbstractBattleHandler {
         this.resolveInputToken(html);
 
         final JSONObject jsonPageParams = this.resolvePageParams(html);
-        if (jsonPageParams != null) {
+        if (jsonPageParams != null && jsonPageParams.containsKey("battleStartType")) {
             final String battleStartType = jsonPageParams.optString("battleStartType");
             session.put("battleStartType", battleStartType);
 

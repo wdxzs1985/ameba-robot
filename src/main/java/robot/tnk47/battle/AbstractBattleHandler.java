@@ -17,9 +17,9 @@ public abstract class AbstractBattleHandler extends Tnk47EventHandler {
 
     protected boolean isBattleResult(final String html) {
         final Map<String, Object> session = this.robot.getSession();
-        final Matcher battleResultMatcher = AbstractBattleHandler.BATTLE_RESULT_PATTERN.matcher(html);
-        if (battleResultMatcher.find()) {
-            final String prefectureBattleId = battleResultMatcher.group(1);
+        final Matcher matcher = AbstractBattleHandler.BATTLE_RESULT_PATTERN.matcher(html);
+        if (matcher.find()) {
+            final String prefectureBattleId = matcher.group(1);
             session.put("prefectureBattleId", prefectureBattleId);
             return true;
         }

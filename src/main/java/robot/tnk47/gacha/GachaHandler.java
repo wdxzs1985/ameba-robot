@@ -10,7 +10,7 @@ import robot.tnk47.Tnk47Robot;
 public class GachaHandler extends Tnk47EventHandler {
 
     private final static Pattern TICKET_PATTERN = Pattern.compile("/gacha/gacha-ticket-animation\\?gachaId=(\\d+)&gachaUseCount=(\\d+)&token=([a-zA-Z0-9]{6})");
-    private final static Pattern BOX_PATTERN = Pattern.compile("<a href=\"/gacha/box-gacha\\?gachaId=(\\d+)\">次の千両箱へ</a>");
+    private final static Pattern BOX_PATTERN = Pattern.compile("<p class=\"nextBoxContent\"><a href=\"/gacha/box-gacha\\?gachaId=(\\d+)\">");
 
     public GachaHandler(final Tnk47Robot robot) {
         super(robot);

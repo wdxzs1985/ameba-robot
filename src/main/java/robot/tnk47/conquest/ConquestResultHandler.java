@@ -4,10 +4,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class ConquestResultHandler extends Tnk47EventHandler {
+public class ConquestResultHandler extends AbstractConquestBattleHandler {
 
     private static final Pattern POINT_PATTERN = Pattern.compile("<p class=\"totalPoint\">(.*?)</p>");
 
@@ -22,10 +21,14 @@ public class ConquestResultHandler extends Tnk47EventHandler {
         final String path = "/conquest/conquest-battle-result?token=%s";
         final String html = this.httpGet(String.format(path, token));
 
+        if (this.isBattleResult(html)) {
+            return "/conquest/field-result";
+        }
+
         if (this.log.isInfoEnabled()) {
-            Matcher matcher = POINT_PATTERN.matcher(html);
+            final Matcher matcher = ConquestResultHandler.POINT_PATTERN.matcher(html);
             if (matcher.find()) {
-                String text = matcher.group(1);
+                final String text = matcher.group(1);
                 this.log.info(text);
             }
         }

@@ -13,7 +13,8 @@ import org.apache.commons.lang.StringUtils;
 
 import robot.AbstractEventHandler;
 
-public abstract class Tnk47EventHandler extends AbstractEventHandler<Tnk47Robot> {
+public abstract class Tnk47EventHandler extends
+        AbstractEventHandler<Tnk47Robot> {
 
     private static final Pattern PAGE_PARAMS_PATTERN = Pattern.compile(".*\\.pageParams = (\\{.*\\});");
     private static final Pattern INPUT_TOKEN_PATTERN = Pattern.compile("<input id=\"__token\" type=\"hidden\" value=\"([a-zA-Z0-9]{6})\"( data-page-id=\".*\")?>");
@@ -32,9 +33,13 @@ public abstract class Tnk47EventHandler extends AbstractEventHandler<Tnk47Robot>
     }
 
     protected JSONObject resolvePageParams(final String html) {
-        String text = StringUtils.replace(html,
-                                          "createjs.LoadQueue.JAVASCRIPT",
-                                          "'createjs.LoadQueue.JAVASCRIPT'");
+        String text = html;
+        text = StringUtils.replace(text,
+                                   "createjs.LoadQueue.JAVASCRIPT",
+                                   "'createjs.LoadQueue.JAVASCRIPT'");
+        text = StringUtils.replace(text,
+                                   "createjs.LoadQueue.IMAGE",
+                                   "'createjs.LoadQueue.IMAGE'");
         final Matcher pageParamsMatcher = Tnk47EventHandler.PAGE_PARAMS_PATTERN.matcher(text);
         if (pageParamsMatcher.find()) {
             final String pageParams = pageParamsMatcher.group(1);

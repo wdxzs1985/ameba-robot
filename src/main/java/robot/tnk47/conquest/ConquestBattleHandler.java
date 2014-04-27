@@ -27,11 +27,15 @@ public class ConquestBattleHandler extends AbstractConquestBattleHandler {
     protected String handleIt() {
         final Map<String, Object> session = this.robot.getSession();
         String conquestBattleId = (String) session.get("conquestBattleId");
-        String html = this.httpGet(String.format("/conquest/conquest-battle?conquestBattleId=%s",
-                                                 conquestBattleId));
+        final String html = this.httpGet(String.format("/conquest/conquest-battle?conquestBattleId=%s",
+                                                       conquestBattleId));
         this.resolveInputToken(html);
 
-        JSONObject pageParams = this.resolvePageParams(html);
+        if (this.isBattleResult(html)) {
+            return "/conquest/field-result";
+        }
+
+        final JSONObject pageParams = this.resolvePageParams(html);
         if (pageParams.has("nextUrl")) {
             return "/conquest";
         }
@@ -41,17 +45,17 @@ public class ConquestBattleHandler extends AbstractConquestBattleHandler {
 
         this.sendInvite(html);
 
-        String getEnemyListAjaxUrl = pageParams.optString("getEnemyListAjaxUrl");
-        String battleStartType = pageParams.optString("battleStartType");
+        final String getEnemyListAjaxUrl = pageParams.optString("getEnemyListAjaxUrl");
+        final String battleStartType = pageParams.optString("battleStartType");
         if (StringUtils.isBlank(conquestBattleId)) {
             conquestBattleId = pageParams.optString("conquestBattleId");
         }
 
-        List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
+        final List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
         nvps.add(new BasicNameValuePair("conquestBattleId", conquestBattleId));
-        JSONObject response = this.httpPostJSON(getEnemyListAjaxUrl, nvps);
-        JSONObject data = response.optJSONObject("data");
-        JSONArray enemyList = data.optJSONArray("enemyList");
+        final JSONObject response = this.httpPostJSON(getEnemyListAjaxUrl, nvps);
+        final JSONObject data = response.optJSONObject("data");
+        final JSONArray enemyList = data.optJSONArray("enemyList");
 
         if (enemyList.size() > 0) {
             final JSONObject enemy = this.filterEnemy(enemyList);
@@ -75,18 +79,18 @@ public class ConquestBattleHandler extends AbstractConquestBattleHandler {
                 return "/conquest/battle-check";
             }
         }
-        return "/conquest";
+        return "/mypage";
     }
 
     private void sendInvite(final String html) {
-        final Matcher matcher = INVITE_PATTERN.matcher(html);
+        final Matcher matcher = ConquestBattleHandler.INVITE_PATTERN.matcher(html);
         if (matcher.find()) {
             final Map<String, Object> session = this.robot.getSession();
             final String token = (String) session.get("token");
 
-            JSONObject pageParams = this.resolvePageParams(html);
-            String conquestBattleId = pageParams.optString("conquestBattleId");
-            String url = pageParams.optString("putConquestBattleInviteAjaxUrl");
+            final JSONObject pageParams = this.resolvePageParams(html);
+            final String conquestBattleId = pageParams.optString("conquestBattleId");
+            final String url = pageParams.optString("putConquestBattleInviteAjaxUrl");
 
             final List<BasicNameValuePair> nvps = this.createNameValuePairs();
             nvps.add(new BasicNameValuePair("conquestBattleId",
@@ -104,14 +108,14 @@ public class ConquestBattleHandler extends AbstractConquestBattleHandler {
     }
 
     private boolean canonAttack(final String html) {
-        final Matcher matcher = CANNON_PATTERN.matcher(html);
+        final Matcher matcher = ConquestBattleHandler.CANNON_PATTERN.matcher(html);
         if (matcher.find()) {
             final Map<String, Object> session = this.robot.getSession();
             final String token = (String) session.get("token");
 
-            JSONObject pageParams = this.resolvePageParams(html);
-            String conquestBattleId = pageParams.optString("conquestBattleId");
-            String url = pageParams.optString("putConquestBattleCannonAjaxUrl");
+            final JSONObject pageParams = this.resolvePageParams(html);
+            final String conquestBattleId = pageParams.optString("conquestBattleId");
+            final String url = pageParams.optString("putConquestBattleCannonAjaxUrl");
 
             final List<BasicNameValuePair> nvps = this.createNameValuePairs();
             nvps.add(new BasicNameValuePair("conquestBattleId",

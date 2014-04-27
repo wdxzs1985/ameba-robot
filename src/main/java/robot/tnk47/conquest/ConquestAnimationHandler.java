@@ -5,10 +5,9 @@ import java.util.Map;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 
-public class ConquestAnimationHandler extends Tnk47EventHandler {
+public class ConquestAnimationHandler extends AbstractConquestBattleHandler {
 
     public ConquestAnimationHandler(final Tnk47Robot robot) {
         super(robot);
@@ -41,6 +40,10 @@ public class ConquestAnimationHandler extends Tnk47EventHandler {
 
         final String html = this.httpPost(path, nvps);
         this.resolveInputToken(html);
+
+        if (this.isBattleResult(html)) {
+            return "/conquest/field-result";
+        }
 
         return "/conquest/conquest-result";
     }
