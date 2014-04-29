@@ -70,7 +70,7 @@ public class QuestStageForwardHandler extends Tnk47EventHandler {
             return this.onLevelUp(data);
         }
         //
-        if (this.isMaxPower(data)) {
+        if (!this.is("isConquest") && this.isMaxPower(data)) {
             session.put("isBattlePowerOut", false);
             if (!this.is("isBattlePointEnough")) {
                 return "/battle";

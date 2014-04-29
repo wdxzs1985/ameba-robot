@@ -65,7 +65,7 @@ public class MypageHandler extends Tnk47EventHandler {
             return "/duel";
         }
 
-        if (this.is("isBattleEnable")) {
+        if (!this.is("isConquest") && this.is("isBattleEnable")) {
             session.put("isBattleEnable", false);
             return "/battle";
         }

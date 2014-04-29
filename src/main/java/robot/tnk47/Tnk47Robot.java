@@ -68,7 +68,7 @@ public class Tnk47Robot extends AbstractRobot {
 
     public static final String HOST = "http://tnk47.ameba.jp";
 
-    public static final String VERSION = "天下自动脚本  11.0";
+    public static final String VERSION = "天下自动脚本  11.1";
 
     @Override
     public void initHandlers() {
@@ -219,6 +219,7 @@ public class Tnk47Robot extends AbstractRobot {
         session.put("isQuestCardFull", false);
         session.put("isQuestFindAll", false);
         session.put("isPointRace", false);
+        session.put("isConquest", false);
         session.put("isBattlePowerFull", false);
         session.put("isBattlePowerOut", false);
         session.put("isBattlePointEnough", false);
