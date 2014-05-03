@@ -203,39 +203,29 @@ public class RaidBattleHandler extends Tnk47EventHandler {
         final JSONArray itemList = pageParams.optJSONArray("itemList");
         for (int i = 0; i < itemList.size(); i++) {
             final JSONObject item = itemList.optJSONObject(i);
+            final String itemId = item.optString("itemId");
             final String imgPath = item.optString("imgPath");
             final boolean isOneDay = StringUtils.contains(imgPath, "oneday");
             final int regenValue = item.optInt("regenValue");
             final int itemCount = item.optInt("itemCount");
 
             RaidItemModel itemModel = null;
-            switch (i) {
-            case 0:
+            if (StringUtils.equals(itemId, "2967")) {
                 itemModel = model.getApSmall();
                 itemModel.setItemCount(itemCount);
                 itemModel.setRegenValue(regenValue);
-                break;
-            case 1:
-                itemModel = model.getApFull();
-                itemModel.setItemCount(itemCount);
-                itemModel.setRegenValue(regenValue);
-                break;
-            case 2:
+            } else if (StringUtils.equals(itemId, "8")) {
                 if (isOneDay) {
                     itemModel = model.getPowerHalf();
                     itemModel.setItemCount(itemCount);
                     itemModel.setRegenValue(regenValue);
                 }
-                break;
-            case 3:
+            } else if (StringUtils.equals(itemId, "20")) {
                 if (isOneDay) {
                     itemModel = model.getPowerFull();
                     itemModel.setItemCount(itemCount);
                     itemModel.setRegenValue(regenValue);
                 }
-                break;
-            default:
-                break;
             }
         }
 
