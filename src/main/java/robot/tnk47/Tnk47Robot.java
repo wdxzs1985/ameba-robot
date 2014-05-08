@@ -11,6 +11,11 @@ import robot.tnk47.battle.BattleHandler;
 import robot.tnk47.battle.BattleResultHandler;
 import robot.tnk47.battle.PrefectureBattleListHandler;
 import robot.tnk47.battle.PrefectureBattleResultHandler;
+import robot.tnk47.card.CardSellHandler;
+import robot.tnk47.card.UpgradeAnimationHandler;
+import robot.tnk47.card.UpgradeAutoConfirmHandler;
+import robot.tnk47.card.UpgradeHandler;
+import robot.tnk47.card.UpgradeSelectBaseHandler;
 import robot.tnk47.conquest.ConquestAnimationHandler;
 import robot.tnk47.conquest.ConquestAreaTopHandler;
 import robot.tnk47.conquest.ConquestBattleCheckHandler;
@@ -60,10 +65,6 @@ import robot.tnk47.raid.RaidHandler;
 import robot.tnk47.raid.RaidStageForwardHandler;
 import robot.tnk47.raid.RaidStageHandler;
 import robot.tnk47.raid.model.RaidBattleDamageMap;
-import robot.tnk47.upgrade.UpgradeAnimationHandler;
-import robot.tnk47.upgrade.UpgradeAutoConfirmHandler;
-import robot.tnk47.upgrade.UpgradeHandler;
-import robot.tnk47.upgrade.UpgradeSelectBaseHandler;
 
 public class Tnk47Robot extends AbstractRobot {
 
@@ -87,7 +88,8 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/gacha/battle-gacha",
                              new BattleGachaHandler(this));
         //
-        this.registerHandler("/gift", new GiftHandler(this));
+        this.registerHandler("/gift/item", new GiftItemHandler(this));
+        this.registerHandler("/gift/card", new GiftCardHandler(this));
         // 控制器：合战活动
         this.registerHandler("/pointrace", new BattleHandler(this));
         // 控制器：合战
@@ -130,6 +132,8 @@ public class Tnk47Robot extends AbstractRobot {
                              new MarathonMissionResultHandler(this));
         this.registerHandler("/marathon/notification",
                              new MarathonNotificationHandler(this));
+        //
+        this.registerHandler("/card/sell", new CardSellHandler(this));
         // 强化
         this.registerHandler("/upgrade", new UpgradeHandler(this));
         this.registerHandler("/upgrade/select-base",
@@ -204,11 +208,13 @@ public class Tnk47Robot extends AbstractRobot {
         final Map<String, Object> session = this.getSession();
         session.put("isMypage", false);
         session.put("isStampGachaEnable", this.isStampGachaEnable());
-        session.put("isGacha2Enable", true);
-        session.put("isGacha3Enable", true);
+        session.put("isGacha2Enable", this.isGachaEnable());
+        session.put("isGacha3Enable", this.isGachaEnable());
         session.put("isGiftEnable", this.isGiftEnable());
+        session.put("isGiftCardEnable", this.isGiftCardEnable());
         session.put("isQuestEnable", this.isQuestEnable());
         session.put("isBattleEnable", this.isBattleEnable());
+        session.put("isCardSellEnable", this.isCardSellEnable());
         session.put("isUpgradeEnable", this.isUpgradeEnable());
         session.put("isDuelEnable", this.isDuelEnable());
 
@@ -278,6 +284,12 @@ public class Tnk47Robot extends AbstractRobot {
 
     public boolean isGiftEnable() {
         final String key = "Tnk47Robot.giftEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isGiftCardEnable() {
+        final String key = "Tnk47Robot.giftCardEnable";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }
@@ -434,6 +446,12 @@ public class Tnk47Robot extends AbstractRobot {
 
     public boolean isConquestEnable() {
         final String key = "Tnk47Robot.conquestEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isCardSellEnable() {
+        final String key = "Tnk47Robot.cardSellEnable";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }

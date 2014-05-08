@@ -23,6 +23,10 @@ Tnk47Robot.gachaEnable=true
 Tnk47Robot.eventEnable=true
 # 领取礼物开关（只领药那一排）
 Tnk47Robot.giftEnable=true
+# 领取礼物开关
+Tnk47Robot.giftCardEnable=true
+# SELL开关(N卡和HN卡)
+Tnk47Robot.cardSellEnable=true
 # 冒险开关
 Tnk47Robot.questEnable=true
 # 战神开关

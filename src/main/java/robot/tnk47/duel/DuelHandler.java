@@ -20,6 +20,7 @@ public class DuelHandler extends Tnk47EventHandler {
         if (this.hasPoint(html)) {
             return "/duel/duel-battle-select";
         }
+        // TODO is upgrade
         return "/mypage";
     }
 

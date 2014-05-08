@@ -24,7 +24,7 @@ public class TicketGachaHandler extends AbstractGachaHandler {
         final String html = this.httpGet(path);
         this.resolveGachaResult(html);
         this.boxGachareset(html);
-        return "/gacha";
+        return "/gacha/gacha-3";
     }
 
 }

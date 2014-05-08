@@ -1,4 +1,4 @@
-package robot.tnk47.upgrade;
+package robot.tnk47.card;
 
 import java.util.List;
 import java.util.Map;

@@ -8,15 +8,15 @@ import net.sf.json.JSONObject;
 
 import org.apache.http.message.BasicNameValuePair;
 
-public class GiftHandler extends Tnk47EventHandler {
+public class GiftItemHandler extends Tnk47EventHandler {
 
-    public GiftHandler(final Tnk47Robot robot) {
+    public GiftItemHandler(final Tnk47Robot robot) {
         super(robot);
     }
 
     @Override
     public String handleIt() {
-        final String html = this.httpGet("/gift");
+        final String html = this.httpGet("/gift?type=2");
         this.resolveInputToken(html);
         final JSONObject jsonPageParams = this.resolvePageParams(html);
         if (jsonPageParams != null) {
@@ -25,7 +25,7 @@ public class GiftHandler extends Tnk47EventHandler {
             if (page > 0) {
                 final String giftIds = this.buildGiftIds(firstPageData);
                 this.sendReceiveAllGift(giftIds);
-                return "/gift";
+                return "/gift/item";
             } else {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("没有礼物");

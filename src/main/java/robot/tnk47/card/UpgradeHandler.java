@@ -1,4 +1,4 @@
-package robot.tnk47.upgrade;
+package robot.tnk47.card;
 
 import java.util.Map;
 import java.util.regex.Matcher;

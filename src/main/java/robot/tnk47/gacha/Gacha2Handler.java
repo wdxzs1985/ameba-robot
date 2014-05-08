@@ -20,7 +20,6 @@ public class Gacha2Handler extends AbstractGachaHandler {
         final String html = this.httpGet("/gacha?gachaTabId=2");
         this.resolveInputToken(html);
 
-        this.log.info(html);
         final Matcher matcher = ACTBTN_PATTHERN.matcher(html);
         if (matcher.find()) {
             String url = matcher.group(1);

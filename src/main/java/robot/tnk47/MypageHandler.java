@@ -57,7 +57,17 @@ public class MypageHandler extends Tnk47EventHandler {
 
         if (this.is("isGiftEnable")) {
             session.put("isGiftEnable", false);
-            return "/gift";
+            return "/gift/item";
+        }
+
+        if (this.is("isGiftCardEnable")) {
+            session.put("isGiftCardEnable", false);
+            return "/gift/card";
+        }
+
+        if (this.is("isCardSellEnable")) {
+            session.put("isCardSellEnable", false);
+            return "/card/sell";
         }
 
         if (this.is("isEventEnable")) {

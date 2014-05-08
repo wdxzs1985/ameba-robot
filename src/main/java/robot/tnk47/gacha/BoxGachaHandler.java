@@ -32,7 +32,7 @@ public class BoxGachaHandler extends AbstractGachaHandler {
             return "/gacha/ticket-gacha";
         }
         this.boxGachareset(html);
-        return "/gacha";
+        return "/gacha/gacha-3";
     }
 
 }
