@@ -27,7 +27,8 @@ import robot.tnk47.duel.DuelHandler;
 import robot.tnk47.gacha.BattleGachaHandler;
 import robot.tnk47.gacha.BoxGachaHandler;
 import robot.tnk47.gacha.ConquestGachaHandler;
-import robot.tnk47.gacha.GachaHandler;
+import robot.tnk47.gacha.Gacha2Handler;
+import robot.tnk47.gacha.Gacha3Handler;
 import robot.tnk47.gacha.StampGachaHandler;
 import robot.tnk47.gacha.TicketGachaHandler;
 import robot.tnk47.guildbattle.GuildBattleAnimationHandler;
@@ -77,7 +78,8 @@ public class Tnk47Robot extends AbstractRobot {
         this.registerHandler("/mypage", new MypageHandler(this));
         this.registerHandler("/event-infomation",
                              new EventInfomationHandler(this));
-        this.registerHandler("/gacha", new GachaHandler(this));
+        this.registerHandler("/gacha/gacha-2", new Gacha2Handler(this));
+        this.registerHandler("/gacha/gacha-3", new Gacha3Handler(this));
         this.registerHandler("/gacha/ticket-gacha",
                              new TicketGachaHandler(this));
         this.registerHandler("/gacha/box-gacha", new BoxGachaHandler(this));
@@ -202,7 +204,8 @@ public class Tnk47Robot extends AbstractRobot {
         final Map<String, Object> session = this.getSession();
         session.put("isMypage", false);
         session.put("isStampGachaEnable", this.isStampGachaEnable());
-        session.put("isGachaEnable", this.isGachaEnable());
+        session.put("isGacha2Enable", true);
+        session.put("isGacha3Enable", true);
         session.put("isGiftEnable", this.isGiftEnable());
         session.put("isQuestEnable", this.isQuestEnable());
         session.put("isBattleEnable", this.isBattleEnable());
@@ -239,6 +242,18 @@ public class Tnk47Robot extends AbstractRobot {
 
     public boolean isMarathonEnable() {
         final String key = "Tnk47Robot.marathonEnable";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isUseStamina50() {
+        final String key = "Tnk47Robot.useStamina50";
+        final String value = this.getConfig().getProperty(key, "false");
+        return Boolean.valueOf(value);
+    }
+
+    public boolean isUseStamina100() {
+        final String key = "Tnk47Robot.useStamina100";
         final String value = this.getConfig().getProperty(key, "false");
         return Boolean.valueOf(value);
     }
@@ -327,24 +342,6 @@ public class Tnk47Robot extends AbstractRobot {
         return value;
     }
 
-    public boolean isUseStaminaToday() {
-        final String key = "Tnk47Robot.useStaminaToday";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
-    }
-
-    public boolean isUseStamina50() {
-        final String key = "Tnk47Robot.useStamina50";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
-    }
-
-    public boolean isUseStamina100() {
-        final String key = "Tnk47Robot.useStamina100";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
-    }
-
     public int getStaminaUpLimit() {
         final String key = "Tnk47Robot.staminaUpLimit";
         final String value = this.getConfig().getProperty(key, "0");
@@ -373,12 +370,6 @@ public class Tnk47Robot extends AbstractRobot {
         final String key = "Tnk47Robot.notificationUser";
         final String value = this.getConfig().getProperty(key);
         return value;
-    }
-
-    public boolean isUseGiveItemToday() {
-        final String key = "Tnk47Robot.useGiveItemToday";
-        final String value = this.getConfig().getProperty(key, "false");
-        return Boolean.valueOf(value);
     }
 
     public boolean isUseGiveItem() {

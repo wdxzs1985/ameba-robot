@@ -45,9 +45,14 @@ public class MypageHandler extends Tnk47EventHandler {
             return "/gacha/stamp-gacha";
         }
 
-        if (this.is("isGachaEnable")) {
-            session.put("isGachaEnable", false);
-            return "/gacha";
+        if (this.is("isGacha2Enable")) {
+            session.put("isGacha2Enable", false);
+            return "/gacha/gacha-2";
+        }
+
+        if (this.is("isGacha3Enable")) {
+            session.put("isGacha3Enable", false);
+            return "/gacha/gacha-3";
         }
 
         if (this.is("isGiftEnable")) {
@@ -103,8 +108,7 @@ public class MypageHandler extends Tnk47EventHandler {
         }
     }
 
-    private void processStatusMater(final String html,
-                                    final Map<String, Object> session) {
+    private void processStatusMater(final String html, final Map<String, Object> session) {
         final Matcher matcher = MypageHandler.HTML_STATUS_MATER_PATTERN.matcher(html);
         if (matcher.find()) {
             final String current = matcher.group(1);

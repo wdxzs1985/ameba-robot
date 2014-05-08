@@ -164,8 +164,7 @@ public class MarathonStageForwardHandler extends Tnk47EventHandler {
                 final String code = regenStamina.optString("code");
                 final String name = regenStamina.optString("name");
                 final String itemId = regenStamina.optString("itemId");
-                if (this.robot.isUseStaminaToday() && StringUtils.contains(name,
-                                                                           "当日")) {
+                if (StringUtils.contains(name, "当日")) {
                     session.put("itemId", itemId);
                     session.put("name", name);
                     session.put("callback", "/mypage");

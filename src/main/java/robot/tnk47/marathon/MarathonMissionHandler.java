@@ -23,7 +23,7 @@ public class MarathonMissionHandler extends Tnk47EventHandler {
 
     public MarathonMissionHandler(final Tnk47Robot robot) {
         super(robot);
-        this.useGiveItemToday = robot.isUseGiveItemToday();
+        this.useGiveItemToday = true;
         this.useGiveItem = robot.isUseGiveItem();
         this.onlyGiveOne = robot.isOnlyGiveOne();
 
