@@ -9,7 +9,7 @@ import robot.tnk47.Tnk47Robot;
 
 public class Gacha2Handler extends AbstractGachaHandler {
 
-    private static final Pattern ACTBTN_PATTHERN = Pattern.compile("<a href=\"(/gacha/gacha-free-animation\\?.*?)\" ?>");
+    private static final Pattern ACTBTN_PATTHERN = Pattern.compile("<a href=\"(/gacha/gacha-free-animation\\?.*?)\" class=\"actBtn jscTouchActive \" ?>");
 
     public Gacha2Handler(final Tnk47Robot robot) {
         super(robot);
@@ -19,6 +19,8 @@ public class Gacha2Handler extends AbstractGachaHandler {
     public String handleIt() {
         final String html = this.httpGet("/gacha?gachaTabId=2");
         this.resolveInputToken(html);
+
+        this.log.debug(html);
 
         final Matcher matcher = ACTBTN_PATTHERN.matcher(html);
         if (matcher.find()) {
