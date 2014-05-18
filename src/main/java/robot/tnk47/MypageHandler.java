@@ -118,7 +118,8 @@ public class MypageHandler extends Tnk47EventHandler {
         }
     }
 
-    private void processStatusMater(final String html, final Map<String, Object> session) {
+    private void processStatusMater(final String html,
+                                    final Map<String, Object> session) {
         final Matcher matcher = MypageHandler.HTML_STATUS_MATER_PATTERN.matcher(html);
         if (matcher.find()) {
             final String current = matcher.group(1);
@@ -132,7 +133,10 @@ public class MypageHandler extends Tnk47EventHandler {
             final String current = matcher.group(1);
             final String max = matcher.group(2);
 
-            if (!StringUtils.equals(current, max)) {
+            final Integer currentBP = Integer.valueOf(current);
+            final Integer maxBP = Integer.valueOf(max);
+
+            if (currentBP > maxBP * 0.6) {
                 session.put("isBattlePowerFull", true);
             }
         }

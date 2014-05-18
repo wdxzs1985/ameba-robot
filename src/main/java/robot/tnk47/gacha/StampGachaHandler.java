@@ -12,7 +12,7 @@ import robot.tnk47.Tnk47Robot;
 public class StampGachaHandler extends AbstractGachaHandler {
 
     private static final Pattern DISABLE_PATTHERN = Pattern.compile("<p class=\"actBtn remainingTime disable\"><span>(.*?)</span></p>");
-    private static final Pattern ACTBTN_PATTHERN = Pattern.compile("<a href=\"(/gacha/gacha-free-animation\\?.*?)\" class=\"actBtn \" ?>");
+    private static final Pattern ACTBTN_PATTHERN = Pattern.compile("<a href=\"(/gacha/gacha-free-animation\\?.*?)\" class=\"actBtn jscTouchActive \" ?>");
 
     public StampGachaHandler(final Tnk47Robot robot) {
         super(robot);
