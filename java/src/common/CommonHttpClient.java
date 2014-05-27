@@ -11,6 +11,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -156,6 +157,7 @@ public class CommonHttpClient {
         String result = null;
         try {
             result = this.entityToString(entity);
+            result = StringEscapeUtils.unescapeHtml(result);
             if (this.log.isDebugEnabled()) {
                 this.log.debug(result);
             }
@@ -175,6 +177,7 @@ public class CommonHttpClient {
         String result;
         try {
             result = this.entityToString(entity);
+            result = StringEscapeUtils.unescapeHtml(result);
             if (this.log.isDebugEnabled()) {
                 this.log.debug(result);
             }
