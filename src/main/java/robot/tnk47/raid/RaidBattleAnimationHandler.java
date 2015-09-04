@@ -4,10 +4,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringEscapeUtils;
 
+import net.sf.json.JSONObject;
 import robot.tnk47.Tnk47EventHandler;
 import robot.tnk47.Tnk47Robot;
 import robot.tnk47.raid.model.RaidBattleDamageBean;
@@ -19,8 +18,9 @@ public class RaidBattleAnimationHandler extends Tnk47EventHandler {
 
     private final RaidBattleDamageMap damageMap;
 
-    public RaidBattleAnimationHandler(final Tnk47Robot robot,
-            final RaidBattleDamageMap damageMap) {
+    public RaidBattleAnimationHandler(
+                                      final Tnk47Robot robot,
+                                      final RaidBattleDamageMap damageMap) {
         super(robot);
         this.damageMap = damageMap;
     }
@@ -67,7 +67,8 @@ public class RaidBattleAnimationHandler extends Tnk47EventHandler {
         return "/raid/battle";
     }
 
-    private JSONObject resolveRaidResultData(final String html) {
+    private JSONObject resolveRaidResultData(
+                                             final String html) {
         final Matcher matcher = RaidBattleAnimationHandler.RAID_RESULT_DATA_PATTERN.matcher(html);
         if (matcher.find()) {
             String text = matcher.group(1);
